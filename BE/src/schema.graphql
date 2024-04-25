@@ -2,7 +2,12 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type ProductInCart {
+type Product {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+type Cart {
   productId: ID!
   userId: ID!
   name: String!
@@ -18,17 +23,50 @@ type User {
   birthDate: String
   status: Int!
   address: String
-  cart: [ProductInCart!]!
+  cart: [Cart!]!
   createdAt: String!
   updatedAt: String!
 }
 
 type Query {
-  getUserById(id: String!): User
-  listUser: [User!]!
+  products: [Product!]!
+  product(id: Int!): Product!
+  users: [User!]!
+  user(id: ID!): User!
 }
 
 type Mutation {
-  createNewUser(name: String!, email: String!, birthDate: String!, address: String!): User!
-  addProductToCart(productId: String!, quantity: Float!): ProductInCart!
+  createProduct(createProductInput: CreateProductInput!): Product!
+  updateProduct(updateProductInput: UpdateProductInput!): Product!
+  removeProduct(id: Int!): Product!
+  createUser(createUserInput: CreateUserInput!): User!
+  updateUser(updateUserInput: UpdateUserInput!): User!
+  removeUser(id: ID!): User!
+  addProductToCart(productId: String!, quantity: Float!): Cart!
+}
+
+input CreateProductInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input UpdateProductInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
+
+input CreateUserInput {
+  name: String!
+  email: String!
+  birthDate: String!
+  address: String!
+}
+
+input UpdateUserInput {
+  name: String
+  email: String
+  birthDate: String = null
+  address: String = null
+  id: ID!
 }

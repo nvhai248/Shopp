@@ -1,5 +1,5 @@
-import { Field, ObjectType, ID, Int } from '@nestjs/graphql';
-import { ProductInCart } from './ProductInCart';
+import { ObjectType, Field, Int, ID } from '@nestjs/graphql';
+import { Cart } from 'src/carts/entities/cart.entity';
 
 @ObjectType()
 export class User {
@@ -21,8 +21,8 @@ export class User {
   @Field({ nullable: true })
   address: string;
 
-  @Field((type) => [ProductInCart], { defaultValue: [] })
-  cart: ProductInCart[];
+  @Field((type) => [Cart], { defaultValue: [] })
+  cart: Cart[];
 
   @Field()
   createdAt: string; //"YYYY-MM-DD"
