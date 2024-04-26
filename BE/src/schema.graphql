@@ -59,14 +59,12 @@ input UpdateProductInput {
 input CreateUserInput {
   name: String!
   email: String!
-  birthDate: String!
-  address: String!
+  password: String!
 }
 
 input UpdateUserInput {
   name: String
   email: String
-  birthDate: String = null
-  address: String = null
+  password: String
   id: ID!
 }

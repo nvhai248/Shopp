@@ -5,6 +5,9 @@ import { join } from 'path';
 import { ProductsModule } from './products/products.module';
 import { UsersModule } from './users/users.module';
 import { CartsModule } from './carts/carts.module';
+import { DatabaseModule } from './database/database.module';
+import { APP_FILTER } from '@nestjs/core';
+import { GraphQLErrorFilter } from './app.errorFilter';
 @Module({
   imports: [
     GraphQLModule.forRoot<ApolloDriverConfig>({
@@ -14,8 +17,14 @@ import { CartsModule } from './carts/carts.module';
     ProductsModule,
     UsersModule,
     CartsModule,
+    DatabaseModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [
+    {
+      provide: APP_FILTER,
+      useClass: GraphQLErrorFilter,
+    },
+  ],
 })
 export class AppModule {}

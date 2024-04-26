@@ -1,19 +1,24 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { CreateUserInput } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.input';
 import { UserMockData } from 'src/mockData/user';
 import { ProductInCartsMockData } from 'src/mockData/productInCart';
+import { BadRequestError } from 'src/utils/error';
+import { UserRepository } from './user.repository';
 
 @Injectable()
 export class UsersService {
-  create(createUserInput: CreateUserInput) {
-    return {
-      id: 'stringAtt',
-      name: createUserInput.name,
-      email: createUserInput.email,
-      birthDate: createUserInput.birthDate,
-      address: createUserInput.address,
-    };
+  constructor(private readonly userRepository: UserRepository) {}
+
+  async create(createUserInput: CreateUserInput) {
+    try {
+      return await this.userRepository.create(createUserInput);
+    } catch (error) {
+      if (error.code === 'P2002' && error.meta.target.includes('email')) {
+        throw new BadRequestError('Email already exists');
+      }
+      throw error;
+    }
   }
 
   findAll() {

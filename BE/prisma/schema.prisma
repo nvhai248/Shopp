@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -14,45 +8,104 @@ datasource db {
 }
 
 model User {
-  id Int @default(autoincrement()) @id
-  name String
-  email String
-  birthDate DateTime
-  status Int @default(0)
-  avatar String
-  address String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id        Int       @id @default(autoincrement())
+  name      String
+  email     String    @unique
+  birthDate DateTime?
+  password  String
+  salt      String
+  status    Int       @default(0)
+  avatar    String?
+  address   String?
+  role      Role      @default(BUYER)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  Address   Address[]
+  Image     Image[]
+}
+
+model Address {
+  id        Int       @id @default(autoincrement())
+  user      User?     @relation(fields: [userId], references: [id])
+  userId    Int?
+  store     Store?    @relation(fields: [storeId], references: [id])
+  storeId   Int?
+  ownerType OwnerType @default(USER)
+  district  String
+  province  String
+  wards     String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@index([userId], name: "address_user_idx")
+  @@index([storeId], name: "address_store_idx")
+}
+
+enum OwnerType {
+  USER
+  STORE
+}
+
+enum Role {
+  BUYER
+  SELLER
+  SHIPPER
+  ADMIN
 }
 
 model Product {
-  id Int @default(autoincrement()) @id
-  storeId Int
-  name String
-  price Float
-  sale Boolean @default(false)
-  avatar String
-  createdBy Int
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id         Int      @id @default(autoincrement())
+  storeId    Int
+  name       String
+  price      Float
+  sale       Boolean  @default(false)
+  categoryId Int
+  category   Category @relation(fields: [categoryId], references: [id])
+  store      Store    @relation(fields: [storeId], references: [id])
+  type       String
+  avatar     String?
+  cover      Image[]
+  createdBy  Int
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Category {
+  id          Int       @id @default(autoincrement())
+  storeId     Int
+  store       Store     @relation(fields: [storeId], references: [id])
+  name        String
+  description String?
+  image       String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  Product     Product[]
 }
 
 model Store {
-  id Int @default(autoincrement()) @id
-  name String
-  address String
+  id        Int        @id @default(autoincrement())
+  name      String
+  address   String
   createdBy Int
-  avatar String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  avatar    String
+  status    Int        @default(0)
+  addresses Address[] // Reverse relation for addresses
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  Category  Category[]
+  Product   Product[]
 }
 
 model Image {
-  id Int @default(autoincrement()) @id
-  width Int
-  height Int
-  url String
-  cloudName String
+  id        Int      @id @default(autoincrement())
+  ownerId   Int
+  owner     User     @relation(fields: [ownerId], references: [id])
+  width     Int?
+  height    Int?
+  url       String
+  cloudName String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  Product   Product? @relation(fields: [productId], references: [id])
+  productId Int?
 }

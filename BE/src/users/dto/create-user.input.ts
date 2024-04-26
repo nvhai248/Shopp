@@ -8,9 +8,6 @@ export class CreateUserInput {
   @Field()
   email: string;
 
-  @Field({ defaultValue: null })
-  birthDate: string;
-
-  @Field({ defaultValue: null })
-  address: string;
+  @Field()
+  password: string;
 }
