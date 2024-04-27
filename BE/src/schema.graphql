@@ -28,6 +28,13 @@ type User {
   updatedAt: String!
 }
 
+type AuthResponse {
+  accessToken: String!
+  refreshToken: String!
+  expired: Float!
+  user: User!
+}
+
 type Query {
   products: [Product!]!
   product(id: Int!): Product!
@@ -39,10 +46,11 @@ type Mutation {
   createProduct(createProductInput: CreateProductInput!): Product!
   updateProduct(updateProductInput: UpdateProductInput!): Product!
   removeProduct(id: Int!): Product!
-  createUser(createUserInput: CreateUserInput!): User!
   updateUser(updateUserInput: UpdateUserInput!): User!
   removeUser(id: ID!): User!
   addProductToCart(productId: String!, quantity: Float!): Cart!
+  login(loginInput: LoginInput!): AuthResponse!
+  register(registerInput: RegisterInput!): AuthResponse!
 }
 
 input CreateProductInput {
@@ -56,15 +64,17 @@ input UpdateProductInput {
   id: Int!
 }
 
-input CreateUserInput {
-  name: String!
+input UpdateUserInput {
+  id: ID!
+}
+
+input LoginInput {
   email: String!
   password: String!
 }
 
-input UpdateUserInput {
-  name: String
-  email: String
-  password: String
-  id: ID!
+input RegisterInput {
+  name: String!
+  email: String!
+  password: String!
 }

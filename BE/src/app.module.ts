@@ -8,6 +8,7 @@ import { CartsModule } from './carts/carts.module';
 import { DatabaseModule } from './database/database.module';
 import { APP_FILTER } from '@nestjs/core';
 import { GraphQLErrorFilter } from './app.errorFilter';
+import { AuthModule } from './auth/auth.module';
 @Module({
   imports: [
     GraphQLModule.forRoot<ApolloDriverConfig>({
@@ -18,6 +19,7 @@ import { GraphQLErrorFilter } from './app.errorFilter';
     UsersModule,
     CartsModule,
     DatabaseModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [

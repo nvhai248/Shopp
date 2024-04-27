@@ -25,3 +25,10 @@ export class BadRequestError extends MyCustomError {
     this.name = GRAPHQL_CODE_ERROR.BadRequest;
   }
 }
+
+export class DBError extends MyCustomError {
+  constructor(message: string) {
+    super(message);
+    this.name = GRAPHQL_CODE_ERROR.DBError;
+  }
+}

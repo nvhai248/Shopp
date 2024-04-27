@@ -1,25 +1,27 @@
 import { Injectable } from '@nestjs/common';
 import { DatabaseService } from 'src/database/database.service';
-import { CreateUserInput } from './dto/create-user.input';
-import { PrismaClient } from '@prisma/client';
-
+import { UserRegisterInput } from './dto/create-user.input';
 @Injectable()
 export class UserRepository {
   constructor(private readonly databaseService: DatabaseService) {}
 
-  async create(createUserInput: CreateUserInput) {
+  async create(userRegisterInput: UserRegisterInput, salt: string) {
     return await this.databaseService.user.create({
       data: {
-        name: createUserInput.name,
-        email: createUserInput.email,
+        name: userRegisterInput.name,
+        email: userRegisterInput.email,
         birthDate: null,
         address: null,
         avatar: null,
-        password: createUserInput.password,
-        salt: '',
+        password: userRegisterInput.password,
+        salt: salt,
       },
     });
+  }
 
-    PrismaClient
+  async findOneByEmail(email: string): Promise<any> {
+    return await this.databaseService.user.findFirst({
+      where: { email: email },
+    });
   }
 }
