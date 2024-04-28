@@ -11,7 +11,7 @@ export async function HashPW(password: string, salt: string): Promise<string> {
   return hash;
 }
 
-export async function ComparePW(
+export async function IsCorrectPW(
   hashPW: string,
   password: string,
 ): Promise<boolean> {

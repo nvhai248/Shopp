@@ -3,16 +3,17 @@ import {
   Query,
   Mutation,
   Args,
-  Int,
   ResolveField,
   Parent,
   ID,
+  Context,
 } from '@nestjs/graphql';
 import { UsersService } from './users.service';
 import { User } from './entities/user.entity';
-import { UserRegisterInput } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.input';
 import { Cart } from 'src/carts/entities/cart.entity';
+import { UseGuards, Request } from '@nestjs/common';
+import { CurrentUser, JwtAuthGuard } from 'src/guard/jwt-auth.guard';
 
 @Resolver(() => User)
 export class UsersResolver {
@@ -25,7 +26,13 @@ export class UsersResolver {
 
   @Query(() => User, { name: 'user' })
   findOne(@Args('id', { type: () => ID }) id: string) {
-    return this.usersService.findOne(id.toString());
+    return this.usersService.findOne(id);
+  }
+
+  @Query(() => User)
+  @UseGuards(JwtAuthGuard)
+  getProfile(@CurrentUser() user: User) {
+    return this.usersService.findOne(user.id);
   }
 
   @Mutation(() => User)

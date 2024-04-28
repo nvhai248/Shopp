@@ -5,6 +5,8 @@ import { UserMockData } from 'src/mockData/user';
 import { ProductInCartsMockData } from 'src/mockData/productInCart';
 import { DBError } from 'src/utils/error';
 import { UserRepository } from './user.repository';
+import { unmaskId } from 'src/utils/mask';
+import { DB_TYPES } from 'src/utils/const';
 
 @Injectable()
 export class UsersService {
@@ -14,8 +16,20 @@ export class UsersService {
     return UserMockData;
   }
 
-  findOne(id: string) {
-    return UserMockData.find((user) => user.id === id);
+  async findOne(id: string) {
+    try {
+      const user = await this.userRepository.findOneById(
+        typeof id == 'number' ? id : unmaskId(id, DB_TYPES.USER),
+      );
+
+      if (!user) {
+        throw new DBError('User not found');
+      }
+
+      return user;
+    } catch (error) {
+      throw error;
+    }
   }
 
   async findOneByEmail(email: string) {

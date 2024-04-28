@@ -24,4 +24,10 @@ export class UserRepository {
       where: { email: email },
     });
   }
+
+  async findOneById(id: number): Promise<any> {
+    return await this.databaseService.user.findFirst({
+      where: { id: id },
+    });
+  }
 }

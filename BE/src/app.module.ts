@@ -6,11 +6,18 @@ import { ProductsModule } from './products/products.module';
 import { UsersModule } from './users/users.module';
 import { CartsModule } from './carts/carts.module';
 import { DatabaseModule } from './database/database.module';
-import { APP_FILTER } from '@nestjs/core';
+import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { GraphQLErrorFilter } from './app.errorFilter';
 import { AuthModule } from './auth/auth.module';
+import { ConfigModule } from '@nestjs/config';
+import { JwtAuthGuard } from './guard/jwt-auth.guard';
+
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      envFilePath: [`.env`],
+      isGlobal: true,
+    }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), 'src/schema.graphql'),

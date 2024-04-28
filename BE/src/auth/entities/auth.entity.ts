@@ -1,4 +1,4 @@
-import { ObjectType, Field } from '@nestjs/graphql';
+import { ObjectType, Field, Int } from '@nestjs/graphql';
 import { User } from 'src/users/entities/user.entity';
 
 @ObjectType()
@@ -9,8 +9,11 @@ export class AuthResponse {
   @Field()
   refreshToken: string;
 
-  @Field()
-  expired: number;
+  @Field(() => Int)
+  expired_accessToken: number;
+
+  @Field(() => Int)
+  expired_refreshToken: number;
 
   @Field(() => User)
   user: User;
