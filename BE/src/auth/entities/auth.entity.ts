@@ -3,18 +3,18 @@ import { User } from 'src/users/entities/user.entity';
 
 @ObjectType()
 export class AuthResponse {
-  @Field()
+  @Field({ nullable: true })
   accessToken: string;
 
-  @Field()
+  @Field({ nullable: true })
   refreshToken: string;
 
-  @Field(() => Int)
+  @Field(() => Int, { nullable: true })
   expired_accessToken: number;
 
-  @Field(() => Int)
+  @Field(() => Int, { nullable: true })
   expired_refreshToken: number;
 
-  @Field(() => User)
+  @Field(() => User, { nullable: true })
   user: User;
 }

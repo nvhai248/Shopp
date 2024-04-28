@@ -8,20 +8,29 @@ datasource db {
 }
 
 model User {
-  id        Int       @id @default(autoincrement())
-  name      String
-  email     String    @unique
-  birthDate DateTime?
-  password  String
-  salt      String
-  status    Int       @default(0)
-  avatar    String?
-  address   String?
-  role      Role      @default(BUYER)
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  Address   Address[]
-  Image     Image[]
+  id           Int            @id @default(autoincrement())
+  name         String
+  email        String         @unique
+  birthDate    DateTime?
+  password     String
+  salt         String
+  status       Int            @default(0)
+  avatar       String?
+  address      String?
+  role         Role           @default(BUYER)
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  Address      Address[]
+  Image        Image[]
+  RefreshToken RefreshToken[]
+}
+
+model RefreshToken {
+  refreshToken String   @unique
+  user         User     @relation(fields: [userId], references: [id])
+  userId       Int
+  expired      Int
+  createdAt    DateTime @default(now())
 }
 
 model Address {

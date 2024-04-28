@@ -30,4 +30,24 @@ export class UserRepository {
       where: { id: id },
     });
   }
+
+  async createNewRefreshToken(
+    refreshToken: string,
+    userId: number,
+    expired: number,
+  ): Promise<any> {
+    return await this.databaseService.refreshToken.create({
+      data: {
+        userId: userId,
+        refreshToken: refreshToken,
+        expired: expired,
+      },
+    });
+  }
+
+  async deleteRefreshToken(id: number) {
+    return await this.databaseService.refreshToken.deleteMany({
+      where: { userId: id },
+    });
+  }
 }

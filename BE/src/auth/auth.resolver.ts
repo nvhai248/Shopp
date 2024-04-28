@@ -3,6 +3,9 @@ import { AuthService } from './auth.service';
 import { AuthResponse } from './entities/auth.entity';
 import { LoginInput } from './dto/login.input';
 import { RegisterInput } from './dto/register.input';
+import { UseGuards } from '@nestjs/common';
+import { CurrentUser, JwtAuthGuard } from 'src/guard/jwt-auth.guard';
+import { LogoutResponse } from './entities/logout.entity';
 
 @Resolver()
 export class AuthResolver {
@@ -16,5 +19,11 @@ export class AuthResolver {
   @Mutation(() => AuthResponse)
   register(@Args('registerInput') registerInput: RegisterInput) {
     return this.authService.register(registerInput);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Mutation(() => LogoutResponse)
+  async logout(@CurrentUser() user: any) {
+    return { result: await this.authService.logout(user.id) };
   }
 }

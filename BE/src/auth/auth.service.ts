@@ -37,17 +37,18 @@ export class AuthService {
     try {
       const salt = await GenSalt();
       registerInput.password = await HashPW(registerInput.password, salt);
-      const user = await this.userRepository.create(registerInput, salt);
+      let user = await this.userRepository.create(registerInput, salt);
+
+      const expired = 60 * 60 * 3;
+      const accessToken = await this.generateJwtToken(
+        user.id,
+        user.role,
+        expired,
+      );
 
       return {
-        accessToken: await this.generateJwtToken(user.id, user.role),
-        refreshToken: await this.generateJwtToken(
-          user.id,
-          user.role,
-          60 * 60 * 24 * 7,
-        ),
-        expired_accessToken: 60 * 60 * 3,
-        expired_refreshToken: 60 * 60 * 24 * 7,
+        accessToken: accessToken,
+        expired_accessToken: expired,
         user: FormatUser(user),
       };
     } catch (error) {
@@ -65,16 +66,40 @@ export class AuthService {
       throw new UnAuthorizedError('Username or password is incorrect!');
     }
 
-    return {
-      accessToken: await this.generateJwtToken(user.id, user.role),
-      refreshToken: await this.generateJwtToken(
+    if (loginInput.isRememberMe) {
+      const expired_rfTk = 60 * 60 * 24 * 7;
+      const refreshToken = await this.generateJwtToken(
         user.id,
         user.role,
-        60 * 60 * 24 * 7,
-      ),
-      expired_accessToken: 60 * 60 * 3,
-      expired_refreshToken: 60 * 60 * 24 * 7,
-      user: FormatUser(user),
-    };
+        expired_rfTk,
+      );
+
+      this.userRepository.deleteRefreshToken(user.id);
+
+      await this.userRepository.createNewRefreshToken(
+        refreshToken,
+        user.id,
+        expired_rfTk,
+      );
+
+      return {
+        accessToken: await this.generateJwtToken(user.id, user.role),
+        refreshToken: refreshToken,
+        expired_accessToken: 60 * 60 * 3,
+        expired_refreshToken: expired_rfTk,
+        user: FormatUser(user),
+      };
+    } else {
+      return {
+        accessToken: await this.generateJwtToken(user.id, user.role),
+        expired_accessToken: 60 * 60 * 3,
+        user: FormatUser(user),
+      };
+    }
+  }
+
+  async logout(id: number): Promise<boolean> {
+    if (await this.userRepository.deleteRefreshToken(id)) return true;
+    return false;
   }
 }

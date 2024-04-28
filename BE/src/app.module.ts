@@ -10,7 +10,6 @@ import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { GraphQLErrorFilter } from './app.errorFilter';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
-import { JwtAuthGuard } from './guard/jwt-auth.guard';
 
 @Module({
   imports: [
