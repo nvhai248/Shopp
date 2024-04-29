@@ -7,6 +7,7 @@ import { BadRequestError, UnAuthorizedError } from 'src/utils/error';
 import { FormatUser } from 'src/utils/formatResult';
 import { JwtService, JwtSignOptions } from '@nestjs/jwt';
 import { JwtPayload } from 'src/interfaces/jwt-payload.interface';
+import { CurrentUser } from 'src/guard/jwt-auth.guard';
 
 @Injectable()
 export class AuthService {
@@ -101,5 +102,15 @@ export class AuthService {
   async logout(id: number): Promise<boolean> {
     if (await this.userRepository.deleteRefreshToken(id)) return true;
     return false;
+  }
+
+  async refreshAccessToken(@CurrentUser() userId: number, role: string) {
+    const expired = 60 * 60 * 3;
+    const token = await this.generateJwtToken(userId, role);
+
+    return {
+      accessToken: token,
+      expired_accessToken: expired,
+    };
   }
 }

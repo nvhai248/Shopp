@@ -36,8 +36,12 @@ export class UsersResolver {
   }
 
   @Mutation(() => User)
-  updateUser(@Args('updateUserInput') updateUserInput: UpdateUserInput) {
-    return this.usersService.update(updateUserInput.id, updateUserInput);
+  @UseGuards(JwtAuthGuard)
+  updateProfile(
+    @Args('updateUserInput') updateUserInput: UpdateUserInput,
+    @CurrentUser() user: any,
+  ) {
+    return this.usersService.update(user.id, updateUserInput);
   }
 
   @Mutation(() => User)

@@ -19,3 +19,9 @@ export enum USER_STATUS {
   NOT_VERIFIED = 0,
   DELETED = -1,
 }
+
+export enum GENDER {
+  MALE = 'MALE',
+  FEMALE = 'FEMALE',
+  ALL = 'ALL',
+}

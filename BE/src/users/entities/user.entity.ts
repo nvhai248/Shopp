@@ -15,11 +15,14 @@ export class User {
   @Field({ nullable: true })
   birthDate: string; //"YYYY-MM-DD"
 
-  @Field(() => Int, { defaultValue: true })
-  status: number;
+  @Field({ nullable: true })
+  phoneNumber: string; //"YYYY-MM-DD"
 
   @Field({ nullable: true })
-  address: string;
+  gender: string; //"YYYY-MM-DD"
+
+  @Field(() => Int, { defaultValue: true })
+  status: number;
 
   @Field((type) => [Cart], { defaultValue: [] })
   cart: Cart[];

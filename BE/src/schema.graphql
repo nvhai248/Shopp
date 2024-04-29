@@ -21,8 +21,9 @@ type User {
   name: String!
   email: String!
   birthDate: String
+  phoneNumber: String
+  gender: String
   status: Int!
-  address: String
   cart: [Cart!]!
   createdAt: String!
   updatedAt: String!
@@ -52,12 +53,13 @@ type Mutation {
   createProduct(createProductInput: CreateProductInput!): Product!
   updateProduct(updateProductInput: UpdateProductInput!): Product!
   removeProduct(id: Int!): Product!
-  updateUser(updateUserInput: UpdateUserInput!): User!
+  updateProfile(updateUserInput: UpdateUserInput!): User!
   removeUser(id: ID!): User!
   addProductToCart(productId: String!, quantity: Float!): Cart!
   login(loginInput: LoginInput!): AuthResponse!
   register(registerInput: RegisterInput!): AuthResponse!
   logout: LogoutResponse!
+  refreshAccessToken: AuthResponse!
 }
 
 input CreateProductInput {
@@ -72,7 +74,10 @@ input UpdateProductInput {
 }
 
 input UpdateUserInput {
-  id: ID!
+  name: String
+  birthDate: String
+  phoneNumber: String
+  gender: String
 }
 
 input LoginInput {

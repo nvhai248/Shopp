@@ -26,4 +26,10 @@ export class AuthResolver {
   async logout(@CurrentUser() user: any) {
     return { result: await this.authService.logout(user.id) };
   }
+
+  @UseGuards(JwtAuthGuard)
+  @Mutation(() => AuthResponse)
+  refreshAccessToken(@CurrentUser() user: any) {
+    return this.authService.refreshAccessToken(user.id, user.role);
+  }
 }
