@@ -7,6 +7,10 @@ import { DBError } from 'src/utils/error';
 export class UserRepository {
   constructor(private readonly databaseService: DatabaseService) {}
 
+  async find() {
+    return await this.databaseService.user.findMany();
+  }
+
   async create(userRegisterInput: UserRegisterInput, salt: string) {
     const { name, email, password } = userRegisterInput;
     return await this.databaseService.user.create({

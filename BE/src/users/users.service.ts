@@ -1,8 +1,6 @@
 import { ConflictException, Injectable } from '@nestjs/common';
 import { UserRegisterInput } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.input';
-import { UserMockData } from 'src/mockData/user';
-import { ProductInCartsMockData } from 'src/mockData/productInCart';
 import { DBError } from 'src/utils/error';
 import { UserRepository } from './user.repository';
 import { unmaskId } from 'src/utils/mask';
@@ -13,7 +11,7 @@ export class UsersService {
   constructor(private readonly userRepository: UserRepository) {}
 
   findAll() {
-    return UserMockData;
+    return this.userRepository.find();
   }
 
   async findOne(id: string) {
@@ -57,11 +55,6 @@ export class UsersService {
   getUserCart(id: string) {
     const products = [];
 
-    ProductInCartsMockData.forEach((product) => {
-      if (product.userId === id) {
-        products.push(product);
-      }
-    });
     return products;
   }
 }
