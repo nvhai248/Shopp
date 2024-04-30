@@ -12,7 +12,7 @@ import { UsersService } from './users.service';
 import { User } from './entities/user.entity';
 import { UpdateUserInput } from './dto/update-user.input';
 import { Cart } from 'src/carts/entities/cart.entity';
-import { UseGuards, Request } from '@nestjs/common';
+import { UseGuards } from '@nestjs/common';
 import { CurrentUser, JwtAuthGuard } from 'src/guard/jwt-auth.guard';
 
 @Resolver(() => User)

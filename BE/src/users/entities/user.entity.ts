@@ -1,4 +1,10 @@
-import { ObjectType, Field, Int, ID } from '@nestjs/graphql';
+import {
+  ObjectType,
+  Field,
+  Int,
+  ID,
+  GraphQLISODateTime,
+} from '@nestjs/graphql';
 import { Cart } from 'src/carts/entities/cart.entity';
 
 @ObjectType()
@@ -13,13 +19,13 @@ export class User {
   email: string;
 
   @Field({ nullable: true })
-  birthDate: string; //"YYYY-MM-DD"
+  birthDate: string;
 
   @Field({ nullable: true })
-  phoneNumber: string; //"YYYY-MM-DD"
+  phoneNumber: string;
 
   @Field({ nullable: true })
-  gender: string; //"YYYY-MM-DD"
+  gender: string;
 
   @Field(() => Int, { defaultValue: true })
   status: number;
@@ -27,9 +33,9 @@ export class User {
   @Field((type) => [Cart], { defaultValue: [] })
   cart: Cart[];
 
-  @Field()
-  createdAt: string; //"YYYY-MM-DD"
+  @Field(() => GraphQLISODateTime)
+  createdAt: Date;
 
-  @Field()
-  updatedAt: string; //"YYYY-MM-DD"
+  @Field(() => GraphQLISODateTime)
+  updatedAt: Date;
 }
