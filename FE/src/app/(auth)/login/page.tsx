@@ -4,7 +4,7 @@ export default function Login() {
   return (
     <>
       <h1>login</h1>
-      <Button variant="outline">Button</Button>
+      <Button variant="destructive">Button</Button>
     </>
   );
 }
