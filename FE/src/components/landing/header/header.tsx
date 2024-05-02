@@ -7,7 +7,7 @@ import { IoCart } from "react-icons/io5";
 const LandingHeader = () => {
   return (
     <header className="flex bg-white pl-40 pr-40 pt-5 pb-5 text-black justify-between items-center">
-      <img src="icon.jpg" className="w-20 h-20" alt="icon" />
+      <img src="shopp_bg.png" className="w-60" alt="icon" />
       <div className="flex w-full max-w-2xl items-center">
         <SearchDropdown />
         <Input

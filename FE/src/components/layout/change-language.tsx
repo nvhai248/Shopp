@@ -15,12 +15,12 @@ import {
 import { Globe2Icon } from "lucide-react";
 
 export function ChangeLanguageDropDown() {
-  const [position, setPosition] = React.useState("bottom");
+  const [position, setPosition] = React.useState("en");
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Globe2Icon className="h-4 w-4" />
+        <Globe2Icon className="h-4 w-4 hover:cursor-pointer" />
       </DropdownMenuTrigger>
       <DropdownMenuContent className="rounded-none">
         <DropdownMenuLabel>Language</DropdownMenuLabel>
