@@ -4,20 +4,16 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Button } from "../ui/button";
 import { ChevronDown } from "lucide-react";
 
 const SearchDropdown = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
-        <Button
-          className="bg-white text-black border hover:bg-white rounded-none"
-          type="button"
-        >
-          All collections
+        <div className="flex bg-white pt-3 text-black text-center border w-40 h-12 hover:bg-blue rounded-none">
+          <p className="pl-2 mr-5">All collections</p>
           <ChevronDown />
-        </Button>
+        </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="rounded-none">
         <DropdownMenuItem>Collection 1 </DropdownMenuItem>

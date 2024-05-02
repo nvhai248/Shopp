@@ -15,7 +15,7 @@ const MainHeader = () => {
   return (
     <header className="flex bg-blue-700 pl-40 pr-40 text-white justify-between items-center h-10 shadow-md">
       <div>
-        <a href="/seller" className="hover:text-black">
+        <a href="/" className="hover:text-black">
           GO TO SELLER PAGE
         </a>
       </div>

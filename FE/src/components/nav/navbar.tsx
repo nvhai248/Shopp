@@ -1,3 +1,4 @@
+import { Divide } from "lucide-react";
 import CollectionDropDown from "./collection-dropdown";
 
 const MainNavBar = () => {

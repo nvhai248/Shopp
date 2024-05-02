@@ -1,4 +1,4 @@
-import LandingHeader from "@/components/landing/header";
+import LandingHeader from "@/components/landing/header/header";
 import MainNavBar from "@/components/nav/navbar";
 
 export default function Home() {

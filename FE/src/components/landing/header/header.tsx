@@ -10,8 +10,12 @@ const LandingHeader = () => {
       <img src="icon.jpg" className="w-20 h-20" alt="icon" />
       <div className="flex w-full max-w-2xl items-center">
         <SearchDropdown />
-        <Input className="rounded-none" type="email" placeholder="Search..." />
-        <Button className="rounded-none bg-blue-700" type="button">
+        <Input
+          className="rounded-none h-12"
+          type="email"
+          placeholder="Search..."
+        />
+        <Button className="rounded-none bg-blue-700 h-12" type="submit">
           {" "}
           <SearchIcon />{" "}
         </Button>
