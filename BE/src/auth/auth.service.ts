@@ -7,8 +7,11 @@ import { BadRequestError, UnAuthorizedError } from 'src/utils/error';
 import { FormatUser } from 'src/utils/formatResult';
 import { JwtService, JwtSignOptions } from '@nestjs/jwt';
 import { JwtPayload } from 'src/interfaces/jwt-payload.interface';
-import { CurrentUser } from 'src/guard/jwt-auth.guard';
 
+const accessTokenSecret = process.env.SECRET_ACCESS_TOKEN_KEY,
+  refreshTokenSecret = process.env.SECRET_ACCESS_REFRESH_KEY,
+  expired_accessToken = 60 * 60 * 3,
+  expired_refreshToken = 60 * 60 * 24 * 30;
 @Injectable()
 export class AuthService {
   constructor(
@@ -16,41 +19,55 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async validateUserByJwt(payload: JwtPayload): Promise<any> {
+  async validateUserByJwtAccessToken(payload: JwtPayload): Promise<any> {
+    return await this.userRepository.findOneById(payload.userId);
+  }
+
+  async validateUserByJwtRefreshToken(
+    payload: JwtPayload,
+    refreshToken: string,
+  ): Promise<any> {
+    if (
+      !(await this.userRepository.findRefreshToken(
+        refreshToken,
+        payload.userId,
+      ))
+    ) {
+      throw new UnAuthorizedError('Wrong refresh token, please login again.');
+    }
     return await this.userRepository.findOneById(payload.userId);
   }
 
   async generateJwtToken(
-    userId: number,
-    role: string,
-    expired: number = 60 * 60 * 3,
+    payload: JwtPayload,
+    expiresIn: number,
+    secret: string,
   ): Promise<string> {
-    const payload: JwtPayload = { userId: userId, role: role };
     const options: JwtSignOptions = {
-      expiresIn: expired,
+      expiresIn,
+      secret,
     };
-
-    const tokenString = this.jwtService.sign(payload, options);
-    return tokenString;
+    return this.jwtService.sign(payload, options);
   }
 
-  async register(registerInput: RegisterInput) {
+  async register(registerInput: RegisterInput): Promise<AuthOutput> {
     try {
       const salt = await GenSalt();
       registerInput.password = await HashPW(registerInput.password, salt);
-      let user = await this.userRepository.create(registerInput, salt);
+      const user = await this.userRepository.create(registerInput, salt);
 
-      const expired = 60 * 60 * 3;
       const accessToken = await this.generateJwtToken(
-        user.id,
-        user.role,
-        expired,
+        { userId: user.id, role: user.role },
+        expired_accessToken,
+        accessTokenSecret,
       );
 
       return {
         accessToken: accessToken,
-        expired_accessToken: expired,
-        user: FormatUser(user),
+        expired_accessToken: expired_accessToken,
+        refreshToken: null,
+        expired_refreshToken: null,
+        data: FormatUser(user),
       };
     } catch (error) {
       if (error.code === 'P2002' && error.meta.target.includes('email')) {
@@ -60,57 +77,62 @@ export class AuthService {
     }
   }
 
-  async login(loginInput: LoginInput) {
+  async login(loginInput: LoginInput): Promise<AuthOutput> {
     const user = await this.userRepository.findOneByEmail(loginInput.email);
 
-    if (user && !(await IsCorrectPW(user.password, loginInput.password))) {
+    if (!user) {
+      throw new UnAuthorizedError('Username or password is incorrect!');
+    }
+    if (!(await IsCorrectPW(user.password, loginInput.password))) {
       throw new UnAuthorizedError('Username or password is incorrect!');
     }
 
+    const payload: JwtPayload = { userId: user.id, role: user.role };
+
+    let refreshToken = null;
+
     if (loginInput.isRememberMe) {
-      const expired_rfTk = 60 * 60 * 24 * 7;
-      const refreshToken = await this.generateJwtToken(
-        user.id,
-        user.role,
-        expired_rfTk,
+      refreshToken = await this.generateJwtToken(
+        payload,
+        expired_refreshToken,
+        refreshTokenSecret,
       );
 
-      this.userRepository.deleteRefreshToken(user.id);
-
+      await this.userRepository.deleteRefreshToken(user.id);
       await this.userRepository.createNewRefreshToken(
         refreshToken,
         user.id,
-        expired_rfTk,
+        expired_refreshToken,
       );
-
-      return {
-        accessToken: await this.generateJwtToken(user.id, user.role),
-        refreshToken: refreshToken,
-        expired_accessToken: 60 * 60 * 3,
-        expired_refreshToken: expired_rfTk,
-        user: FormatUser(user),
-      };
-    } else {
-      return {
-        accessToken: await this.generateJwtToken(user.id, user.role),
-        expired_accessToken: 60 * 60 * 3,
-        user: FormatUser(user),
-      };
     }
+    return {
+      accessToken: await this.generateJwtToken(
+        payload,
+        expired_accessToken,
+        accessTokenSecret,
+      ),
+      refreshToken,
+      expired_accessToken: expired_accessToken,
+      expired_refreshToken: expired_refreshToken,
+      data: FormatUser(user),
+    };
   }
 
-  async logout(id: number): Promise<boolean> {
-    if (await this.userRepository.deleteRefreshToken(id)) return true;
-    return false;
+  async logout(userId: number) {
+    return await this.userRepository.deleteRefreshToken(userId);
   }
 
-  async refreshAccessToken(@CurrentUser() userId: number, role: string) {
-    const expired = 60 * 60 * 3;
-    const token = await this.generateJwtToken(userId, role);
+  async refreshAccessToken(userId: number, role: string) {
+    const payload: JwtPayload = { userId, role };
+    const accessToken = await this.generateJwtToken(
+      payload,
+      expired_accessToken,
+      accessTokenSecret,
+    );
 
     return {
-      accessToken: token,
-      expired_accessToken: expired,
+      accessToken,
+      expired_accessToken: expired_accessToken,
     };
   }
 }

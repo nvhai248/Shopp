@@ -53,4 +53,10 @@ export class UserRepository {
       throw new DBError(error.message);
     }
   }
+
+  async findRefreshToken(refreshToken: string, userId: number) {
+    return await this.databaseService.refreshToken.findFirst({
+      where: { refreshToken: refreshToken, userId: userId },
+    });
+  }
 }

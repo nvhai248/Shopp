@@ -3,7 +3,7 @@ import { ProductsService } from './products.service';
 import { Product } from './entities/product.entity';
 import { CreateProductInput } from './dto/create-product.input';
 import { UpdateProductInput } from './dto/update-product.input';
-import { CurrentUser, JwtAuthGuard } from 'src/guard/jwt-auth.guard';
+import { CurrentUser, JwtAccessAuthGuard } from 'src/guard/jwt-auth.guard';
 import { UseGuards } from '@nestjs/common';
 
 @Resolver(() => Product)
@@ -11,7 +11,7 @@ export class ProductsResolver {
   constructor(private readonly productsService: ProductsService) {}
 
   @Mutation(() => Product)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAccessAuthGuard)
   createProduct(
     @Args('createProductInput') createProductInput: CreateProductInput,
     @CurrentUser() user: any,

@@ -1,5 +1,4 @@
-import { ObjectType, Field, Int } from '@nestjs/graphql';
-import { User } from 'src/users/entities/user.entity';
+import { ObjectType, Field } from '@nestjs/graphql';
 
 @ObjectType()
 export class LogoutResponse {

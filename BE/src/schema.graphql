@@ -47,10 +47,8 @@ type User {
 
 type AuthResponse {
   accessToken: String
-  refreshToken: String
   expired_accessToken: Int
-  expired_refreshToken: Int
-  user: User
+  data: User
 }
 
 type LogoutResponse {
