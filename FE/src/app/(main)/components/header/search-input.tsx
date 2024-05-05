@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { SearchIcon } from "lucide-react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import SearchDropdown from "./search-dropdown";
 
 const SearchInput = () => {
   const router = useRouter();
@@ -21,7 +22,7 @@ const SearchInput = () => {
 
   return (
     <div className="flex w-full max-w-2xl items-center">
-      {/* SearchDropdown component */}
+      <SearchDropdown />
       <Input
         className="rounded-none h-12"
         type="text"

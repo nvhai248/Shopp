@@ -9,6 +9,12 @@ export class AuthResponse {
   @Field(() => Int, { nullable: true })
   expired_accessToken: number;
 
+  @Field({ nullable: true })
+  refreshToken: string;
+
+  @Field(() => Int, { nullable: true })
+  expired_refreshToken: number;
+
   @Field(() => User, { nullable: true })
   data: User;
 }

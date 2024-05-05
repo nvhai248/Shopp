@@ -48,6 +48,8 @@ type User {
 type AuthResponse {
   accessToken: String
   expired_accessToken: Int
+  refreshToken: String
+  expired_refreshToken: Int
   data: User
 }
 
