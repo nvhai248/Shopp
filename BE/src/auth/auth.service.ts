@@ -3,7 +3,10 @@ import { UserRepository } from 'src/users/user.repository';
 import { LoginInput } from './dto/login.input';
 import { GenSalt, HashPW, IsCorrectPW } from 'src/utils/hasher';
 import { RegisterInput } from './dto/register.input';
-import { BadRequestError, UnAuthorizedError } from 'src/utils/error';
+import {
+  MyBadRequestException,
+  MyUnAuthorizedException,
+} from 'src/utils/error';
 import { FormatUser } from 'src/utils/formatResult';
 import { JwtService, JwtSignOptions } from '@nestjs/jwt';
 import { JwtPayload } from 'src/interfaces/jwt-payload.interface';
@@ -33,7 +36,9 @@ export class AuthService {
     );
 
     if (!token) {
-      throw new UnAuthorizedError('Wrong refresh token, please login again.');
+      throw new MyUnAuthorizedException(
+        'Wrong refresh token, please login again.',
+      );
     }
     return;
   }
@@ -71,7 +76,7 @@ export class AuthService {
       };
     } catch (error) {
       if (error.code === 'P2002' && error.meta.target.includes('email')) {
-        throw new BadRequestError('Email already exists');
+        throw new MyBadRequestException('Email already exists');
       }
       throw error;
     }
@@ -81,10 +86,10 @@ export class AuthService {
     const user = await this.userRepository.findOneByEmail(loginInput.email);
 
     if (!user) {
-      throw new UnAuthorizedError('Username or password is incorrect!');
+      throw new MyUnAuthorizedException('Username or password is incorrect!');
     }
     if (!(await IsCorrectPW(user.password, loginInput.password))) {
-      throw new UnAuthorizedError('Username or password is incorrect!');
+      throw new MyUnAuthorizedException('Username or password is incorrect!');
     }
 
     const payload: JwtPayload = { userId: user.id, role: user.role };

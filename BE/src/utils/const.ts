@@ -5,6 +5,7 @@ export enum GRAPHQL_CODE_ERROR {
   BadRequest = ApolloServerErrorCode.BAD_REQUEST,
   UnAuthorizedError = 'UNAUTHORIZED_ERROR',
   DBError = 'DB_ERROR',
+  ForbiddenError = 'FORBIDDEN_ERROR',
 }
 
 export enum DB_TYPES {

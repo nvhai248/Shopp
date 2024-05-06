@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { DatabaseService } from 'src/database/database.service';
 import { UserRegisterInput } from './dto/create-user.input';
-import { DBError } from 'src/utils/error';
+import { MyDBException } from 'src/utils/error';
 
 @Injectable()
 export class UserRepository {
@@ -50,7 +50,7 @@ export class UserRepository {
       });
     } catch (error) {
       console.error(error.message);
-      throw new DBError(error.message);
+      throw new MyDBException(error.message);
     }
   }
 

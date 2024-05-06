@@ -1,7 +1,7 @@
 import { ConflictException, Injectable } from '@nestjs/common';
 import { UserRegisterInput } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.input';
-import { DBError } from 'src/utils/error';
+import { MyDBException } from 'src/utils/error';
 import { UserRepository } from './user.repository';
 import { unmaskId } from 'src/utils/mask';
 import { DB_TYPES } from 'src/utils/const';
@@ -21,7 +21,7 @@ export class UsersService {
       );
 
       if (!user) {
-        throw new DBError('User not found');
+        throw new MyDBException('User not found');
       }
 
       return user;
@@ -35,7 +35,7 @@ export class UsersService {
       const user = await this.userRepository.findOneByEmail(email);
 
       if (!user) {
-        throw new DBError('User not found');
+        throw new MyDBException('User not found');
       }
 
       return user;

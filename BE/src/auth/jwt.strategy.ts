@@ -6,7 +6,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { AuthService } from './auth.service';
 import { JwtPayload } from 'src/interfaces/jwt-payload.interface';
-import { UnAuthorizedError } from 'src/utils/error';
+import { MyUnAuthorizedException } from 'src/utils/error';
 
 @Injectable()
 export class JwtAccessStrategy extends PassportStrategy(Strategy, 'access') {
@@ -25,7 +25,7 @@ export class JwtAccessStrategy extends PassportStrategy(Strategy, 'access') {
     const user = await this.authService.validateUserByPayload(payload);
 
     if (!user) {
-      throw new UnAuthorizedError('Invalid access token');
+      throw new MyUnAuthorizedException('Invalid access token');
     }
 
     return user;
@@ -48,7 +48,7 @@ export class JwtRefreshStrategy extends PassportStrategy(Strategy, 'refresh') {
     const user = await this.authService.validateUserByPayload(payload);
 
     if (!user) {
-      throw new UnAuthorizedError('Invalid JWT');
+      throw new MyUnAuthorizedException('Invalid JWT');
     }
 
     return user;

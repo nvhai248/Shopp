@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { DatabaseService } from 'src/database/database.service';
 import { GENDER } from 'src/utils/const';
-import { DBError } from 'src/utils/error';
+import { MyDBException } from 'src/utils/error';
 import { CreateProductInput } from './dto/create-product.input';
 
 @Injectable()
@@ -37,7 +37,7 @@ export class ProductRepository {
         },
       });
     } catch (error) {
-      throw new DBError(error.message);
+      throw new MyDBException(error.message);
     }
   }
 

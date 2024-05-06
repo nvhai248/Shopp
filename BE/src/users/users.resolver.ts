@@ -14,6 +14,7 @@ import { UpdateUserInput } from './dto/update-user.input';
 import { Cart } from 'src/carts/entities/cart.entity';
 import { UseGuards } from '@nestjs/common';
 import { CurrentUser, JwtAccessAuthGuard } from 'src/guard/jwt-auth.guard';
+import { RequireActiveGuard } from 'src/guard/require-active.guard';
 
 @Resolver(() => User)
 export class UsersResolver {
@@ -30,7 +31,7 @@ export class UsersResolver {
   }
 
   @Query(() => User)
-  @UseGuards(JwtAccessAuthGuard)
+  @UseGuards(JwtAccessAuthGuard, RequireActiveGuard)
   getProfile(@CurrentUser() user: User) {
     return this.usersService.findOne(user.id);
   }

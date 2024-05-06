@@ -7,7 +7,7 @@ import { UsersModule } from './users/users.module';
 import { CartsModule } from './carts/carts.module';
 import { DatabaseModule } from './database/database.module';
 import { APP_FILTER, APP_GUARD } from '@nestjs/core';
-import { GraphQLErrorFilter } from './app.errorFilter';
+import { FormatError, GraphQLErrorFilter } from './utils/handle-exception';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 
@@ -20,6 +20,9 @@ import { ConfigModule } from '@nestjs/config';
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), 'src/schema.graphql'),
+      formatError(error) {
+        return FormatError(error);
+      },
     }),
     ProductsModule,
     UsersModule,

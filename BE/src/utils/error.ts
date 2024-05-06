@@ -1,34 +1,45 @@
 import { GraphQLError } from 'graphql';
 import { GRAPHQL_CODE_ERROR } from './const';
-import { HttpStatus } from '@nestjs/common';
 
-export class MyCustomError extends GraphQLError {
+export class MyCustomException extends GraphQLError {
   constructor(
     message: string,
-    private readonly code: number = HttpStatus.INTERNAL_SERVER_ERROR,
+    private readonly code: string = GRAPHQL_CODE_ERROR.BadRequest,
   ) {
-    super(message);
-    this.name = 'MyCustomError';
+    super(message, {
+      extensions: {
+        code: code,
+      },
+    });
   }
 }
 
-export class UnAuthorizedError extends MyCustomError {
+export class MyUnAuthorizedException extends MyCustomException {
   constructor(message: string) {
-    super(message);
-    this.name = GRAPHQL_CODE_ERROR.UnAuthorizedError;
+    super(message, GRAPHQL_CODE_ERROR.UnAuthorizedError);
   }
 }
 
-export class BadRequestError extends MyCustomError {
+export class MyBadRequestException extends MyCustomException {
   constructor(message: string) {
-    super(message);
-    this.name = GRAPHQL_CODE_ERROR.BadRequest;
+    super(message, GRAPHQL_CODE_ERROR.BadRequest);
   }
 }
 
-export class DBError extends MyCustomError {
+export class MyDBException extends MyCustomException {
   constructor(message: string) {
-    super(message);
-    this.name = GRAPHQL_CODE_ERROR.DBError;
+    super(message, GRAPHQL_CODE_ERROR.DBError);
+  }
+}
+
+export class MyForbiddenException extends MyCustomException {
+  constructor(message: string) {
+    super(message, GRAPHQL_CODE_ERROR.ForbiddenError);
+  }
+}
+
+export class MyInternalServerException extends MyCustomException {
+  constructor(message: string) {
+    super(message, GRAPHQL_CODE_ERROR.InternalServerError);
   }
 }
