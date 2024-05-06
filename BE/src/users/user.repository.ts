@@ -36,9 +36,9 @@ export class UserRepository {
     });
   }
 
-  async deleteRefreshToken(userId: number) {
+  async deleteRefreshToken(userId: number, refreshToken: string) {
     return await this.databaseService.refreshToken.deleteMany({
-      where: { userId },
+      where: { userId: userId, refreshToken: refreshToken },
     });
   }
 

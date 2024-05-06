@@ -19,23 +19,23 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async validateUserByJwtAccessToken(payload: JwtPayload): Promise<any> {
+  async validateUserByPayload(payload: JwtPayload): Promise<any> {
     return await this.userRepository.findOneById(payload.userId);
   }
 
   async validateUserByJwtRefreshToken(
-    payload: JwtPayload,
+    userId: number,
     refreshToken: string,
   ): Promise<any> {
-    if (
-      !(await this.userRepository.findRefreshToken(
-        refreshToken,
-        payload.userId,
-      ))
-    ) {
+    const token = await this.userRepository.findRefreshToken(
+      refreshToken,
+      userId,
+    );
+
+    if (!token) {
       throw new UnAuthorizedError('Wrong refresh token, please login again.');
     }
-    return await this.userRepository.findOneById(payload.userId);
+    return;
   }
 
   async generateJwtToken(
@@ -98,7 +98,6 @@ export class AuthService {
         refreshTokenSecret,
       );
 
-      await this.userRepository.deleteRefreshToken(user.id);
       await this.userRepository.createNewRefreshToken(
         refreshToken,
         user.id,
@@ -118,8 +117,10 @@ export class AuthService {
     };
   }
 
-  async logout(userId: number) {
-    return await this.userRepository.deleteRefreshToken(userId);
+  async logout(userId: number, refreshToken: string) {
+    return (await this.userRepository.deleteRefreshToken(userId, refreshToken))
+      ? true
+      : false;
   }
 
   async refreshAccessToken(userId: number, role: string) {

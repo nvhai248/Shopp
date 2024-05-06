@@ -2,11 +2,12 @@
 
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PassportStrategy } from '@nestjs/passport';
-import { ExecutionContext, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { AuthService } from './auth.service';
 import { JwtPayload } from 'src/interfaces/jwt-payload.interface';
 import { UnAuthorizedError } from 'src/utils/error';
+
 @Injectable()
 export class JwtAccessStrategy extends PassportStrategy(Strategy, 'access') {
   constructor(
@@ -21,7 +22,7 @@ export class JwtAccessStrategy extends PassportStrategy(Strategy, 'access') {
   }
 
   async validate(payload: JwtPayload) {
-    const user = await this.authService.validateUserByJwtAccessToken(payload);
+    const user = await this.authService.validateUserByPayload(payload);
 
     if (!user) {
       throw new UnAuthorizedError('Invalid access token');
@@ -43,26 +44,8 @@ export class JwtRefreshStrategy extends PassportStrategy(Strategy, 'refresh') {
     });
   }
 
-  async validate(payload: JwtPayload, context: ExecutionContext) {
-    const request = context.switchToHttp().getRequest();
-
-    // Retrieve the refresh token from the request headers
-    const authHeader = request.headers['authorization'];
-
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      throw new UnAuthorizedError('Invalid authorization header');
-    }
-
-    const refreshToken = authHeader.substring(7); // Remove 'Bearer ' prefix
-
-    if (!refreshToken) {
-      throw new UnAuthorizedError('No refresh token provided');
-    }
-
-    const user = await this.authService.validateUserByJwtRefreshToken(
-      payload,
-      refreshToken,
-    );
+  async validate(payload: JwtPayload) {
+    const user = await this.authService.validateUserByPayload(payload);
 
     if (!user) {
       throw new UnAuthorizedError('Invalid JWT');
