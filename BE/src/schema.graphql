@@ -69,6 +69,8 @@ type Mutation {
   createProduct(createProductInput: CreateProductInput!): Product!
   updateProduct(updateProductInput: UpdateProductInput!): Product!
   removeProduct(id: Int!): Product!
+  requireSendEmailVerifyUser: Boolean!
+  verifyUser(otp: String!): Boolean!
   updateProfile(updateUserInput: UpdateUserInput!): User!
   removeUser(id: ID!): User!
   addProductToCart(productId: String!, quantity: Float!): Cart!

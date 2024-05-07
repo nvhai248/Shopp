@@ -6,14 +6,10 @@ import { RegisterInput } from './dto/register.input';
 import { UseGuards } from '@nestjs/common';
 import { CurrentUser, JwtRefreshAuthGuard } from 'src/guard/jwt-auth.guard';
 import { LogoutResponse } from './entities/logout.entity';
-import { MailerService } from '@nestjs-modules/mailer';
 
 @Resolver()
 export class AuthResolver {
-  constructor(
-    private readonly authService: AuthService,
-    private readonly mailerService: MailerService,
-  ) {}
+  constructor(private readonly authService: AuthService) {}
 
   @Mutation(() => AuthResponse)
   async login(@Args('loginInput') loginInput: LoginInput) {
@@ -37,14 +33,6 @@ export class AuthResolver {
   @Mutation(() => AuthResponse)
   async refreshAccessToken(@CurrentUser() user: any) {
     await this.authService.validateUserByJwtRefreshToken(user.id, user.token);
-
-    this.mailerService
-      .sendMail({
-        to: user.email,
-        subject: 'Access token',
-        text: 'Hehe',
-      })
-      .catch((error) => console.log('Error sending email:', error));
 
     return this.authService.refreshAccessToken(user.id, user.role);
   }

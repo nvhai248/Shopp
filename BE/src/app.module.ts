@@ -7,7 +7,7 @@ import { UsersModule } from './users/users.module';
 import { CartsModule } from './carts/carts.module';
 import { DatabaseModule } from './database/database.module';
 import { APP_FILTER } from '@nestjs/core';
-import { FormatError, GraphQLErrorFilter } from './utils/handle-exception';
+import { FormatError, GraphQLErrorFilter } from './utils/handleException';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MailerModule } from '@nestjs-modules/mailer';

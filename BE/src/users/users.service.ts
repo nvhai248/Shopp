@@ -52,6 +52,10 @@ export class UsersService {
     return `This action removes a #${id} user`;
   }
 
+  async updateUserStatus(id: number, status: number) {
+    await this.userRepository.updateOne(id, { status: status });
+  }
+
   getUserCart(id: string) {
     const products = [];
 
