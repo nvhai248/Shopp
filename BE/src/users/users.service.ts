@@ -5,6 +5,7 @@ import { MyDBException } from 'src/utils/error';
 import { UserRepository } from './user.repository';
 import { unmaskId } from 'src/utils/mask';
 import { DB_TYPES } from 'src/utils/const';
+import { FormatUser } from 'src/utils/formatResult';
 
 @Injectable()
 export class UsersService {
@@ -24,7 +25,7 @@ export class UsersService {
         throw new MyDBException('User not found');
       }
 
-      return user;
+      return FormatUser(user);
     } catch (error) {
       throw error;
     }

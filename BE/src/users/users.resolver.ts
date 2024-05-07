@@ -14,7 +14,7 @@ import { Cart } from 'src/carts/entities/cart.entity';
 import { UseGuards } from '@nestjs/common';
 import { CurrentUser, JwtAccessAuthGuard } from 'src/guard/jwt-auth.guard';
 import { RequireActiveGuard } from 'src/guard/require-active.guard';
-import { OtpService } from './otp.service';
+import { OtpService } from '../shared/mailer/otp.service';
 import { MailerService } from '@nestjs-modules/mailer';
 import { NewVerificationEmailOption } from 'src/utils/templateEmail';
 import { USER_STATUS } from 'src/utils/const';
@@ -29,12 +29,10 @@ export class UsersResolver {
 
   @Mutation(() => Boolean)
   @UseGuards(JwtAccessAuthGuard)
-  async requireSendEmailVerifyUser(
-    @CurrentUser() user: User,
-  ): Promise<boolean> {
-    const id = user.id;
+  async requireSendEmailVerifyUser(@CurrentUser() user: any): Promise<boolean> {
+    const secret = user.secretOtp;
 
-    const otp = this.otpService.generateOtp(id);
+    const otp = await this.otpService.generateOtp(secret);
 
     // Send the OTP to the user via email
     this.mailerService
@@ -49,17 +47,17 @@ export class UsersResolver {
   @Mutation(() => Boolean)
   @UseGuards(JwtAccessAuthGuard)
   async verifyUser(
-    @CurrentUser() user: User,
+    @CurrentUser() user: any,
     @Args('otp') otp: string,
   ): Promise<Boolean> {
-    const id = user.id;
+    const secret = user.secretOtp;
 
     // Verify OTP entered by the user
-    const otpIsValid = this.otpService.verifyOtp(id, otp);
+    const otpIsValid = this.otpService.verifyOtp(secret, otp);
 
     if (otpIsValid) {
       await this.usersService.updateUserStatus(
-        parseInt(id),
+        parseInt(user.id),
         USER_STATUS.ACTIVE,
       );
     }

@@ -10,6 +10,7 @@ import {
 import { FormatUser } from 'src/utils/formatResult';
 import { JwtService, JwtSignOptions } from '@nestjs/jwt';
 import { JwtPayload } from 'src/interfaces/jwt-payload.interface';
+import { OtpService } from 'src/shared/mailer/otp.service';
 
 const accessTokenSecret = process.env.SECRET_ACCESS_TOKEN_KEY,
   refreshTokenSecret = process.env.SECRET_ACCESS_REFRESH_KEY,
@@ -20,6 +21,7 @@ export class AuthService {
   constructor(
     private readonly userRepository: UserRepository,
     private readonly jwtService: JwtService,
+    private readonly otpService: OtpService,
   ) {}
 
   async validateUserByPayload(payload: JwtPayload): Promise<any> {
@@ -60,6 +62,7 @@ export class AuthService {
       const salt = await GenSalt();
       registerInput.password = await HashPW(registerInput.password, salt);
       const user = await this.userRepository.create(registerInput, salt);
+      await this.otpService.generateSecret(user.id);
 
       const accessToken = await this.generateJwtToken(
         { userId: user.id, role: user.role },
