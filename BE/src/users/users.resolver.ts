@@ -31,13 +31,13 @@ export class UsersResolver {
   }
 
   @Query(() => User)
-  @UseGuards(JwtAccessAuthGuard, RequireActiveGuard)
+  @UseGuards(JwtAccessAuthGuard)
   getProfile(@CurrentUser() user: User) {
     return this.usersService.findOne(user.id);
   }
 
   @Mutation(() => User)
-  @UseGuards(JwtAccessAuthGuard)
+  @UseGuards(JwtAccessAuthGuard, RequireActiveGuard)
   updateProfile(
     @Args('updateUserInput') updateUserInput: UpdateUserInput,
     @CurrentUser() user: any,

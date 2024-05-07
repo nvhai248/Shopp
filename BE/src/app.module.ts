@@ -6,10 +6,11 @@ import { ProductsModule } from './products/products.module';
 import { UsersModule } from './users/users.module';
 import { CartsModule } from './carts/carts.module';
 import { DatabaseModule } from './database/database.module';
-import { APP_FILTER, APP_GUARD } from '@nestjs/core';
+import { APP_FILTER } from '@nestjs/core';
 import { FormatError, GraphQLErrorFilter } from './utils/handle-exception';
 import { AuthModule } from './auth/auth.module';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { MailerModule } from '@nestjs-modules/mailer';
 
 @Module({
   imports: [
@@ -23,6 +24,22 @@ import { ConfigModule } from '@nestjs/config';
       formatError(error) {
         return FormatError(error);
       },
+    }),
+    MailerModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        transport: {
+          service: 'Gmail',
+          auth: {
+            user: configService.get<string>('MAILER_USER'),
+            pass: configService.get<string>('MAILER_PASSWORD'),
+          },
+        },
+        defaults: {
+          from: `"HShopp" <${configService.get<string>('MAILER_USER')}>`,
+        },
+      }),
+      inject: [ConfigService],
     }),
     ProductsModule,
     UsersModule,
