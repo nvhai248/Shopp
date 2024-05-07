@@ -40,3 +40,22 @@ export function NewThankyouForRegisterEmailOption(
     `,
   };
 }
+
+export function NewRefreshPasswordEmailOption(
+  to: string,
+  name: string,
+  userId: string,
+): ISendMailOptions {
+  return {
+    to: to,
+    subject: 'HShopp - Refresh password!',
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <div style="text-align: center; padding: 20px 0;">
+          <h1 style="color: #333;">We recently send request refresh password, ${name}!</h1>
+          <p style="font-size: 16px;">Please click <a href="${CLIENT_SITE_DOMAIN}/refresh-password?id=${userId}">here</a> to reset your password!</p>
+        </div>
+      </div>
+    `,
+  };
+}

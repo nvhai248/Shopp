@@ -73,6 +73,7 @@ type Mutation {
   verifyUser(otp: String!): Boolean!
   updateProfile(updateUserInput: UpdateUserInput!): User!
   removeUser(id: ID!): User!
+  requireSendEmailResetPassword(email: String!): Boolean!
   addProductToCart(productId: String!, quantity: Float!): Cart!
   login(loginInput: LoginInput!): AuthResponse!
   register(registerInput: RegisterInput!): AuthResponse!

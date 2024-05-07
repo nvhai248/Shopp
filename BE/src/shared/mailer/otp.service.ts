@@ -1,11 +1,18 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import * as speakeasy from 'speakeasy';
+import { CacheService } from 'src/database/cache.service';
 import { DatabaseService } from 'src/database/database.service';
-import { MyBadRequestException } from 'src/utils/error';
+
+function genKey(userId: number, typeKey: string): string {
+  return `${userId}:${typeKey}`;
+}
 
 @Injectable()
 export class OtpService {
-  constructor(private readonly databaseService: DatabaseService) {}
+  constructor(
+    private readonly databaseService: DatabaseService,
+    private readonly cacheService: CacheService,
+  ) {}
 
   async generateSecret(id: number) {
     const secret = speakeasy.generateSecret({ length: 20 });
@@ -15,16 +22,35 @@ export class OtpService {
     });
   }
 
-  async generateOtp(secret: string): Promise<string> {
+  async generateOtp(
+    userId: number,
+    secret: string,
+    type: string,
+  ): Promise<string> {
     const token = speakeasy.totp({
       secret: secret,
       encoding: 'base32',
     }); // Your secret generation logic
 
+    await this.cacheService.set(`${genKey(userId, type)}`, token, {
+      ttl: 1000 * 60 * 60,
+    });
+
     return token;
   }
 
-  verifyOtp(secret: string, otp: string): boolean {
+  async verifyOtp(
+    userId: number,
+    secret: string,
+    otp: string,
+    type: string,
+  ): Promise<boolean> {
+    const isNotExpired = await this.cacheService.get(genKey(userId, type));
+
+    if (!isNotExpired) {
+      throw new BadRequestException('Expired credentials!');
+    }
+
     return speakeasy.totp.verify({
       secret: secret,
       encoding: 'base32',

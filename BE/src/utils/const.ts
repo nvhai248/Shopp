@@ -6,6 +6,7 @@ export enum GRAPHQL_CODE_ERROR {
   UnAuthorizedError = 'UNAUTHORIZED_ERROR',
   DBError = 'DB_ERROR',
   ForbiddenError = 'FORBIDDEN_ERROR',
+  NotFound = 'NOTFOUND_ERROR',
 }
 
 export enum DB_TYPES {
@@ -25,6 +26,11 @@ export enum GENDER {
   MALE = 'MALE',
   FEMALE = 'FEMALE',
   ALL = 'ALL',
+}
+
+export enum TYPE_KEY {
+  VERIFY = 'verify',
+  REFRESH_PASSWORD = 'refresh_password',
 }
 
 export const CLIENT_SITE_DOMAIN = process.env.CLIENT_SITE_DOMAIN;

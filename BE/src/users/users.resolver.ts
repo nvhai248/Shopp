@@ -17,7 +17,8 @@ import { RequireActiveGuard } from 'src/guard/require-active.guard';
 import { OtpService } from '../shared/mailer/otp.service';
 import { MailerService } from '@nestjs-modules/mailer';
 import { NewVerificationEmailOption } from 'src/utils/templateEmail';
-import { USER_STATUS } from 'src/utils/const';
+import { TYPE_KEY, USER_STATUS } from 'src/utils/const';
+import { MyNotFoundException } from 'src/utils/error';
 
 @Resolver(() => User)
 export class UsersResolver {
@@ -30,9 +31,11 @@ export class UsersResolver {
   @Mutation(() => Boolean)
   @UseGuards(JwtAccessAuthGuard)
   async requireSendEmailVerifyUser(@CurrentUser() user: any): Promise<boolean> {
-    const secret = user.secretOtp;
-
-    const otp = await this.otpService.generateOtp(secret);
+    const otp = await this.otpService.generateOtp(
+      user.id,
+      user.secretOtp,
+      TYPE_KEY.VERIFY,
+    );
 
     // Send the OTP to the user via email
     this.mailerService
@@ -50,10 +53,13 @@ export class UsersResolver {
     @CurrentUser() user: any,
     @Args('otp') otp: string,
   ): Promise<Boolean> {
-    const secret = user.secretOtp;
-
     // Verify OTP entered by the user
-    const otpIsValid = this.otpService.verifyOtp(secret, otp);
+    const otpIsValid = this.otpService.verifyOtp(
+      user.id,
+      user.secretOtp,
+      otp,
+      TYPE_KEY.VERIFY,
+    );
 
     if (otpIsValid) {
       await this.usersService.updateUserStatus(
@@ -98,5 +104,17 @@ export class UsersResolver {
   @ResolveField((returns) => [Cart], { name: 'cart' })
   getUserCart(@Parent() user: User) {
     return this.usersService.getUserCart(user.id);
+  }
+
+  @Mutation(() => Boolean)
+  async requireSendEmailResetPassword(@Args('email') email: string) {
+    const user = await this.usersService.findOneByEmail(email);
+
+    if (!user) {
+      throw new MyNotFoundException('User not found!');
+    }
+
+    /* this.mailerService.sendMail().catch((err) => console.log(err)); */
+    return true;
   }
 }

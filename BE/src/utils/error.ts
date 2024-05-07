@@ -35,6 +35,12 @@ export class MyBadRequestException extends MyCustomException {
   }
 }
 
+export class MyNotFoundException extends MyCustomException {
+  constructor(message: string) {
+    super(message, GRAPHQL_CODE_ERROR.NotFound, HttpStatus.NOT_FOUND);
+  }
+}
+
 export class MyDBException extends MyCustomException {
   constructor(message: string) {
     super(message, GRAPHQL_CODE_ERROR.DBError, HttpStatus.BAD_REQUEST);
