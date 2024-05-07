@@ -46,7 +46,9 @@ export class UsersService {
   }
 
   async update(id: number, updateUserInput: UpdateUserInput) {
-    return await this.userRepository.updateOne(id, updateUserInput);
+    const user = await this.userRepository.updateOne(id, updateUserInput);
+
+    return FormatUser(user);
   }
 
   remove(id: string) {

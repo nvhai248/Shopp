@@ -26,3 +26,6 @@ export enum GENDER {
   FEMALE = 'FEMALE',
   ALL = 'ALL',
 }
+
+export const CLIENT_SITE_DOMAIN = process.env.CLIENT_SITE_DOMAIN;
+export const SITE_PORT = process.env.SITE_PORT || 8080;

@@ -11,6 +11,8 @@ import { FormatUser } from 'src/utils/formatResult';
 import { JwtService, JwtSignOptions } from '@nestjs/jwt';
 import { JwtPayload } from 'src/interfaces/jwt-payload.interface';
 import { OtpService } from 'src/shared/mailer/otp.service';
+import { MailerService } from '@nestjs-modules/mailer';
+import { NewThankyouForRegisterEmailOption } from 'src/utils/templateEmail';
 
 const accessTokenSecret = process.env.SECRET_ACCESS_TOKEN_KEY,
   refreshTokenSecret = process.env.SECRET_ACCESS_REFRESH_KEY,
@@ -22,6 +24,7 @@ export class AuthService {
     private readonly userRepository: UserRepository,
     private readonly jwtService: JwtService,
     private readonly otpService: OtpService,
+    private readonly mailerService: MailerService,
   ) {}
 
   async validateUserByPayload(payload: JwtPayload): Promise<any> {
@@ -69,6 +72,10 @@ export class AuthService {
         expired_accessToken,
         accessTokenSecret,
       );
+
+      this.mailerService
+        .sendMail(NewThankyouForRegisterEmailOption(user.email, user.name))
+        .catch((err) => console.log(err));
 
       return {
         accessToken: accessToken,
