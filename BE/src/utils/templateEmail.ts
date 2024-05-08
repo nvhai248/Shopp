@@ -16,6 +16,7 @@ export function NewVerificationEmailOption(
           <p style="font-size: 18px;">To verify your account, please use the following OTP:</p>
           <h2 style="font-size: 36px; color: #007bff;">${code}</h2>
           <p style="font-size: 16px;">Please click <a href="${CLIENT_SITE_DOMAIN}/verification">here</a> to enter your code!</p>
+          <p style="font-size: 16px; color: red;">Code will expire in 1 minute!</p>
           <p style="font-size: 16px;">Thank you for using HShopp!</p>
         </div>
       </div>
@@ -45,6 +46,7 @@ export function NewRefreshPasswordEmailOption(
   to: string,
   name: string,
   userId: string,
+  token: number,
 ): ISendMailOptions {
   return {
     to: to,
@@ -53,7 +55,7 @@ export function NewRefreshPasswordEmailOption(
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
         <div style="text-align: center; padding: 20px 0;">
           <h1 style="color: #333;">We recently send request refresh password, ${name}!</h1>
-          <p style="font-size: 16px;">Please click <a href="${CLIENT_SITE_DOMAIN}/refresh-password?id=${userId}">here</a> to reset your password!</p>
+          <p style="font-size: 16px;">Please click <a href="${CLIENT_SITE_DOMAIN}/refresh-password?id=${userId}&token=${token}">here</a> to reset your password!</p>
         </div>
       </div>
     `,

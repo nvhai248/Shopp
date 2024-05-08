@@ -14,37 +14,20 @@ import { Cart } from 'src/carts/entities/cart.entity';
 import { UseGuards } from '@nestjs/common';
 import { CurrentUser, JwtAccessAuthGuard } from 'src/guard/jwt-auth.guard';
 import { RequireActiveGuard } from 'src/guard/require-active.guard';
-import { OtpService } from '../shared/mailer/otp.service';
-import { MailerService } from '@nestjs-modules/mailer';
-import { NewVerificationEmailOption } from 'src/utils/templateEmail';
-import { TYPE_KEY, USER_STATUS } from 'src/utils/const';
-import { MyNotFoundException } from 'src/utils/error';
+import { UserRefreshPasswordInput } from './dto/refreshPw.input';
 
 @Resolver(() => User)
 export class UsersResolver {
-  constructor(
-    private readonly usersService: UsersService,
-    private readonly otpService: OtpService,
-    private readonly mailerService: MailerService,
-  ) {}
+  constructor(private readonly usersService: UsersService) {}
 
   @Mutation(() => Boolean)
   @UseGuards(JwtAccessAuthGuard)
   async requireSendEmailVerifyUser(@CurrentUser() user: any): Promise<boolean> {
-    const otp = await this.otpService.generateOtp(
-      user.id,
+    return this.usersService.requireSendEmailVerifyUser(
+      user.email,
+      user.name,
       user.secretOtp,
-      TYPE_KEY.VERIFY,
     );
-
-    // Send the OTP to the user via email
-    this.mailerService
-      .sendMail(NewVerificationEmailOption(user.email, user.name, otp))
-      .catch((err) => {
-        console.log(err);
-      });
-
-    return true;
   }
 
   @Mutation(() => Boolean)
@@ -54,21 +37,7 @@ export class UsersResolver {
     @Args('otp') otp: string,
   ): Promise<Boolean> {
     // Verify OTP entered by the user
-    const otpIsValid = this.otpService.verifyOtp(
-      user.id,
-      user.secretOtp,
-      otp,
-      TYPE_KEY.VERIFY,
-    );
-
-    if (otpIsValid) {
-      await this.usersService.updateUserStatus(
-        parseInt(user.id),
-        USER_STATUS.ACTIVE,
-      );
-    }
-
-    return otpIsValid;
+    return this.usersService.verifyUser(user.id, user.secretOtp, otp);
   }
 
   @Query(() => [User], { name: 'users' })
@@ -108,13 +77,17 @@ export class UsersResolver {
 
   @Mutation(() => Boolean)
   async requireSendEmailResetPassword(@Args('email') email: string) {
-    const user = await this.usersService.findOneByEmail(email);
+    return this.usersService.requireSendEmailResetPassword(email);
+  }
 
-    if (!user) {
-      throw new MyNotFoundException('User not found!');
-    }
-
-    /* this.mailerService.sendMail().catch((err) => console.log(err)); */
-    return true;
+  @Mutation(() => Boolean)
+  async refreshUserPassword(
+    @Args('userRefreshPasswordInput') data: UserRefreshPasswordInput,
+  ) {
+    return this.usersService.refreshUserPassword(
+      data.id,
+      data.token,
+      data.password,
+    );
   }
 }

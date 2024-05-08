@@ -5,7 +5,7 @@ import { PassportModule } from '@nestjs/passport';
 import { UserRepository } from 'src/users/user.repository';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtAccessStrategy, JwtRefreshStrategy } from './jwt.strategy';
-import { OtpService } from 'src/shared/mailer/otp.service';
+import { OtpService } from 'src/shared/otp/otp.service';
 
 @Module({
   imports: [

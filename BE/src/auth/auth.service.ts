@@ -10,7 +10,7 @@ import {
 import { FormatUser } from 'src/utils/formatResult';
 import { JwtService, JwtSignOptions } from '@nestjs/jwt';
 import { JwtPayload } from 'src/interfaces/jwt-payload.interface';
-import { OtpService } from 'src/shared/mailer/otp.service';
+import { OtpService } from 'src/shared/otp/otp.service';
 import { MailerService } from '@nestjs-modules/mailer';
 import { NewThankyouForRegisterEmailOption } from 'src/utils/templateEmail';
 

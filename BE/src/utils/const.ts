@@ -29,8 +29,11 @@ export enum GENDER {
 }
 
 export enum TYPE_KEY {
-  VERIFY = 'verify',
   REFRESH_PASSWORD = 'refresh_password',
+}
+
+export function GenKey(userId: number, typeKey: string): string {
+  return `${userId}:${typeKey}`;
 }
 
 export const CLIENT_SITE_DOMAIN = process.env.CLIENT_SITE_DOMAIN;

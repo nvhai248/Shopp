@@ -74,6 +74,7 @@ type Mutation {
   updateProfile(updateUserInput: UpdateUserInput!): User!
   removeUser(id: ID!): User!
   requireSendEmailResetPassword(email: String!): Boolean!
+  refreshUserPassword(userRefreshPasswordInput: UserRefreshPasswordInput!): Boolean!
   addProductToCart(productId: String!, quantity: Float!): Cart!
   login(loginInput: LoginInput!): AuthResponse!
   register(registerInput: RegisterInput!): AuthResponse!
@@ -111,6 +112,12 @@ input UpdateUserInput {
   birthDate: String
   phoneNumber: String
   gender: String
+}
+
+input UserRefreshPasswordInput {
+  id: String!
+  token: String!
+  password: String!
 }
 
 input LoginInput {
