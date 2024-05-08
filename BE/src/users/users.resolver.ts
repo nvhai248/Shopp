@@ -9,12 +9,13 @@ import {
 } from '@nestjs/graphql';
 import { UsersService } from './users.service';
 import { User } from './entities/user.entity';
-import { UpdateUserInput } from './dto/update-user.input';
+import { UpdateUserInput } from './dto/updateUser.input';
 import { Cart } from 'src/carts/entities/cart.entity';
 import { UseGuards } from '@nestjs/common';
 import { CurrentUser, JwtAccessAuthGuard } from 'src/guard/jwt-auth.guard';
 import { RequireActiveGuard } from 'src/guard/require-active.guard';
 import { UserRefreshPasswordInput } from './dto/refreshPw.input';
+import { ChangePasswordInput } from './dto/changePw.input';
 
 @Resolver(() => User)
 export class UsersResolver {
@@ -88,6 +89,19 @@ export class UsersResolver {
       data.id,
       data.token,
       data.password,
+    );
+  }
+
+  @Mutation(() => Boolean)
+  @UseGuards(JwtAccessAuthGuard)
+  async changePassword(
+    @CurrentUser() user: any,
+    @Args('changePasswordInput') dto: ChangePasswordInput,
+  ) {
+    return this.usersService.changePassword(
+      user.id,
+      dto.currentPassword,
+      dto.newPassword,
     );
   }
 }

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { DatabaseService } from 'src/database/database.service';
-import { UserRegisterInput } from './dto/create-user.input';
+import { UserRegisterInput } from './dto/createUser.input';
 import { MyDBException } from 'src/utils/error';
 
 @Injectable()

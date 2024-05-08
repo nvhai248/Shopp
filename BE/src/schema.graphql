@@ -75,6 +75,7 @@ type Mutation {
   removeUser(id: ID!): User!
   requireSendEmailResetPassword(email: String!): Boolean!
   refreshUserPassword(userRefreshPasswordInput: UserRefreshPasswordInput!): Boolean!
+  changePassword(changePasswordInput: ChangePasswordInput!): Boolean!
   addProductToCart(productId: String!, quantity: Float!): Cart!
   login(loginInput: LoginInput!): AuthResponse!
   register(registerInput: RegisterInput!): AuthResponse!
@@ -118,6 +119,11 @@ input UserRefreshPasswordInput {
   id: String!
   token: String!
   password: String!
+}
+
+input ChangePasswordInput {
+  currentPassword: String!
+  newPassword: String!
 }
 
 input LoginInput {

@@ -54,8 +54,31 @@ export function NewRefreshPasswordEmailOption(
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
         <div style="text-align: center; padding: 20px 0;">
-          <h1 style="color: #333;">We recently send request refresh password, ${name}!</h1>
-          <p style="font-size: 16px;">Please click <a href="${CLIENT_SITE_DOMAIN}/refresh-password?id=${userId}&token=${token}">here</a> to reset your password!</p>
+          <h1 style="color: #333;">We recently sent a request to refresh your password, ${name}!</h1>
+          <p style="font-size: 16px;">Please click <a href="${CLIENT_SITE_DOMAIN}/refresh-password?id=${userId}&token=${token}" style="color: #007bff; text-decoration: none;">here</a> to reset your password.</p>
+          <p style="font-size: 16px; color: red;">This link will expire in 30 minutes.</p>
+        </div>
+      </div>
+    `,
+  };
+}
+
+export function NewNotificationDetectChangePasswordEmailOption(
+  to: string,
+  name: string,
+  userId: string,
+  token: number,
+): ISendMailOptions {
+  return {
+    to: to,
+    subject: 'HShopp - Detected password changed!',
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <div style="text-align: center; padding: 20px 0;">
+          <h1 style="color: #333;">We have detected a password change on your account, ${name}!</h1>
+          <h2 style="color: #333;">If this wasn't you, please click the button below to reset your password.</h2>
+          <a href="${CLIENT_SITE_DOMAIN}/refresh-password?id=${userId}&token=${token}" style="display: inline-block; background-color: #007bff; color: #fff; text-decoration: none; padding: 10px 20px; border-radius: 5px;">Reset Password</a>
+          <p style="font-size: 16px; color: red;">This link will expire in 30 minutes.</p>
         </div>
       </div>
     `,

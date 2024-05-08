@@ -1,6 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { UpdateUserInput } from './dto/update-user.input';
-import { MyBadRequestException, MyDBException } from 'src/utils/error';
+import { UpdateUserInput } from './dto/updateUser.input';
+import {
+  MyBadRequestException,
+  MyDBException,
+  MyUnAuthorizedException,
+} from 'src/utils/error';
 import { UserRepository } from './user.repository';
 import { unmaskId } from 'src/utils/mask';
 import { DB_TYPES, USER_STATUS, GenKey, TYPE_KEY } from 'src/utils/const';
@@ -8,13 +12,14 @@ import { FormatUser } from 'src/utils/formatResult';
 import { OtpService } from '../shared/otp/otp.service';
 import { MailerService } from '@nestjs-modules/mailer';
 import {
+  NewNotificationDetectChangePasswordEmailOption,
   NewRefreshPasswordEmailOption,
   NewVerificationEmailOption,
 } from 'src/utils/templateEmail';
 import { MyNotFoundException } from 'src/utils/error';
 import { CacheService } from 'src/database/cache.service';
 import { maskId } from 'src/utils/mask';
-import { HashPW } from 'src/utils/hasher';
+import { HashPW, IsCorrectPW } from 'src/utils/hasher';
 
 @Injectable()
 export class UsersService {
@@ -122,7 +127,7 @@ export class UsersService {
       {
         ttl: 1000 * 60 * 30,
       },
-    ); // expired in 1 minutes
+    ); // expired in 30 minutes
 
     this.mailerService
       .sendMail(
@@ -156,6 +161,44 @@ export class UsersService {
     const hashPw = await HashPW(password, user.salt);
 
     await this.userRepository.updateOne(id, { password: hashPw });
+    return true;
+  }
+
+  async changePassword(
+    userId: number,
+    currentPassword: string,
+    newPassword: string,
+  ) {
+    const user = await this.userRepository.findOneById(userId);
+
+    if (!IsCorrectPW(user.password, currentPassword)) {
+      throw new MyUnAuthorizedException('Invalid password!');
+    }
+    const hashPw = await HashPW(newPassword, user.salt);
+
+    await this.userRepository.updateOne(user.id, { password: hashPw });
+
+    const token = Date.now() % 100000;
+
+    await this.cacheService.set(
+      GenKey(user.id, TYPE_KEY.REFRESH_PASSWORD),
+      token,
+      {
+        ttl: 1000 * 60 * 30,
+      },
+    ); // expired in 30 minutes
+
+    this.mailerService
+      .sendMail(
+        NewNotificationDetectChangePasswordEmailOption(
+          user.email,
+          user.name,
+          maskId(user.id, DB_TYPES.USER),
+          token,
+        ),
+      )
+      .catch((err) => {});
+
     return true;
   }
 

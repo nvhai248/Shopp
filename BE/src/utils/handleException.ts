@@ -8,7 +8,6 @@ export class GraphQLErrorFilter implements ExceptionFilter {
   }
 }
 
-// Format exception return
 export function FormatError(error) {
   const originalError = error.extensions?.originalError;
 
@@ -16,10 +15,13 @@ export function FormatError(error) {
     return {
       message: error.message,
       code: error.extensions?.code,
+      stack: error.stack, // Return the stack trace
     };
   }
+
   return {
     message: originalError.message,
     code: error.extensions?.code,
+    stack: originalError.stack, // Return the stack trace of the original error
   };
 }
