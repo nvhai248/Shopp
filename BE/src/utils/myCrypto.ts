@@ -1,19 +1,30 @@
-import * as CryptoJS from 'crypto-js';
+import { HttpException, HttpStatus } from '@nestjs/common';
 
 const secretKey = process.env.CRYPTO_SECRET;
-
 // Function to encode JSON object to encrypted string
 export function EncodeToEncryptedString(data: object): string {
-  const encryptedData = CryptoJS.AES.encrypt(
-    JSON.stringify(data),
-    secretKey,
-  ).toString();
-  return encryptedData;
+  try {
+    const encryptedData = encodeURIComponent(JSON.stringify(data));
+    return encryptedData;
+  } catch (error) {
+    throw new HttpException(
+      'Internal error',
+      HttpStatus.INTERNAL_SERVER_ERROR,
+      error.message,
+    );
+  }
 }
 
 // Function to decode encrypted string to JSON object
 export function DecodeFromEncryptedString(encryptedString: string): object {
-  const bytes = CryptoJS.AES.decrypt(encryptedString, secretKey);
-  const decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
-  return decryptedData;
+  try {
+    const decryptedData = JSON.parse(decodeURIComponent(encryptedString));
+    return decryptedData;
+  } catch (error) {
+    throw new HttpException(
+      'Internal error',
+      HttpStatus.INTERNAL_SERVER_ERROR,
+      error.message,
+    );
+  }
 }

@@ -23,8 +23,6 @@ export class AuthController {
   async checkOauthByGoogle(@Query('token') token: string) {
     const userData = DecodeFromEncryptedString(token);
 
-    console.log(userData);
-
     try {
       const result = await this.authService.checkOauthByGoogle(userData);
 
