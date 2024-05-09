@@ -14,13 +14,13 @@ export class ProductsService {
       const categoryId = createProductInput.categoryId
         ? unmaskId(createProductInput.categoryId, DB_TYPES.CATEGORY)
         : 1;
-      const storeId = createProductInput.storeId
-        ? unmaskId(createProductInput.storeId, DB_TYPES.STORE)
+      const brandId = createProductInput.brandId
+        ? unmaskId(createProductInput.brandId, DB_TYPES.STORE)
         : 1;
       return await this.productRepository.create(
         createProductInput,
         categoryId,
-        storeId,
+        brandId,
         createdBy,
       );
     } catch (error) {

@@ -25,7 +25,7 @@ export enum USER_STATUS {
 export enum GENDER {
   MALE = 'MALE',
   FEMALE = 'FEMALE',
-  ALL = 'ALL',
+  UNDEFINED = 'UNDEFINED',
 }
 
 export enum TYPE_KEY {

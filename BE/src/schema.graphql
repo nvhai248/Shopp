@@ -34,7 +34,8 @@ type Cart {
 
 type User {
   id: ID!
-  name: String!
+  firstName: String!
+  lastName: String!
   email: String!
   birthDate: String
   phoneNumber: String
@@ -87,7 +88,7 @@ input CreateProductInput {
   name: String!
   gender: String
   categoryId: String
-  storeId: String
+  brandId: String
   price: Float!
   sale: Boolean
   type: String
@@ -99,7 +100,7 @@ input UpdateProductInput {
   name: String
   gender: String
   categoryId: String
-  storeId: String
+  brandId: String
   price: Float
   sale: Boolean
   type: String
@@ -133,7 +134,8 @@ input LoginInput {
 }
 
 input RegisterInput {
-  name: String!
+  firstName: String!
+  lastName: String!
   email: String!
   password: String!
 }

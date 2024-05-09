@@ -11,7 +11,7 @@ export class ProductRepository {
   async create(
     createProductInput: CreateProductInput,
     categoryId: number,
-    storeId: number,
+    brandId: number,
     createdBy: number,
   ) {
     try {
@@ -24,15 +24,15 @@ export class ProductRepository {
           gender:
             gender === GENDER.MALE ||
             gender === GENDER.FEMALE ||
-            gender === GENDER.ALL
+            gender === GENDER.UNDEFINED
               ? gender
-              : GENDER.MALE,
+              : GENDER.UNDEFINED,
           price: price,
           sale: sale,
           type: type,
           avatar: avatar,
           categoryId: categoryId,
-          storeId: storeId,
+          brandId: brandId,
           createdBy: createdBy,
         },
       });

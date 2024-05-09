@@ -10,34 +10,34 @@ datasource db {
 enum Gender {
   MALE
   FEMALE
-  ALL
+  UNDEFINED
 }
 
 enum OwnerType {
   USER
-  STORE
+  BRAND
 }
 
 enum Role {
-  BUYER
-  SELLER
-  SHIPPER
+  GUEST
   ADMIN
 }
 
 model User {
   id           Int            @id @default(autoincrement())
-  name         String
+  firstName    String
+  lastName     String
   email        String         @unique
   birthDate    DateTime?
-  gender       Gender         @default(ALL)
+  gender       Gender         @default(UNDEFINED)
   phoneNumber  String?
   password     String
   salt         String
+  googleId     String?
   status       Int            @default(0)
   avatar       String?
-  role         Role           @default(BUYER)
-  secretOtp    String?        
+  role         Role           @default(GUEST)
+  secretOtp    String?
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
   contacts     Contact[]
@@ -57,8 +57,8 @@ model Contact {
   id            Int       @id @default(autoincrement())
   user          User?     @relation(fields: [userId], references: [id])
   userId        Int?
-  store         Store?    @relation(fields: [storeId], references: [id])
-  storeId       Int?
+  brand         Brand?    @relation(fields: [brandId], references: [id])
+  brandId       Int?
   ownerType     OwnerType @default(USER)
   district      String
   province      String
@@ -69,19 +69,19 @@ model Contact {
   updatedAt     DateTime  @updatedAt
 
   @@index([userId], name: "contact_user_idx")
-  @@index([storeId], name: "contact_store_idx")
+  @@index([brandId], name: "contact_brand_idx")
 }
 
 model Product {
   id         Int      @id @default(autoincrement())
-  storeId    Int
+  brandId    Int
   name       String
-  gender     Gender   @default(ALL)
+  gender     Gender   @default(UNDEFINED)
   price      Float
   sale       Boolean  @default(false)
   categoryId Int
   category   Category @relation(fields: [categoryId], references: [id])
-  store      Store    @relation(fields: [storeId], references: [id])
+  brand      Brand    @relation(fields: [brandId], references: [id])
   type       String
   avatar     String?
   cover      Image[]
@@ -92,8 +92,8 @@ model Product {
 
 model Category {
   id          Int       @id @default(autoincrement())
-  storeId     Int
-  store       Store     @relation(fields: [storeId], references: [id])
+  brandId     Int
+  brand       Brand     @relation(fields: [brandId], references: [id])
   name        String
   description String?
   image       String?
@@ -102,7 +102,7 @@ model Category {
   Product     Product[]
 }
 
-model Store {
+model Brand {
   id        Int        @id @default(autoincrement())
   name      String
   createdBy Int

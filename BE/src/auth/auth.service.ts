@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { UserRepository } from 'src/users/user.repository';
 import { LoginInput } from './dto/login.input';
 import { GenSalt, HashPW, IsCorrectPW } from 'src/utils/hasher';
@@ -74,7 +74,7 @@ export class AuthService {
       );
 
       this.mailerService
-        .sendMail(NewThankyouForRegisterEmailOption(user.email, user.name))
+        .sendMail(NewThankyouForRegisterEmailOption(user.email, user.firstName))
         .catch((err) => console.log(err));
 
       return {
@@ -150,5 +150,109 @@ export class AuthService {
       accessToken,
       expired_accessToken: expired_accessToken,
     };
+  }
+
+  async checkOauthByGoogle(user: any) {
+    try {
+      // if googleId exists with another user => return
+      const checkValidUser = await this.userRepository.findOneByGoogleId(
+        user.googleId,
+      );
+
+      let accessToken = '';
+      let refreshToken = '';
+
+      if (checkValidUser) {
+        accessToken = await this.generateJwtToken(
+          {
+            userId: checkValidUser.id,
+            role: checkValidUser.role,
+          },
+          expired_accessToken,
+          accessTokenSecret,
+        );
+
+        refreshToken = await this.generateJwtToken(
+          {
+            userId: checkValidUser.id,
+            role: checkValidUser.role,
+          },
+          expired_refreshToken,
+          accessTokenSecret,
+        );
+
+        await this.userRepository.createNewRefreshToken(
+          refreshToken,
+          checkValidUser.id,
+          expired_refreshToken,
+        );
+
+        return {
+          data: {
+            accessToken: accessToken,
+            expired_accessToken: expired_accessToken,
+            refreshToken: refreshToken,
+            expired_refreshToken: expired_refreshToken,
+            data: null,
+          },
+        };
+      }
+
+      const checkValidEmail = await this.userRepository.findOneByEmail(
+        user.email,
+      );
+
+      // if googleId not exists and email existed in another account
+      if (checkValidEmail) {
+        throw new BadRequestException(
+          'Bad Request',
+          'Email already use in another account!',
+        );
+      }
+
+      //else register
+      const newUser = await this.userRepository.createByOauth(user);
+      accessToken = await this.generateJwtToken(
+        {
+          userId: newUser.id,
+          role: newUser.role,
+        },
+        expired_accessToken,
+        accessTokenSecret,
+      );
+
+      refreshToken = await this.generateJwtToken(
+        {
+          userId: newUser.id,
+          role: newUser.role,
+        },
+        expired_refreshToken,
+        accessTokenSecret,
+      );
+
+      await this.userRepository.createNewRefreshToken(
+        refreshToken,
+        newUser.id,
+        expired_refreshToken,
+      );
+
+      this.mailerService
+        .sendMail(
+          NewThankyouForRegisterEmailOption(newUser.email, newUser.firstName),
+        )
+        .catch((err) => console.log(err));
+
+      return {
+        data: {
+          accessToken: accessToken,
+          expired_accessToken: expired_accessToken,
+          refreshToken: refreshToken,
+          expired_refreshToken: expired_refreshToken,
+          data: null,
+        },
+      };
+    } catch (error) {
+      throw error;
+    }
   }
 }

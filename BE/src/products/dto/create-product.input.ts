@@ -12,7 +12,7 @@ export class CreateProductInput {
   categoryId: string;
 
   @Field({ nullable: true })
-  storeId: string;
+  brandId: string;
 
   @Field()
   price: number;

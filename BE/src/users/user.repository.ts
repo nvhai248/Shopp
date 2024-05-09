@@ -12,9 +12,9 @@ export class UserRepository {
   }
 
   async create(userRegisterInput: UserRegisterInput, salt: string) {
-    const { name, email, password } = userRegisterInput;
+    const { firstName, lastName, email, password } = userRegisterInput;
     return await this.databaseService.user.create({
-      data: { name, email, password, salt },
+      data: { firstName, lastName, email, password, salt },
     });
   }
 
@@ -57,6 +57,18 @@ export class UserRepository {
   async findRefreshToken(refreshToken: string, userId: number) {
     return await this.databaseService.refreshToken.findFirst({
       where: { refreshToken: refreshToken, userId: userId },
+    });
+  }
+
+  async findOneByGoogleId(googleId: any) {
+    return await this.databaseService.user.findFirst({
+      where: { googleId: googleId },
+    });
+  }
+
+  async createByOauth(userData: any) {
+    return await this.databaseService.user.create({
+      data: userData,
     });
   }
 }
