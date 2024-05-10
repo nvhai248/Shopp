@@ -20,6 +20,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
+      playground: false,
       autoSchemaFile: join(process.cwd(), 'src/schema.graphql'),
       formatError(error) {
         return FormatError(error);
