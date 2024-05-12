@@ -1,19 +1,14 @@
 import { GraphQLError } from 'graphql';
 import { GRAPHQL_CODE_ERROR } from './const';
-import { HttpStatus } from '@nestjs/common';
 
 export class MyCustomException extends GraphQLError {
   constructor(
     message: string,
     private readonly code: string = GRAPHQL_CODE_ERROR.BadRequest,
-    private statusCode: number = HttpStatus.BAD_REQUEST,
   ) {
     super(message, {
       extensions: {
         code: code,
-        http: {
-          status: statusCode,
-        },
       },
     });
   }
@@ -21,44 +16,36 @@ export class MyCustomException extends GraphQLError {
 
 export class MyUnAuthorizedException extends MyCustomException {
   constructor(message: string) {
-    super(
-      message,
-      GRAPHQL_CODE_ERROR.UnAuthorizedError,
-      HttpStatus.UNAUTHORIZED,
-    );
+    super(message, GRAPHQL_CODE_ERROR.UnAuthorizedError);
   }
 }
 
 export class MyBadRequestException extends MyCustomException {
   constructor(message: string) {
-    super(message, GRAPHQL_CODE_ERROR.BadRequest, HttpStatus.BAD_REQUEST);
+    super(message, GRAPHQL_CODE_ERROR.BadRequest);
   }
 }
 
 export class MyNotFoundException extends MyCustomException {
   constructor(message: string) {
-    super(message, GRAPHQL_CODE_ERROR.NotFound, HttpStatus.NOT_FOUND);
+    super(message, GRAPHQL_CODE_ERROR.NotFound);
   }
 }
 
 export class MyDBException extends MyCustomException {
   constructor(message: string) {
-    super(message, GRAPHQL_CODE_ERROR.DBError, HttpStatus.BAD_REQUEST);
+    super(message, GRAPHQL_CODE_ERROR.DBError);
   }
 }
 
 export class MyForbiddenException extends MyCustomException {
   constructor(message: string) {
-    super(message, GRAPHQL_CODE_ERROR.ForbiddenError, HttpStatus.FORBIDDEN);
+    super(message, GRAPHQL_CODE_ERROR.ForbiddenError);
   }
 }
 
 export class MyInternalServerException extends MyCustomException {
   constructor(message: string) {
-    super(
-      message,
-      GRAPHQL_CODE_ERROR.InternalServerError,
-      HttpStatus.INTERNAL_SERVER_ERROR,
-    );
+    super(message, GRAPHQL_CODE_ERROR.InternalServerError);
   }
 }

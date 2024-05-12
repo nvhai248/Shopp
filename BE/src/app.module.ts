@@ -6,8 +6,6 @@ import { ProductsModule } from './products/products.module';
 import { UsersModule } from './users/users.module';
 import { CartsModule } from './carts/carts.module';
 import { DatabaseModule } from './database/database.module';
-import { APP_FILTER } from '@nestjs/core';
-import { FormatError, GraphQLErrorFilter } from './utils/handleException';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MailerModule } from '@nestjs-modules/mailer';
@@ -20,11 +18,8 @@ import { MailerModule } from '@nestjs-modules/mailer';
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
-      playground: false,
+      playground: true,
       autoSchemaFile: join(process.cwd(), 'src/schema.graphql'),
-      formatError(error) {
-        return FormatError(error);
-      },
     }),
     MailerModule.forRootAsync({
       imports: [ConfigModule],
@@ -49,11 +44,5 @@ import { MailerModule } from '@nestjs-modules/mailer';
     AuthModule,
   ],
   controllers: [],
-  providers: [
-    {
-      provide: APP_FILTER,
-      useClass: GraphQLErrorFilter,
-    },
-  ],
 })
 export class AppModule {}

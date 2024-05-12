@@ -1,6 +1,6 @@
 import MainNavBar from "@/components/nav/navbar";
 import LandingHeader from "./components/header/header";
-import MainHeader from "@/components/layout/header";
+import MainHeader from "@/components/header/header";
 
 export default function LayoutLanding({
   children,

@@ -5,52 +5,32 @@ import { PassportStrategy } from '@nestjs/passport';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { AuthService } from './auth.service';
-import { JwtPayload } from 'src/interfaces/jwt-payload.interface';
-import { MyUnAuthorizedException } from 'src/utils/error';
+import { passportJwtSecret } from 'jwks-rsa';
 
 @Injectable()
-export class JwtAccessStrategy extends PassportStrategy(Strategy, 'access') {
+export class JwtAccessStrategy extends PassportStrategy(Strategy, 'jwt') {
   constructor(
     private readonly configService: ConfigService,
     private readonly authService: AuthService,
   ) {
     super({
+      secretOrKeyProvider: passportJwtSecret({
+        cache: true,
+        rateLimit: true,
+        jwksRequestsPerMinute: 5,
+        jwksUri: `${configService.get<string>('AUTH0_ISSUER_URL')}.well-known/jwks.json`,
+      }),
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      secretOrKey: configService.get<string>('SECRET_ACCESS_TOKEN_KEY'),
+      audience: configService.get<string>('AUTH0_AUDIENCE'),
+      issuer: `${configService.get<string>('AUTH0_ISSUER_URL')}`,
+      algorithms: ['RS256'],
     });
   }
 
-  async validate(payload: JwtPayload) {
-    const user = await this.authService.validateUserByPayload(payload);
+  validate(payload: unknown): unknown {
+    console.log(payload);
 
-    if (!user) {
-      throw new MyUnAuthorizedException('Invalid access token');
-    }
-
-    return user;
-  }
-}
-@Injectable()
-export class JwtRefreshStrategy extends PassportStrategy(Strategy, 'refresh') {
-  constructor(
-    private readonly configService: ConfigService,
-    private readonly authService: AuthService,
-  ) {
-    super({
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      ignoreExpiration: false,
-      secretOrKey: configService.get<string>('SECRET_ACCESS_REFRESH_KEY'),
-    });
-  }
-
-  async validate(payload: JwtPayload) {
-    const user = await this.authService.validateUserByPayload(payload);
-
-    if (!user) {
-      throw new MyUnAuthorizedException('Invalid JWT');
-    }
-
-    return user;
+    return payload;
   }
 }

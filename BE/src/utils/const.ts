@@ -36,5 +36,10 @@ export function GenKey(userId: number, typeKey: string): string {
   return `${userId}:${typeKey}`;
 }
 
+export enum JWT_PROPS {
+  EXPIRED_REFRESH_TOKEN = 60 * 60 * 24 * 30, // one month
+  EXPIRED_ACCESS_TOKEN = 60 * 60, // one hour
+}
+
 export const CLIENT_SITE_DOMAIN = process.env.CLIENT_SITE_DOMAIN;
 export const SITE_PORT = process.env.SITE_PORT || 8080;

@@ -46,18 +46,6 @@ type User {
   updatedAt: DateTime!
 }
 
-type AuthResponse {
-  accessToken: String
-  expired_accessToken: Int
-  refreshToken: String
-  expired_refreshToken: Int
-  data: User
-}
-
-type LogoutResponse {
-  result: Boolean
-}
-
 type Query {
   products: [Product!]!
   product(id: Int!): Product!
@@ -78,10 +66,6 @@ type Mutation {
   refreshUserPassword(userRefreshPasswordInput: UserRefreshPasswordInput!): Boolean!
   changePassword(changePasswordInput: ChangePasswordInput!): Boolean!
   addProductToCart(productId: String!, quantity: Float!): Cart!
-  login(loginInput: LoginInput!): AuthResponse!
-  register(registerInput: RegisterInput!): AuthResponse!
-  logout: LogoutResponse!
-  refreshAccessToken: AuthResponse!
 }
 
 input CreateProductInput {
@@ -125,17 +109,4 @@ input UserRefreshPasswordInput {
 input ChangePasswordInput {
   currentPassword: String!
   newPassword: String!
-}
-
-input LoginInput {
-  email: String!
-  password: String!
-  isRememberMe: Boolean! = false
-}
-
-input RegisterInput {
-  firstName: String!
-  lastName: String!
-  email: String!
-  password: String!
 }
