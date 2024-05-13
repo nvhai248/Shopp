@@ -209,6 +209,8 @@ export class AuthService {
 
       //else register
       const newUser = await this.userRepository.createByOauth(user);
+
+      await this.otpService.generateSecret(newUser.id);
       accessToken = await this.generateJwtToken(
         {
           userId: newUser.id,
