@@ -18,7 +18,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
-      playground: true,
+      playground: false,
       autoSchemaFile: join(process.cwd(), 'src/schema.graphql'),
     }),
     MailerModule.forRootAsync({
