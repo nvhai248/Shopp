@@ -1,4 +1,4 @@
-import { ProductType } from "../app/+core/types/product.type";
+import { ProductType } from "../+core/types/product.type";
 
 const products: Array<ProductType> = [
   {

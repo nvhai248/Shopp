@@ -1,4 +1,5 @@
-import * as React from "react";
+"use client";
+
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -8,40 +9,133 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import Link from "next/link";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Checkbox } from "@/components/ui/checkbox";
+import { signIn } from "next-auth/react";
+import { FRONTEND_URL } from "@/lib/constants";
 
-export default function Login() {
+const formSchema = z.object({
+  email: z.string().email({
+    message: "Please enter a valid email address",
+  }),
+  password: z.string().min(8, {
+    message: "Password must be at least 8 characters",
+  }),
+  isRememberMe: z.boolean(),
+});
+
+export default function LoginForm() {
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+      isRememberMe: false,
+    },
+  });
+
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    const result = await signIn("credentials", {
+      email: values.email,
+      password: values.password,
+      isRememberMe: values.isRememberMe,
+      redirect: false,
+    });
+
+    if (result?.error) {
+      console.error("Error signing in:", result.error);
+    } else {
+      window.location.href = FRONTEND_URL;
+    }
+  }
+
   return (
     <Card className="w-[400px] h-[550px] ml-10 rounded-none">
       <CardHeader className="text-center">
         <CardTitle className="text-3xl">Sign In</CardTitle>
       </CardHeader>
       <CardContent>
-        <form>
-          <div className="grid w-full items-center gap-7">
-            <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="name">Email</Label>
-              <Input
-                id="name"
-                className="rounded-none h-12"
-                placeholder="Enter your email"
-              />
-            </div>
-            <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                type="password"
-                className="rounded-none h-12"
-                placeholder="Enter your password"
-              />
-            </div>
-          </div>
-        </form>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      id="email"
+                      className="rounded-none h-12"
+                      placeholder="Enter your email"
+                      type="email"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Password</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      id="password"
+                      type="password"
+                      className="rounded-none h-12"
+                      placeholder="Enter your password"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="isRememberMe"
+              render={({ field }) => (
+                <FormItem>
+                  <div className="flex items-center space-x-2 mt-2">
+                    <Checkbox id="isRememberMe" checked={field.value} />
+                    <label
+                      htmlFor="isRememberMe"
+                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                    >
+                      Remember Me
+                    </label>
+                  </div>
+                </FormItem>
+              )}
+            />
+
+            <Button
+              type="submit"
+              className="w-full mb-3 h-12 rounded-none mt-2"
+            >
+              Sign In
+            </Button>
+          </form>
+        </Form>
       </CardContent>
       <CardFooter className="flex flex-col">
-        <Button className="w-full mb-3 h-12 rounded-none">Sign In</Button>
         <Link href="/reset" className="hover:text-blue-700">
           Forgot password?
         </Link>
