@@ -2,6 +2,7 @@
 
 import { LoginMutation } from "@/+core/definegql/mutations/login";
 import { refreshATMutation } from "@/+core/definegql/mutations/refreshATK";
+import { LoginQuery } from "@/+core/definegql/queries/getProfile";
 import { LoginInput } from "@/+core/interfaces/login";
 import { MyApolloClient } from "@/lib/apolloClient";
 import { NextAuthOptions } from "next-auth";
@@ -28,6 +29,7 @@ async function refreshToken(token: JWT): Promise<JWT> {
     }
   } catch (err) {
     console.error("Error refreshing token", err);
+    //return null;
   }
 
   return {
@@ -70,8 +72,7 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async jwt({ token, user, account }) {
       if (user) return { ...token, ...user };
-
-      if (new Date().getTime() < token.expired_accessToken) {
+      if (new Date().getTime() > token.expired_accessToken) {
         return token;
       }
 
@@ -79,11 +80,16 @@ export const authOptions: NextAuthOptions = {
     },
 
     async session({ token, session }) {
-      session.data = token.data;
-      session.accessToken = token.accessToken;
-      session.refreshToken = token.refreshToken;
-      session.expired_accessToken = token.expired_accessToken;
-      session.expired_refreshToken = token.expired_refreshToken;
+      const { data } = await MyApolloClient.query({
+        query: LoginQuery,
+        context: {
+          headers: {
+            Authorization: `Bearer ${token.accessToken}`,
+          },
+        },
+      });
+
+      session.user = data?.getProfile;
 
       return session;
     },

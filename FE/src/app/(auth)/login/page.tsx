@@ -59,7 +59,7 @@ export default function LoginForm() {
     if (result?.error) {
       setNotification(result.error);
     } else {
-      console.log("result: ", result);
+      window.location = FRONTEND_URL;
     }
   }
 

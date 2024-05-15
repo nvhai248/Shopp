@@ -79,7 +79,6 @@ export class AuthService {
         expired_accessToken: JWT_CONST.ACCESS_EXPIRED(),
         refreshToken: null,
         expired_refreshToken: null,
-        data: FormatUser(user),
       };
     } catch (error) {
       if (error.code === 'P2002' && error.meta.target.includes('email')) {
@@ -125,7 +124,6 @@ export class AuthService {
       refreshToken,
       expired_accessToken: JWT_CONST.ACCESS_EXPIRED(),
       expired_refreshToken: JWT_CONST.REFRESH_EXPIRED(),
-      data: FormatUser(user),
     };
   }
 

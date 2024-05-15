@@ -5,7 +5,6 @@
 type Product {
   id: ID!
   name: String!
-  gender: String
   price: Float!
   sale: Boolean!
   createdBy: Float!
@@ -40,6 +39,7 @@ type User {
   birthDate: String
   phoneNumber: String
   gender: String
+  avatar: String
   status: Int!
   cart: [Cart!]!
   createdAt: DateTime!
@@ -48,10 +48,9 @@ type User {
 
 type AuthResponse {
   accessToken: String
-  expired_accessToken: Int
+  expired_accessToken: Float
   refreshToken: String
-  expired_refreshToken: Int
-  data: User
+  expired_refreshToken: Float
 }
 
 type LogoutResponse {

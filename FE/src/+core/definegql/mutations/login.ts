@@ -6,18 +6,6 @@ export const LoginMutation = gql`
     login(loginInput: $loginInput) {
       accessToken
       expired_accessToken
-      data {
-        id
-        email
-        birthDate
-        phoneNumber
-        gender
-        status
-        createdAt
-        updatedAt
-        firstName
-        lastName
-      }
       refreshToken
       expired_refreshToken
     }
