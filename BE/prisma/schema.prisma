@@ -13,13 +13,8 @@ enum Gender {
   UNDEFINED
 }
 
-enum OwnerType {
-  USER
-  BRAND
-}
-
 enum Role {
-  GUEST
+  CUSTOMER
   ADMIN
 }
 
@@ -36,13 +31,15 @@ model User {
   googleId     String?
   status       Int            @default(0)
   avatar       String?
-  role         Role           @default(GUEST)
+  role         Role           @default(CUSTOMER)
   secretOtp    String?
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
   contacts     Contact[]
   Image        Image[]
   RefreshToken RefreshToken[]
+  Order        Order[]
+  Review       Review[]
 }
 
 model RefreshToken {
@@ -51,43 +48,48 @@ model RefreshToken {
   userId       Int
   expired      Int
   createdAt    DateTime @default(now())
+
+  @@index([userId], name: "userId_index")
 }
 
 model Contact {
-  id            Int       @id @default(autoincrement())
-  user          User?     @relation(fields: [userId], references: [id])
+  id            Int      @id @default(autoincrement())
+  user          User?    @relation(fields: [userId], references: [id])
   userId        Int?
-  brand         Brand?    @relation(fields: [brandId], references: [id])
-  brandId       Int?
-  ownerType     OwnerType @default(USER)
   district      String
   province      String
   wards         String
   detailAddress String
   phoneNumber   String
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  Order         Order[]
 
   @@index([userId], name: "contact_user_idx")
-  @@index([brandId], name: "contact_brand_idx")
 }
 
 model Product {
-  id         Int      @id @default(autoincrement())
-  brandId    Int
-  name       String
-  gender     Gender   @default(UNDEFINED)
-  price      Float
-  sale       Boolean  @default(false)
-  categoryId Int
-  category   Category @relation(fields: [categoryId], references: [id])
-  brand      Brand    @relation(fields: [brandId], references: [id])
-  type       String
-  avatar     String?
-  cover      Image[]
-  createdBy  Int
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id           Int            @id @default(autoincrement())
+  brandId      Int
+  name         String
+  gender       Gender         @default(UNDEFINED)
+  price        Float
+  sale         Boolean        @default(false)
+  priceSale    Float
+  categoryId   Int
+  category     Category       @relation(fields: [categoryId], references: [id])
+  brand        Brand          @relation(fields: [brandId], references: [id])
+  type         String
+  avatar       String?
+  cover        Image[]
+  createdBy    Int
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  Review       Review[]
+  productOrder productOrder[]
+
+  @@index([brandId], name: "brand_product_index")
+  @@index([categoryId], name: "category_product_index")
 }
 
 model Category {
@@ -100,6 +102,8 @@ model Category {
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   Product     Product[]
+
+  @@index([brandId], name: "brand_category_index")
 }
 
 model Brand {
@@ -108,7 +112,6 @@ model Brand {
   createdBy Int
   avatar    String
   status    Int        @default(0)
-  contacts  Contact[]
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
   Category  Category[]
@@ -127,4 +130,41 @@ model Image {
   updatedAt DateTime @updatedAt
   Product   Product? @relation(fields: [productId], references: [id])
   productId Int?
+  Review    Review?  @relation(fields: [reviewInt], references: [int])
+  reviewInt Int?
+}
+
+model productOrder {
+  orderId   Int
+  productId Int
+  order     Order   @relation(fields: [orderId], references: [id])
+  product   Product @relation(fields: [productId], references: [id])
+  quantity  Int
+
+  @@id([orderId, productId])
+}
+
+model Order {
+  id         Int            @id @default(autoincrement())
+  ownerId    Int
+  owner      User           @relation(fields: [ownerId], references: [id])
+  products   productOrder[]
+  contact    Contact        @relation(fields: [contactId], references: [id])
+  totalPrice Int
+  createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @updatedAt
+  contactId  Int
+}
+
+model Review {
+  int       Int      @id @default(autoincrement())
+  ownerId   Int
+  owner     User     @relation(fields: [ownerId], references: [id])
+  productId Int
+  product   Product  @relation(fields: [productId], references: [id])
+  content   String
+  cover     Image[]
+  rate      Float
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

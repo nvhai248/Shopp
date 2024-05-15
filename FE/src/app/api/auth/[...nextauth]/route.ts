@@ -40,12 +40,9 @@ export const authOptions: NextAuthOptions = {
     CredentialsProvider({
       name: "Credentials",
       credentials: {
-        email: {
-          label: "Email",
-          type: "text",
-          placeholder: "Your email...",
-        },
-        password: { label: "Password", type: "password" },
+        email: {},
+        password: {},
+        isRememberMe: {},
       },
       async authorize(credentials, req) {
         if (!credentials?.email || !credentials?.password) return null;
@@ -53,8 +50,10 @@ export const authOptions: NextAuthOptions = {
         const loginInput: LoginInput = {
           email: credentials.email,
           password: credentials.password,
-          isRememberMe: true,
+          isRememberMe: credentials?.isRememberMe == "false" ? false : true,
         };
+
+        console.log(loginInput);
 
         try {
           const { data } = await MyApolloClient.mutate({
@@ -77,7 +76,7 @@ export const authOptions: NextAuthOptions = {
   ],
 
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, account }) {
       if (user) return { ...token, ...user };
 
       if (new Date().getTime() < token.backendTokens.expired_accessToken) {
