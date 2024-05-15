@@ -14,9 +14,6 @@ export class Product {
   @Field()
   name: string;
 
-  @Field({ nullable: true })
-  gender: string;
-
   @Field()
   price: number;
 

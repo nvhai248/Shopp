@@ -44,6 +44,33 @@ export const SITE_PORT = process.env.SITE_PORT || 8080;
 export const JWT_CONST = {
   ACCESS_SECRET: process.env.SECRET_ACCESS_TOKEN_KEY,
   REFRESH_SECRET: process.env.SECRET_ACCESS_REFRESH_KEY,
-  ACCESS_EXPIRED: 60 * 60, // one hour
-  REFRESH_EXPIRED: 60 * 60 * 24 * 30, // one month
+  ACCESS_EXPIRED: () => {
+    return 60 * 60 + new Date().getTime();
+  }, // one hour
+  REFRESH_EXPIRED: () => {
+    return 60 * 60 * 24 * 30 + new Date().getTime();
+  }, // one month
 };
+
+export enum PRODUCT_TYPE {
+  FICTION = 'FICTION',
+  NON_FICTION = 'NON_FICTION',
+  MYSTERY = 'MYSTERY',
+  SCIENCE_FICTION = 'SCIENCE_FICTION',
+  FANTASY = 'FANTASY',
+  BIOGRAPHY = 'BIOGRAPHY',
+  HISTORY = 'HISTORY',
+  ROMANCE = 'ROMANCE',
+  THRILLER = 'THRILLER',
+  CHILDREN = 'CHILDREN',
+  YOUNG_ADULT = 'YOUNG_ADULT',
+  SELF_HELP = 'SELF_HELP',
+  HEALTH = 'HEALTH',
+  COOKING = 'COOKING',
+  ART = 'ART',
+  POETRY = 'POETRY',
+  TRAVEL = 'TRAVEL',
+  RELIGION = 'RELIGION',
+  SCIENCE = 'SCIENCE',
+  SPORTS = 'SPORTS',
+}

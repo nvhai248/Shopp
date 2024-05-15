@@ -66,7 +66,7 @@ export class AuthService {
 
       const accessToken = await this.generateJwtToken(
         { userId: user.id, role: user.role },
-        JWT_CONST.ACCESS_EXPIRED,
+        JWT_CONST.ACCESS_EXPIRED(),
         JWT_CONST.ACCESS_SECRET,
       );
 
@@ -76,7 +76,7 @@ export class AuthService {
 
       return {
         accessToken: accessToken,
-        expired_accessToken: JWT_CONST.ACCESS_EXPIRED,
+        expired_accessToken: JWT_CONST.ACCESS_EXPIRED(),
         refreshToken: null,
         expired_refreshToken: null,
         data: FormatUser(user),
@@ -106,25 +106,25 @@ export class AuthService {
     if (loginInput.isRememberMe) {
       refreshToken = await this.generateJwtToken(
         payload,
-        JWT_CONST.REFRESH_EXPIRED,
+        JWT_CONST.REFRESH_EXPIRED(),
         JWT_CONST.REFRESH_SECRET,
       );
 
       await this.userRepository.createNewRefreshToken(
         refreshToken,
         user.id,
-        JWT_CONST.REFRESH_EXPIRED,
+        JWT_CONST.REFRESH_EXPIRED(),
       );
     }
     return {
       accessToken: await this.generateJwtToken(
         payload,
-        JWT_CONST.ACCESS_EXPIRED,
+        JWT_CONST.ACCESS_EXPIRED(),
         JWT_CONST.ACCESS_SECRET,
       ),
       refreshToken,
-      expired_accessToken: JWT_CONST.ACCESS_EXPIRED,
-      expired_refreshToken: JWT_CONST.REFRESH_EXPIRED,
+      expired_accessToken: JWT_CONST.ACCESS_EXPIRED(),
+      expired_refreshToken: JWT_CONST.REFRESH_EXPIRED(),
       data: FormatUser(user),
     };
   }
@@ -139,13 +139,13 @@ export class AuthService {
     const payload: JwtPayload = { userId, role };
     const accessToken = await this.generateJwtToken(
       payload,
-      JWT_CONST.ACCESS_EXPIRED,
+      JWT_CONST.ACCESS_EXPIRED(),
       JWT_CONST.ACCESS_SECRET,
     );
 
     return {
       accessToken,
-      expired_accessToken: JWT_CONST.ACCESS_EXPIRED,
+      expired_accessToken: JWT_CONST.ACCESS_EXPIRED(),
     };
   }
 
@@ -165,7 +165,7 @@ export class AuthService {
             userId: checkValidUser.id,
             role: checkValidUser.role,
           },
-          JWT_CONST.ACCESS_EXPIRED,
+          JWT_CONST.ACCESS_EXPIRED(),
           JWT_CONST.ACCESS_SECRET,
         );
 
@@ -174,22 +174,22 @@ export class AuthService {
             userId: checkValidUser.id,
             role: checkValidUser.role,
           },
-          JWT_CONST.REFRESH_EXPIRED,
+          JWT_CONST.REFRESH_EXPIRED(),
           JWT_CONST.ACCESS_SECRET,
         );
 
         await this.userRepository.createNewRefreshToken(
           refreshToken,
           checkValidUser.id,
-          JWT_CONST.REFRESH_EXPIRED,
+          JWT_CONST.REFRESH_EXPIRED(),
         );
 
         return {
           data: {
             accessToken: accessToken,
-            expired_accessToken: JWT_CONST.ACCESS_EXPIRED,
+            expired_accessToken: JWT_CONST.ACCESS_EXPIRED(),
             refreshToken: refreshToken,
-            expired_refreshToken: JWT_CONST.REFRESH_EXPIRED,
+            expired_refreshToken: JWT_CONST.REFRESH_EXPIRED(),
             data: null,
           },
         };
@@ -216,7 +216,7 @@ export class AuthService {
           userId: newUser.id,
           role: newUser.role,
         },
-        JWT_CONST.ACCESS_EXPIRED,
+        JWT_CONST.ACCESS_EXPIRED(),
         JWT_CONST.ACCESS_SECRET,
       );
 
@@ -225,14 +225,14 @@ export class AuthService {
           userId: newUser.id,
           role: newUser.role,
         },
-        JWT_CONST.REFRESH_EXPIRED,
+        JWT_CONST.REFRESH_EXPIRED(),
         JWT_CONST.ACCESS_SECRET,
       );
 
       await this.userRepository.createNewRefreshToken(
         refreshToken,
         newUser.id,
-        JWT_CONST.REFRESH_EXPIRED,
+        JWT_CONST.REFRESH_EXPIRED(),
       );
 
       this.mailerService
@@ -244,9 +244,9 @@ export class AuthService {
       return {
         data: {
           accessToken: accessToken,
-          expired_accessToken: JWT_CONST.ACCESS_EXPIRED,
+          expired_accessToken: JWT_CONST.ACCESS_EXPIRED(),
           refreshToken: refreshToken,
-          expired_refreshToken: JWT_CONST.REFRESH_EXPIRED,
+          expired_refreshToken: JWT_CONST.REFRESH_EXPIRED(),
           data: null,
         },
       };

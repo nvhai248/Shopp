@@ -21,10 +21,10 @@ const DynamicLoginBtn = () => {
       <DropdownMenu>
         <DropdownMenuTrigger className="text-sm flex hover:cursor-pointer hover:text-black">
           <Avatar className="w-5 h-5 mr-2 mt-0.25">
-            <AvatarImage src={session.user.image as string} alt="Avatar" />
+            <AvatarImage src={session.data.avatar as string} alt="Avatar" />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
-          <p>{session.user.name}</p>
+          <p>{session.data.firstName + session.data.lastName}</p>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="rounded-none">
           <DropdownMenuItem>My Profile</DropdownMenuItem>

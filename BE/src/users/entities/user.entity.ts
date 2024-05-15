@@ -5,7 +5,9 @@ import {
   ID,
   GraphQLISODateTime,
 } from '@nestjs/graphql';
+import { IsEnum } from 'class-validator';
 import { Cart } from 'src/carts/entities/cart.entity';
+import { GENDER } from 'src/utils/const';
 
 @ObjectType()
 export class User {
@@ -28,7 +30,11 @@ export class User {
   phoneNumber: string;
 
   @Field({ nullable: true })
+  @IsEnum(GENDER, { each: true })
   gender: string;
+
+  @Field({ nullable: true })
+  avatar: string;
 
   @Field(() => Int, { defaultValue: true })
   status: number;

@@ -15,7 +15,7 @@ async function refreshToken(token: JWT): Promise<JWT> {
       mutation: refreshATMutation,
       context: {
         headers: {
-          Authorization: `Bearer ${token.backendTokens.refreshToken}`,
+          Authorization: `Bearer ${token.refreshToken}`,
         },
       },
     });
@@ -53,21 +53,13 @@ export const authOptions: NextAuthOptions = {
           isRememberMe: credentials?.isRememberMe == "false" ? false : true,
         };
 
-        console.log(loginInput);
+        const { data, errors } = await MyApolloClient.mutate({
+          mutation: LoginMutation,
+          variables: { loginInput: loginInput },
+        });
 
-        try {
-          const { data } = await MyApolloClient.mutate({
-            mutation: LoginMutation,
-            variables: { loginInput },
-          });
-
-          console.log(data);
-
-          if (data?.login) {
-            return data.login;
-          }
-        } catch (err) {
-          console.error("Error logging in", err);
+        if (data?.login) {
+          return data.login;
         }
 
         return null;
@@ -79,7 +71,7 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token, user, account }) {
       if (user) return { ...token, ...user };
 
-      if (new Date().getTime() < token.backendTokens.expired_accessToken) {
+      if (new Date().getTime() < token.expired_accessToken) {
         return token;
       }
 
@@ -87,8 +79,11 @@ export const authOptions: NextAuthOptions = {
     },
 
     async session({ token, session }) {
-      session.user = token.user;
-      session.backendTokens = token.backendTokens;
+      session.data = token.data;
+      session.accessToken = token.accessToken;
+      session.refreshToken = token.refreshToken;
+      session.expired_accessToken = token.expired_accessToken;
+      session.expired_refreshToken = token.expired_refreshToken;
 
       return session;
     },

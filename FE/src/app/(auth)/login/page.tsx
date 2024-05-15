@@ -24,6 +24,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Checkbox } from "@/components/ui/checkbox";
 import { signIn } from "next-auth/react";
 import { FRONTEND_URL } from "@/lib/constants";
+import { useState } from "react";
 
 const formSchema = z.object({
   email: z.string().email({
@@ -36,6 +37,8 @@ const formSchema = z.object({
 });
 
 export default function LoginForm() {
+  const [notification, setNotification] = useState<string>("");
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -54,9 +57,9 @@ export default function LoginForm() {
     });
 
     if (result?.error) {
-      console.error("Error signing in:", result.error);
+      setNotification(result.error);
     } else {
-      window.location.href = FRONTEND_URL;
+      console.log("result: ", result);
     }
   }
 
@@ -114,7 +117,11 @@ export default function LoginForm() {
               render={({ field }) => (
                 <FormItem>
                   <div className="flex items-center space-x-2 mt-2">
-                    <Checkbox id="isRememberMe" checked={field.value} />
+                    <Checkbox
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                      id="isRememberMe"
+                    />
                     <label
                       htmlFor="isRememberMe"
                       className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
@@ -125,6 +132,8 @@ export default function LoginForm() {
                 </FormItem>
               )}
             />
+
+            <p className="mt-2 text-red-500 text-sm">{notification}</p>
 
             <Button
               type="submit"

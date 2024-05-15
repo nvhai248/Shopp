@@ -18,6 +18,43 @@ enum Role {
   ADMIN
 }
 
+enum StatusOrder {
+  PENDING
+  ON_SHPPING
+  CANCEL
+  DONE
+}
+
+enum StatusProduct {
+  ACTIVED
+  DELETED
+  ON_SALE
+  ON_PROMOTION
+}
+
+enum ProductType {
+  FICTION
+  NON_FICTION
+  MYSTERY
+  SCIENCE_FICTION
+  FANTASY
+  BIOGRAPHY
+  HISTORY
+  ROMANCE
+  THRILLER
+  CHILDREN
+  YOUNG_ADULT
+  SELF_HELP
+  HEALTH
+  COOKING
+  ART
+  POETRY
+  TRAVEL
+  RELIGION
+  SCIENCE
+  SPORTS
+}
+
 model User {
   id           Int            @id @default(autoincrement())
   firstName    String
@@ -36,7 +73,6 @@ model User {
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
   contacts     Contact[]
-  Image        Image[]
   RefreshToken RefreshToken[]
   Order        Order[]
   Review       Review[]
@@ -72,16 +108,15 @@ model Product {
   id           Int            @id @default(autoincrement())
   brandId      Int
   name         String
-  gender       Gender         @default(UNDEFINED)
   price        Float
-  sale         Boolean        @default(false)
   priceSale    Float
   categoryId   Int
   category     Category       @relation(fields: [categoryId], references: [id])
   brand        Brand          @relation(fields: [brandId], references: [id])
-  type         String
+  types        ProductType[]
   avatar       String?
-  cover        Image[]
+  status       StatusProduct  @default(ACTIVED)
+  cover        String[]
   createdBy    Int
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
@@ -118,22 +153,6 @@ model Brand {
   Product   Product[]
 }
 
-model Image {
-  id        Int      @id @default(autoincrement())
-  ownerId   Int
-  owner     User     @relation(fields: [ownerId], references: [id])
-  width     Int?
-  height    Int?
-  url       String
-  cloudName String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  Product   Product? @relation(fields: [productId], references: [id])
-  productId Int?
-  Review    Review?  @relation(fields: [reviewInt], references: [int])
-  reviewInt Int?
-}
-
 model productOrder {
   orderId   Int
   productId Int
@@ -151,9 +170,12 @@ model Order {
   products   productOrder[]
   contact    Contact        @relation(fields: [contactId], references: [id])
   totalPrice Int
+  status     StatusOrder    @default(PENDING)
   createdAt  DateTime       @default(now())
   updatedAt  DateTime       @updatedAt
   contactId  Int
+
+  @@index([ownerId], name: "owner_order_index")
 }
 
 model Review {
@@ -163,8 +185,12 @@ model Review {
   productId Int
   product   Product  @relation(fields: [productId], references: [id])
   content   String
-  cover     Image[]
+  cover     String[]
+  status    Int      @default(1)
   rate      Float
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([ownerId], name: "owner_review_index")
+  @@index([productId], name: "product_review_index")
 }

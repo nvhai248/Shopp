@@ -1,12 +1,11 @@
-import { InputType, Int, Field } from '@nestjs/graphql';
+import { InputType, Field } from '@nestjs/graphql';
+import { IsEnum } from 'class-validator';
+import { PRODUCT_TYPE } from 'src/utils/const';
 
 @InputType()
 export class CreateProductInput {
   @Field()
   name: string;
-
-  @Field({ nullable: true })
-  gender: string;
 
   @Field({ nullable: true })
   categoryId: string;
@@ -17,11 +16,9 @@ export class CreateProductInput {
   @Field()
   price: number;
 
-  @Field({ nullable: true })
-  sale: boolean;
-
-  @Field({ nullable: true })
-  type: string;
+  @Field(() => [String], { nullable: true })
+  @IsEnum(PRODUCT_TYPE, { each: true })
+  types: PRODUCT_TYPE[];
 
   @Field({ nullable: true })
   avatar: string;

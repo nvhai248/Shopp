@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { DatabaseService } from 'src/database/database.service';
-import { GENDER } from 'src/utils/const';
 import { MyDBException } from 'src/utils/error';
 import { CreateProductInput } from './dto/create-product.input';
+import { PRODUCT_TYPE } from 'src/utils/const';
 
 @Injectable()
 export class ProductRepository {
@@ -15,22 +15,16 @@ export class ProductRepository {
     createdBy: number,
   ) {
     try {
-      const { name, gender, price, sale, type, avatar, cover } =
-        createProductInput;
+      const { name, price, types, avatar, cover } = createProductInput;
 
       return await this.databaseService.product.create({
         data: {
           name: name,
-          gender:
-            gender === GENDER.MALE ||
-            gender === GENDER.FEMALE ||
-            gender === GENDER.UNDEFINED
-              ? gender
-              : GENDER.UNDEFINED,
           price: price,
-          sale: sale,
-          type: type,
+          priceSale: 0,
+          types: types,
           avatar: avatar,
+          cover: cover,
           categoryId: categoryId,
           brandId: brandId,
           createdBy: createdBy,
