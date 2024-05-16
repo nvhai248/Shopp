@@ -86,9 +86,9 @@ type Mutation {
 input CreateProductInput {
   name: String!
   categoryId: String
-  brandId: String
+  description: String
+  publisherId: String
   price: Float!
-  types: [String!]
   avatar: String
   cover: [String!]
 }
@@ -96,9 +96,9 @@ input CreateProductInput {
 input UpdateProductInput {
   name: String
   categoryId: String
-  brandId: String
+  description: String
+  publisherId: String
   price: Float
-  types: [String!]
   avatar: String
   cover: [String!]
   id: Int!

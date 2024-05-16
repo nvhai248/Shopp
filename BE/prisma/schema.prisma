@@ -20,7 +20,7 @@ enum Role {
 
 enum StatusOrder {
   PENDING
-  ON_SHPPING
+  ON_SHIPPING
   CANCEL
   DONE
 }
@@ -32,27 +32,15 @@ enum StatusProduct {
   ON_PROMOTION
 }
 
-enum ProductType {
-  FICTION
-  NON_FICTION
-  MYSTERY
-  SCIENCE_FICTION
-  FANTASY
-  BIOGRAPHY
-  HISTORY
-  ROMANCE
-  THRILLER
+enum CategoryType {
   CHILDREN
-  YOUNG_ADULT
-  SELF_HELP
-  HEALTH
-  COOKING
-  ART
-  POETRY
-  TRAVEL
-  RELIGION
-  SCIENCE
-  SPORTS
+  PARENT
+}
+
+enum AboutType {
+  Q_AND_A
+  MAIN
+  CHILD
 }
 
 model User {
@@ -76,6 +64,7 @@ model User {
   RefreshToken RefreshToken[]
   Order        Order[]
   Review       Review[]
+  Image        Image[]
 }
 
 model RefreshToken {
@@ -106,16 +95,17 @@ model Contact {
 
 model Product {
   id           Int            @id @default(autoincrement())
-  brandId      Int
+  publisherId  Int
   name         String
+  description  String
   price        Float
   priceSale    Float
   categoryId   Int
   category     Category       @relation(fields: [categoryId], references: [id])
-  brand        Brand          @relation(fields: [brandId], references: [id])
-  types        ProductType[]
+  publisher    Publisher      @relation(fields: [publisherId], references: [id])
   avatar       String?
   status       StatusProduct  @default(ACTIVED)
+  author       String?
   cover        String[]
   createdBy    Int
   createdAt    DateTime       @default(now())
@@ -123,34 +113,34 @@ model Product {
   Review       Review[]
   productOrder productOrder[]
 
-  @@index([brandId], name: "brand_product_index")
+  @@index([publisherId], name: "publisher_product_index")
   @@index([categoryId], name: "category_product_index")
 }
 
 model Category {
-  id          Int       @id @default(autoincrement())
-  brandId     Int
-  brand       Brand     @relation(fields: [brandId], references: [id])
+  id          Int          @id @default(autoincrement())
   name        String
   description String?
+  type        CategoryType @default(PARENT)
+  parentId    Int?
+  parent      Category?    @relation("ChildCategories", fields: [parentId], references: [id])
   image       String?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  products    Product[]
+  children    Category[]   @relation("ChildCategories")
+}
+
+model Publisher {
+  id          Int       @id @default(autoincrement())
+  name        String
+  description String
+  createdBy   Int
+  avatar      String
+  status      Int       @default(0)
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   Product     Product[]
-
-  @@index([brandId], name: "brand_category_index")
-}
-
-model Brand {
-  id        Int        @id @default(autoincrement())
-  name      String
-  createdBy Int
-  avatar    String
-  status    Int        @default(0)
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-  Category  Category[]
-  Product   Product[]
 }
 
 model productOrder {
@@ -193,4 +183,28 @@ model Review {
 
   @@index([ownerId], name: "owner_review_index")
   @@index([productId], name: "product_review_index")
+}
+
+model Image {
+  id        Int      @id @default(autoincrement())
+  ownerId   Int
+  owner     User     @relation(fields: [ownerId], references: [id])
+  width     Int?
+  height    Int?
+  url       String
+  cloudName String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model About {
+  id          Int       @id @default(autoincrement())
+  type        AboutType @default(Q_AND_A)
+  title       String
+  description String
+  cover       String
+  status      Int       @default(1)
+  createdAt   DateTime  @default(now())
+
+  updatedAt DateTime @updatedAt
 }

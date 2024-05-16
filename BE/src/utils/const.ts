@@ -14,14 +14,21 @@ export enum GRAPHQL_CODE_ERROR {
 export enum DB_TYPES {
   USER = 'user_type_for_shopp',
   PRODUCT = 'product_type_for_shopp',
-  STORE = 'store_type_for_shopp',
+  PUBLISHER = 'publisher_type_for_shopp',
   CATEGORY = 'category_type_for_shopp',
+  ORDER = 'order_type_for_shopp',
+  REVIEW = 'review_type_for_shopp',
 }
 
 export enum USER_STATUS {
   ACTIVE = 1,
   NOT_VERIFIED = 0,
   DELETED = -1,
+}
+
+export enum ROLE {
+  CUSTOMER = 'CUSTOMER',
+  ADMIN = 'ADMIN',
 }
 
 export enum GENDER {
@@ -52,25 +59,32 @@ export const JWT_CONST = {
   }, // one month
 };
 
-export enum PRODUCT_TYPE {
-  FICTION = 'FICTION',
-  NON_FICTION = 'NON_FICTION',
-  MYSTERY = 'MYSTERY',
-  SCIENCE_FICTION = 'SCIENCE_FICTION',
-  FANTASY = 'FANTASY',
-  BIOGRAPHY = 'BIOGRAPHY',
-  HISTORY = 'HISTORY',
-  ROMANCE = 'ROMANCE',
-  THRILLER = 'THRILLER',
+export enum CATEGORY_TYPE {
   CHILDREN = 'CHILDREN',
-  YOUNG_ADULT = 'YOUNG_ADULT',
-  SELF_HELP = 'SELF_HELP',
-  HEALTH = 'HEALTH',
-  COOKING = 'COOKING',
-  ART = 'ART',
-  POETRY = 'POETRY',
-  TRAVEL = 'TRAVEL',
-  RELIGION = 'RELIGION',
-  SCIENCE = 'SCIENCE',
-  SPORTS = 'SPORTS',
+  PARENT = 'PARENT',
+}
+
+export enum STATUS_ORDER {
+  PENDING = 'PENDING',
+  ON_SHIPPING = 'ON_SHIPPING',
+  CANCEL = 'CANCEL',
+  DONE = 'DONE',
+}
+
+export enum STATUS_PRODUCT {
+  ACTIVE = 'ACTIVE',
+  DELETED = 'DELETED',
+  ON_SALE = 'ON_SALE',
+  ON_PROMOTION = 'ON_PROMOTION',
+}
+
+export enum ABOUT_TYPE {
+  Q_AND_A = 'Q_AND_A',
+  MAIN = 'MAIN',
+  CHILD = 'CHILD',
+}
+
+export enum ABOUT_STATUS {
+  ACTIVE = 1,
+  DELETED = 0,
 }

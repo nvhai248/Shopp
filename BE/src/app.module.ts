@@ -10,6 +10,7 @@ import { FormatError } from './utils/handleException';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MailerModule } from '@nestjs-modules/mailer';
+import { AppController } from './app.controller';
 
 @Module({
   imports: [
@@ -47,7 +48,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
     DatabaseModule,
     AuthModule,
   ],
-  controllers: [],
+  controllers: [AppController],
   providers: [],
 })
 export class AppModule {}
