@@ -6,5 +6,6 @@ import { OtpService } from '../shared/otp/otp.service';
 
 @Module({
   providers: [UsersResolver, UsersService, UserRepository, OtpService],
+  exports: [UserRepository],
 })
 export class UsersModule {}

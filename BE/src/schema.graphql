@@ -36,6 +36,7 @@ type User {
   firstName: String!
   lastName: String!
   email: String!
+  role: String!
   birthDate: String
   phoneNumber: String
   gender: String

@@ -44,7 +44,7 @@ export class UsersService {
         throw new MyDBException('User not found');
       }
 
-      return FormatUser(user);
+      return user;
     } catch (error) {
       throw error;
     }

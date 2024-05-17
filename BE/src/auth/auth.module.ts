@@ -8,6 +8,7 @@ import { JwtAccessStrategy, JwtRefreshStrategy } from './jwt.strategy';
 import { OtpService } from 'src/shared/otp/otp.service';
 import { GoogleStrategy } from './google.strategy';
 import { AuthController } from './auth.controller';
+import { UsersModule } from 'src/users/users.module';
 
 @Module({
   imports: [
@@ -15,12 +16,12 @@ import { AuthController } from './auth.controller';
     JwtModule.registerAsync({
       useFactory: () => ({}),
     }),
+    UsersModule,
   ],
   providers: [
     OtpService,
     AuthResolver,
     AuthService,
-    UserRepository,
     JwtRefreshStrategy,
     JwtAccessStrategy,
     GoogleStrategy,

@@ -23,6 +23,8 @@ enum StatusOrder {
   ON_SHIPPING
   CANCEL
   DONE
+  // PAYED
+  // RETURN
 }
 
 enum StatusProduct {
@@ -30,6 +32,7 @@ enum StatusProduct {
   DELETED
   ON_SALE
   ON_PROMOTION
+  // INACTIVED
 }
 
 enum CategoryType {

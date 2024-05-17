@@ -15,6 +15,7 @@ export class UserRepository {
     const { firstName, lastName, email, password } = userRegisterInput;
     return await this.databaseService.user.create({
       data: { firstName, lastName, email, password, salt },
+      
     });
   }
 
