@@ -3,20 +3,19 @@ import { CreateProductInput } from './dto/create-product.input';
 import { UpdateProductInput } from './dto/update-product.input';
 import { ProductRepository } from './product.repository';
 import { unmaskId } from 'src/utils/mask';
-import { DB_TYPES } from 'src/utils/const';
 
 @Injectable()
 export class ProductsService {
   constructor(private readonly productRepository: ProductRepository) {}
 
-  async create(createProductInput: CreateProductInput, createdBy: number) {
+  async create(createProductInput: CreateProductInput, createdBy: string) {
     try {
       const categoryId = createProductInput.categoryId
-        ? unmaskId(createProductInput.categoryId, DB_TYPES.CATEGORY)
-        : 1;
+        ? createProductInput.categoryId
+        : '1';
       const publisherId = createProductInput.publisherId
-        ? unmaskId(createProductInput.publisherId, DB_TYPES.PUBLISHER)
-        : 1;
+        ? createProductInput.publisherId
+        : '1';
       return await this.productRepository.create(
         createProductInput,
         categoryId,

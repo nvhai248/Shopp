@@ -11,15 +11,6 @@ export enum GRAPHQL_CODE_ERROR {
   NotFound = 'NOTFOUND_ERROR',
 }
 
-export enum DB_TYPES {
-  USER = 'user_type_for_shopp',
-  PRODUCT = 'product_type_for_shopp',
-  PUBLISHER = 'publisher_type_for_shopp',
-  CATEGORY = 'category_type_for_shopp',
-  ORDER = 'order_type_for_shopp',
-  REVIEW = 'review_type_for_shopp',
-}
-
 export enum USER_STATUS {
   ACTIVE = 1,
   NOT_VERIFIED = 0,
@@ -41,7 +32,7 @@ export enum TYPE_KEY {
   REFRESH_PASSWORD = 'refresh_password',
 }
 
-export function GenKey(userId: number, typeKey: string): string {
+export function GenKey(userId: string, typeKey: string): string {
   return `${userId}:${typeKey}`;
 }
 

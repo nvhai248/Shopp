@@ -21,5 +21,5 @@ export class CreateProductInput {
   avatar: string;
 
   @Field(() => [String], { nullable: true })
-  cover: string[];
+  images: string[];
 }

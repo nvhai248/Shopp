@@ -7,13 +7,13 @@ import {
   MyBadRequestException,
   MyUnAuthorizedException,
 } from 'src/utils/error';
-import { FormatUser } from 'src/utils/formatResult';
 import { JwtService, JwtSignOptions } from '@nestjs/jwt';
 import { JwtPayload } from 'src/interfaces/jwt-payload.interface';
 import { OtpService } from 'src/shared/otp/otp.service';
 import { MailerService } from '@nestjs-modules/mailer';
 import { NewThankyouForRegisterEmailOption } from 'src/utils/templateEmail';
-import { JWT_CONST } from 'src/utils/const';
+import { JWT_CONST, ROLE } from 'src/utils/const';
+import { AuthResponse } from './entities/auth.entity';
 
 @Injectable()
 export class AuthService {
@@ -28,8 +28,12 @@ export class AuthService {
     return await this.userRepository.findOneById(payload.userId);
   }
 
+  async validateAdmin(payload: JwtPayload): Promise<any> {
+    return await this.userRepository.findOneById(payload.userId);
+  }
+
   async validateUserByJwtRefreshToken(
-    userId: number,
+    userId: string,
     refreshToken: string,
   ): Promise<any> {
     const token = await this.userRepository.findRefreshToken(
@@ -57,7 +61,7 @@ export class AuthService {
     return this.jwtService.sign(payload, options);
   }
 
-  async register(registerInput: RegisterInput): Promise<AuthOutput> {
+  async register(registerInput: RegisterInput): Promise<AuthResponse> {
     try {
       const salt = await GenSalt();
       registerInput.password = await HashPW(registerInput.password, salt);
@@ -65,7 +69,7 @@ export class AuthService {
       await this.otpService.generateSecret(user.id);
 
       const accessToken = await this.generateJwtToken(
-        { userId: user.id, role: user.role },
+        { userId: user.id, role: ROLE.CUSTOMER },
         JWT_CONST.ACCESS_EXPIRED(),
         JWT_CONST.ACCESS_SECRET,
       );
@@ -88,7 +92,7 @@ export class AuthService {
     }
   }
 
-  async login(loginInput: LoginInput): Promise<AuthOutput> {
+  async login(loginInput: LoginInput): Promise<AuthResponse> {
     const user = await this.userRepository.findOneByEmail(loginInput.email);
 
     if (!user) {
@@ -127,13 +131,13 @@ export class AuthService {
     };
   }
 
-  async logout(userId: number, refreshToken: string) {
+  async logout(userId: string, refreshToken: string) {
     return (await this.userRepository.deleteRefreshToken(userId, refreshToken))
       ? true
       : false;
   }
 
-  async refreshAccessToken(userId: number, role: string) {
+  async refreshAccessToken(userId: string, role: string) {
     const payload: JwtPayload = { userId, role };
     const accessToken = await this.generateJwtToken(
       payload,
@@ -161,7 +165,7 @@ export class AuthService {
         accessToken = await this.generateJwtToken(
           {
             userId: checkValidUser.id,
-            role: checkValidUser.role,
+            role: ROLE.CUSTOMER,
           },
           JWT_CONST.ACCESS_EXPIRED(),
           JWT_CONST.ACCESS_SECRET,
@@ -170,7 +174,7 @@ export class AuthService {
         refreshToken = await this.generateJwtToken(
           {
             userId: checkValidUser.id,
-            role: checkValidUser.role,
+            role: ROLE.CUSTOMER,
           },
           JWT_CONST.REFRESH_EXPIRED(),
           JWT_CONST.ACCESS_SECRET,
@@ -212,7 +216,7 @@ export class AuthService {
       accessToken = await this.generateJwtToken(
         {
           userId: newUser.id,
-          role: newUser.role,
+          role: ROLE.CUSTOMER,
         },
         JWT_CONST.ACCESS_EXPIRED(),
         JWT_CONST.ACCESS_SECRET,
@@ -221,7 +225,7 @@ export class AuthService {
       refreshToken = await this.generateJwtToken(
         {
           userId: newUser.id,
-          role: newUser.role,
+          role: ROLE.CUSTOMER,
         },
         JWT_CONST.REFRESH_EXPIRED(),
         JWT_CONST.ACCESS_SECRET,

@@ -13,26 +13,18 @@ enum Gender {
   UNDEFINED
 }
 
-enum Role {
-  CUSTOMER
-  ADMIN
-}
-
 enum StatusOrder {
   PENDING
   ON_SHIPPING
   CANCEL
   DONE
-  // PAYED
-  // RETURN
+  RETURN
 }
 
 enum StatusProduct {
   ACTIVED
   DELETED
-  ON_SALE
-  ON_PROMOTION
-  // INACTIVED
+  INACTIVED
 }
 
 enum CategoryType {
@@ -46,10 +38,42 @@ enum AboutType {
   CHILD
 }
 
+enum PaymentMethod {
+  COD
+  CREDIT_CARD
+}
+
+enum UserStatus {
+  ACTIVED
+  BANNED
+  NOTVERIFIED
+  DELETED
+}
+
+model Admin {
+  id          String      @id @default(uuid())
+  firstName   String?
+  lastName    String?
+  email       String      @unique
+  birthDate   DateTime?
+  gender      Gender      @default(UNDEFINED)
+  phoneNumber String?
+  password    String
+  salt        String
+  status      Int         @default(0)
+  avatar      String?     @default("https://static-00.iconduck.com/assets.00/avatar-default-symbolic-icon-2048x1949-pq9uiebg.png")
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  publishers  Publisher[]
+  Product     Product[]
+  Category    Category[]
+  Image       Image[]
+}
+
 model User {
-  id           Int            @id @default(autoincrement())
-  firstName    String
-  lastName     String
+  id           String         @id @default(uuid())
+  firstName    String?
+  lastName     String?
   email        String         @unique
   birthDate    DateTime?
   gender       Gender         @default(UNDEFINED)
@@ -57,9 +81,8 @@ model User {
   password     String
   salt         String
   googleId     String?
-  status       Int            @default(0)
-  avatar       String?
-  role         Role           @default(CUSTOMER)
+  status       Boolean        @default(false)
+  avatar       String?        @default("https://static-00.iconduck.com/assets.00/avatar-default-symbolic-icon-2048x1949-pq9uiebg.png")
   secretOtp    String?
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
@@ -73,17 +96,19 @@ model User {
 model RefreshToken {
   refreshToken String   @unique
   user         User     @relation(fields: [userId], references: [id])
-  userId       Int
+  userId       String
   expired      Int
   createdAt    DateTime @default(now())
 
+  @@id([refreshToken, userId])
   @@index([userId], name: "userId_index")
 }
 
 model Contact {
-  id            Int      @id @default(autoincrement())
-  user          User?    @relation(fields: [userId], references: [id])
-  userId        Int?
+  id            String   @id @default(uuid())
+  owner         User?    @relation(fields: [ownerId], references: [id])
+  ownerId       String?
+  fullName      String
   district      String
   province      String
   wards         String
@@ -93,41 +118,73 @@ model Contact {
   updatedAt     DateTime @updatedAt
   Order         Order[]
 
-  @@index([userId], name: "contact_user_idx")
+  @@index([ownerId], name: "contact_user_idx")
 }
 
 model Product {
-  id           Int            @id @default(autoincrement())
-  publisherId  Int
+  id           String             @id @default(uuid())
+  publisherId  String
   name         String
   description  String
   price        Float
-  priceSale    Float
-  categoryId   Int
-  category     Category       @relation(fields: [categoryId], references: [id])
-  publisher    Publisher      @relation(fields: [publisherId], references: [id])
+  priceSale    Float?
+  categoryId   String
+  isOnSale     Boolean            @default(false)
+  category     Category           @relation(fields: [categoryId], references: [id])
+  publisher    Publisher          @relation(fields: [publisherId], references: [id])
   avatar       String?
-  status       StatusProduct  @default(ACTIVED)
+  status       StatusProduct      @default(ACTIVED)
   author       String?
-  cover        String[]
-  createdBy    Int
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt
+  images       String[]
+  createdBy    String
+  admin        Admin              @relation(fields: [createdBy], references: [id])
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
   Review       Review[]
   productOrder productOrder[]
+  promotions   ProductPromotion[]
 
   @@index([publisherId], name: "publisher_product_index")
   @@index([categoryId], name: "category_product_index")
 }
 
+model Promotion {
+  id                 String             @id @default(uuid())
+  name               String
+  description        String
+  banner             String?            @default("https://img.freepik.com/free-vector/horizontal-sale-banner-template-world-book-day-celebration_23-2150181295.jpg?w=1380&t=st=1715965165~exp=1715965765~hmac=57900c36234f20ee17bd27f376407ef837816cd9161eecb49e4bde9ab6eeea4a")
+  discountPercentage Float
+  totalPrice         Float
+  startDate          DateTime
+  endDate            DateTime
+  status             Boolean            @default(true)
+  products           ProductPromotion[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ProductPromotion {
+  productId   String
+  promotionId String
+  quantity    Int
+  price       Float
+
+  product   Product   @relation(fields: [productId], references: [id])
+  promotion Promotion @relation(fields: [promotionId], references: [id])
+
+  @@id([productId, promotionId])
+}
+
 model Category {
-  id          Int          @id @default(autoincrement())
+  id          String       @id @default(uuid())
   name        String
   description String?
   type        CategoryType @default(PARENT)
-  parentId    Int?
+  parentId    String?
   parent      Category?    @relation("ChildCategories", fields: [parentId], references: [id])
-  image       String?
+  createdBy   String
+  admin       Admin        @relation(fields: [createdBy], references: [id])
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
   products    Product[]
@@ -135,11 +192,12 @@ model Category {
 }
 
 model Publisher {
-  id          Int       @id @default(autoincrement())
+  id          String    @id @default(uuid())
   name        String
   description String
-  createdBy   Int
-  avatar      String
+  avatar      String    @default("https://static-00.iconduck.com/assets.00/avatar-default-symbolic-icon-2048x1949-pq9uiebg.png")
+  createdBy   String
+  admin       Admin     @relation(fields: [createdBy], references: [id])
   status      Int       @default(0)
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
@@ -147,38 +205,42 @@ model Publisher {
 }
 
 model productOrder {
-  orderId   Int
-  productId Int
+  orderId   String
+  productId String
   order     Order   @relation(fields: [orderId], references: [id])
   product   Product @relation(fields: [productId], references: [id])
+  price     Float
   quantity  Int
 
   @@id([orderId, productId])
 }
 
 model Order {
-  id         Int            @id @default(autoincrement())
-  ownerId    Int
-  owner      User           @relation(fields: [ownerId], references: [id])
-  products   productOrder[]
-  contact    Contact        @relation(fields: [contactId], references: [id])
-  totalPrice Int
-  status     StatusOrder    @default(PENDING)
-  createdAt  DateTime       @default(now())
-  updatedAt  DateTime       @updatedAt
-  contactId  Int
+  id            String         @id @default(uuid())
+  ownerId       String
+  owner         User           @relation(fields: [ownerId], references: [id])
+  products      productOrder[]
+  contact       Contact        @relation(fields: [contactId], references: [id])
+  isPayed       Boolean        @default(false)
+  paymentMethod PaymentMethod  @default(COD)
+  totalPrice    Float
+  status        StatusOrder    @default(PENDING)
+  reason        String?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  contactId     String
 
   @@index([ownerId], name: "owner_order_index")
 }
 
 model Review {
-  int       Int      @id @default(autoincrement())
-  ownerId   Int
+  int       String   @id @default(uuid())
+  ownerId   String
   owner     User     @relation(fields: [ownerId], references: [id])
-  productId Int
+  productId String
   product   Product  @relation(fields: [productId], references: [id])
   content   String
-  cover     String[]
+  images    String[]
   status    Int      @default(1)
   rate      Float
   createdAt DateTime @default(now())
@@ -189,8 +251,8 @@ model Review {
 }
 
 model Image {
-  id        Int      @id @default(autoincrement())
-  ownerId   Int
+  id        String   @id @default(uuid())
+  ownerId   String
   owner     User     @relation(fields: [ownerId], references: [id])
   width     Int?
   height    Int?
@@ -198,15 +260,17 @@ model Image {
   cloudName String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  Admin     Admin?   @relation(fields: [adminId], references: [id])
+  adminId   String?
 }
 
 model About {
-  id          Int       @id @default(autoincrement())
+  id          String    @id @default(uuid())
   type        AboutType @default(Q_AND_A)
   title       String
   description String
-  cover       String
-  status      Int       @default(1)
+  image       String?
+  status      Boolean   @default(false)
   createdAt   DateTime  @default(now())
 
   updatedAt DateTime @updatedAt

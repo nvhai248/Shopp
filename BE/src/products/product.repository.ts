@@ -9,12 +9,12 @@ export class ProductRepository {
 
   async create(
     createProductInput: CreateProductInput,
-    categoryId: number,
-    publisherId: number,
-    createdBy: number,
+    categoryId: string,
+    publisherId: string,
+    createdBy: string,
   ) {
     try {
-      const { name, price, avatar, cover, description } = createProductInput;
+      const { name, price, avatar, images, description } = createProductInput;
 
       return await this.databaseService.product.create({
         data: {
@@ -22,7 +22,7 @@ export class ProductRepository {
           price: price,
           priceSale: 0,
           avatar: avatar,
-          cover: cover,
+          images: images,
           description: description,
           categoryId: categoryId,
           publisherId: publisherId,

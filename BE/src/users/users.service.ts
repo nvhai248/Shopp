@@ -6,9 +6,7 @@ import {
   MyUnAuthorizedException,
 } from 'src/utils/error';
 import { UserRepository } from './user.repository';
-import { unmaskId } from 'src/utils/mask';
-import { DB_TYPES, USER_STATUS, GenKey, TYPE_KEY } from 'src/utils/const';
-import { FormatUser } from 'src/utils/formatResult';
+import { USER_STATUS, GenKey, TYPE_KEY } from 'src/utils/const';
 import { OtpService } from '../shared/otp/otp.service';
 import { MailerService } from '@nestjs-modules/mailer';
 import {
@@ -36,9 +34,7 @@ export class UsersService {
 
   async findOne(id: string) {
     try {
-      const user = await this.userRepository.findOneById(
-        typeof id == 'number' ? id : unmaskId(id, DB_TYPES.USER),
-      );
+      const user = await this.userRepository.findOneById(id);
 
       if (!user) {
         throw new MyDBException('User not found');
@@ -64,17 +60,17 @@ export class UsersService {
     }
   }
 
-  async update(id: number, updateUserInput: UpdateUserInput) {
+  async update(id: string, updateUserInput: UpdateUserInput) {
     const user = await this.userRepository.updateOne(id, updateUserInput);
 
-    return FormatUser(user);
+    return user;
   }
 
   remove(id: string) {
     return `This action removes a #${id} user`;
   }
 
-  async updateUserStatus(id: number, status: number) {
+  async updateUserStatus(id: string, status: string) {
     await this.userRepository.updateOne(id, { status: status });
   }
 
@@ -96,7 +92,7 @@ export class UsersService {
   }
 
   async verifyUser(
-    userId: number,
+    userId: string,
     userSecretOtp: string,
     otp: string,
   ): Promise<Boolean> {
@@ -131,12 +127,7 @@ export class UsersService {
 
     this.mailerService
       .sendMail(
-        NewRefreshPasswordEmailOption(
-          user.email,
-          user.name,
-          maskId(user.id, DB_TYPES.USER),
-          token,
-        ),
+        NewRefreshPasswordEmailOption(user.email, user.name, user.id, token),
       )
       .catch((err) => console.log(err));
     return true;
@@ -147,25 +138,24 @@ export class UsersService {
     token: string,
     password: string,
   ): Promise<boolean> {
-    const id = unmaskId(userId, DB_TYPES.USER);
     const systemToken = await this.cacheService.get(
-      GenKey(id, TYPE_KEY.REFRESH_PASSWORD),
+      GenKey(userId, TYPE_KEY.REFRESH_PASSWORD),
     );
 
     if (token === systemToken) {
       throw new MyBadRequestException('Your token is expired or invalid.');
     }
 
-    const user = await this.userRepository.findOneById(id);
+    const user = await this.userRepository.findOneById(userId);
 
     const hashPw = await HashPW(password, user.salt);
 
-    await this.userRepository.updateOne(id, { password: hashPw });
+    await this.userRepository.updateOne(userId, { password: hashPw });
     return true;
   }
 
   async changePassword(
-    userId: number,
+    userId: string,
     currentPassword: string,
     newPassword: string,
   ) {
@@ -193,7 +183,7 @@ export class UsersService {
         NewNotificationDetectChangePasswordEmailOption(
           user.email,
           user.name,
-          maskId(user.id, DB_TYPES.USER),
+          user.id,
           token,
         ),
       )

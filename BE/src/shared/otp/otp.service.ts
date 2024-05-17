@@ -6,7 +6,7 @@ import { DatabaseService } from 'src/database/database.service';
 export class OtpService {
   constructor(private readonly databaseService: DatabaseService) {}
 
-  async generateSecret(id: number) {
+  async generateSecret(id: string) {
     const secret = speakeasy.generateSecret({ length: 20 });
     await this.databaseService.user.update({
       where: { id: id },

@@ -10,8 +10,50 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
+import { z } from "zod";
+import { signIn } from "next-auth/react";
+import { FRONTEND_URL } from "@/lib/constants";
+import { useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+
+const formSchema = z.object({
+  email: z.string().email({
+    message: "Please enter a valid email address",
+  }),
+  password: z.string().min(8, {
+    message: "Password must be at least 8 characters",
+  }),
+  isRememberMe: z.boolean(),
+});
 
 export default function Register() {
+  const [notification, setNotification] = useState<string>("");
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+      isRememberMe: false,
+    },
+  });
+
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    const result = await signIn("credentials", {
+      email: values.email,
+      password: values.password,
+      isRememberMe: values.isRememberMe,
+      redirect: false,
+    });
+
+    if (result?.error) {
+      setNotification(result.error);
+    } else {
+      window.location.href = FRONTEND_URL;
+    }
+  }
+
   return (
     <Card className="w-[400px] h-[550px] ml-10 rounded-none">
       <CardHeader className="text-center">

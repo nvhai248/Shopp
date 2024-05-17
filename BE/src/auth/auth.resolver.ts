@@ -7,12 +7,9 @@ import { UseGuards } from '@nestjs/common';
 import { CurrentUser, JwtRefreshAuthGuard } from 'src/guard/jwt-auth.guard';
 import { LogoutResponse } from './entities/logout.entity';
 
-
 @Resolver()
 export class AuthResolver {
-  constructor(
-    private readonly authService: AuthService,
-  ) {}
+  constructor(private readonly authService: AuthService) {}
 
   @Mutation(() => AuthResponse)
   async login(@Args('loginInput') loginInput: LoginInput) {
@@ -23,7 +20,6 @@ export class AuthResolver {
 
   @Mutation(() => AuthResponse)
   register(@Args('registerInput') registerInput: RegisterInput) {
-    
     return this.authService.register(registerInput);
   }
 

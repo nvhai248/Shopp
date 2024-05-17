@@ -59,7 +59,7 @@ export default function LoginForm() {
     if (result?.error) {
       setNotification(result.error);
     } else {
-      window.location = FRONTEND_URL;
+      window.location.href = FRONTEND_URL;
     }
   }
 
