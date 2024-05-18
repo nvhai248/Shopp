@@ -28,6 +28,34 @@ export class JwtAccessStrategy extends PassportStrategy(Strategy, 'access') {
       throw new MyUnAuthorizedException('Invalid access token');
     }
 
+    user.role = payload.role;
+
+    return user;
+  }
+}
+
+@Injectable()
+export class JwtAdminStrategy extends PassportStrategy(Strategy, 'admin') {
+  constructor(
+    private readonly configService: ConfigService,
+    private readonly authService: AuthService,
+  ) {
+    super({
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      ignoreExpiration: false,
+      secretOrKey: configService.get<string>('SECRET_ACCESS_TOKEN_KEY'),
+    });
+  }
+
+  async validate(payload: JwtPayload) {
+    const user = await this.authService.validateAdmin(payload);
+
+    if (!user) {
+      throw new MyUnAuthorizedException('Invalid access token');
+    }
+
+    user.role = payload.role;
+
     return user;
   }
 }
@@ -50,6 +78,8 @@ export class JwtRefreshStrategy extends PassportStrategy(Strategy, 'refresh') {
     if (!user) {
       throw new MyUnAuthorizedException('Invalid JWT');
     }
+
+    user.role = payload.role;
 
     return user;
   }

@@ -14,6 +14,7 @@ import { MailerService } from '@nestjs-modules/mailer';
 import { NewThankyouForRegisterEmailOption } from 'src/utils/templateEmail';
 import { JWT_CONST, ROLE } from 'src/utils/const';
 import { AuthResponse } from './entities/auth.entity';
+import { AdminLoginInput } from './dto/adminLogin.input';
 
 @Injectable()
 export class AuthService {
@@ -29,7 +30,33 @@ export class AuthService {
   }
 
   async validateAdmin(payload: JwtPayload): Promise<any> {
-    return await this.userRepository.findOneById(payload.userId);
+    return await this.userRepository.findAdminById(payload.userId);
+  }
+
+  async adminLogin(adminLoginInput: AdminLoginInput): Promise<AuthResponse> {
+    const user = await this.userRepository.findAdminOneByEmail(
+      adminLoginInput.email,
+    );
+
+    if (!user) {
+      throw new MyUnAuthorizedException('Username or password is incorrect!');
+    }
+    if (!(await IsCorrectPW(user.password, adminLoginInput.password))) {
+      throw new MyUnAuthorizedException('Username or password is incorrect!');
+    }
+
+    const payload: JwtPayload = { userId: user.id, role: ROLE.ADMIN };
+
+    return {
+      accessToken: await this.generateJwtToken(
+        payload,
+        JWT_CONST.ACCESS_EXPIRED(),
+        JWT_CONST.ACCESS_SECRET,
+      ),
+      refreshToken: null,
+      expired_accessToken: JWT_CONST.ACCESS_EXPIRED(),
+      expired_refreshToken: null,
+    };
   }
 
   async validateUserByJwtRefreshToken(
@@ -102,7 +129,7 @@ export class AuthService {
       throw new MyUnAuthorizedException('Username or password is incorrect!');
     }
 
-    const payload: JwtPayload = { userId: user.id, role: user.role };
+    const payload: JwtPayload = { userId: user.id, role: ROLE.CUSTOMER };
 
     let refreshToken = null;
 

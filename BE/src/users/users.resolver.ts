@@ -53,7 +53,7 @@ export class UsersResolver {
 
   @Query(() => User)
   @UseGuards(JwtAccessAuthGuard)
-  getProfile(@CurrentUser() user: User) {
+  getProfile(@CurrentUser() user: any) {
     return this.usersService.findOne(user.id);
   }
 

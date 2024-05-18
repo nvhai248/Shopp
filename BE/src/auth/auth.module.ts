@@ -4,7 +4,11 @@ import { AuthResolver } from './auth.resolver';
 import { PassportModule } from '@nestjs/passport';
 import { UserRepository } from 'src/users/user.repository';
 import { JwtModule } from '@nestjs/jwt';
-import { JwtAccessStrategy, JwtRefreshStrategy } from './jwt.strategy';
+import {
+  JwtAccessStrategy,
+  JwtAdminStrategy,
+  JwtRefreshStrategy,
+} from './jwt.strategy';
 import { OtpService } from 'src/shared/otp/otp.service';
 import { GoogleStrategy } from './google.strategy';
 import { AuthController } from './auth.controller';
@@ -25,6 +29,7 @@ import { UsersModule } from 'src/users/users.module';
     JwtRefreshStrategy,
     JwtAccessStrategy,
     GoogleStrategy,
+    JwtAdminStrategy,
   ],
   controllers: [AuthController],
 })

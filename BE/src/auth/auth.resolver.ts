@@ -6,6 +6,7 @@ import { RegisterInput } from './dto/register.input';
 import { UseGuards } from '@nestjs/common';
 import { CurrentUser, JwtRefreshAuthGuard } from 'src/guard/jwt-auth.guard';
 import { LogoutResponse } from './entities/logout.entity';
+import { AdminLoginInput } from './dto/adminLogin.input';
 
 @Resolver()
 export class AuthResolver {
@@ -14,6 +15,13 @@ export class AuthResolver {
   @Mutation(() => AuthResponse)
   async login(@Args('loginInput') loginInput: LoginInput) {
     const result = await this.authService.login(loginInput);
+
+    return result;
+  }
+
+  @Mutation(() => AuthResponse)
+  async adminLogin(@Args('loginInput') loginInput: AdminLoginInput) {
+    const result = await this.authService.adminLogin(loginInput);
 
     return result;
   }

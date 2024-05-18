@@ -21,12 +21,18 @@ export class UserRepository {
     return await this.databaseService.user.findFirst({ where: { email } });
   }
 
+  async findAdminOneByEmail(email: string): Promise<any> {
+    return await this.databaseService.hShopAdmin.findFirst({
+      where: { email },
+    });
+  }
+
   async findOneById(id: string): Promise<any> {
     return await this.databaseService.user.findFirst({ where: { id } });
   }
 
   async findAdminById(id: string): Promise<any> {
-    return await this.databaseService.admin.findFirst({ where: { id } });
+    return await this.databaseService.hShopAdmin.findFirst({ where: { id } });
   }
 
   async createNewRefreshToken(

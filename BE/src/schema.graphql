@@ -33,15 +33,14 @@ type Cart {
 
 type User {
   id: ID!
-  firstName: String!
-  lastName: String!
+  firstName: String
+  lastName: String
   email: String!
-  role: String!
   birthDate: String
   phoneNumber: String
   gender: String
   avatar: String
-  status: Int!
+  status: String!
   cart: [Cart!]!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -79,6 +78,7 @@ type Mutation {
   changePassword(changePasswordInput: ChangePasswordInput!): Boolean!
   addProductToCart(productId: String!, quantity: Float!): Cart!
   login(loginInput: LoginInput!): AuthResponse!
+  adminLogin(loginInput: AdminLoginInput!): AuthResponse!
   register(registerInput: RegisterInput!): AuthResponse!
   logout: LogoutResponse!
   refreshAccessToken: AuthResponse!
@@ -91,7 +91,7 @@ input CreateProductInput {
   publisherId: String
   price: Float!
   avatar: String
-  cover: [String!]
+  images: [String!]
 }
 
 input UpdateProductInput {
@@ -101,12 +101,13 @@ input UpdateProductInput {
   publisherId: String
   price: Float
   avatar: String
-  cover: [String!]
+  images: [String!]
   id: Int!
 }
 
 input UpdateUserInput {
-  name: String
+  firstName: String
+  lastName: String
   birthDate: String
   phoneNumber: String
   gender: String
@@ -129,9 +130,12 @@ input LoginInput {
   isRememberMe: Boolean! = false
 }
 
+input AdminLoginInput {
+  email: String!
+  password: String!
+}
+
 input RegisterInput {
-  firstName: String!
-  lastName: String!
   email: String!
   password: String!
 }

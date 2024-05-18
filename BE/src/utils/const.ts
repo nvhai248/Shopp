@@ -12,9 +12,10 @@ export enum GRAPHQL_CODE_ERROR {
 }
 
 export enum USER_STATUS {
-  ACTIVE = 1,
-  NOT_VERIFIED = 0,
-  DELETED = -1,
+  ACTIVE = 'ACTIVE',
+  BANNED = 'BANNED',
+  UNVERIFIED = 'UNVERIFIED',
+  DELETED = 'DELETED',
 }
 
 export enum ROLE {
@@ -30,6 +31,41 @@ export enum GENDER {
 
 export enum TYPE_KEY {
   REFRESH_PASSWORD = 'refresh_password',
+}
+
+export enum CATEGORY_TYPE {
+  CHILDREN = 'CHILDREN',
+  PARENT = 'PARENT',
+}
+
+export enum STATUS_ORDER {
+  PENDING = 'PENDING',
+  ON_SHIPPING = 'ON_SHIPPING',
+  CANCEL = 'CANCEL',
+  DONE = 'DONE',
+  RETURN = 'RETURN',
+}
+
+export enum STATUS_PRODUCT {
+  ACTIVE = 'ACTIVE',
+  DELETED = 'DELETED',
+  INACTIVE = 'INACTIVE',
+}
+
+export enum ABOUT_TYPE {
+  Q_AND_A = 'Q_AND_A',
+  MAIN = 'MAIN',
+  CHILD = 'CHILD',
+}
+
+export enum ABOUT_STATUS {
+  ACTIVE = 1,
+  DELETED = 0,
+}
+
+export enum PAYMENT_METHOD {
+  COD = 'COD',
+  CREDIT_CARD = 'CREDIT_CARD',
 }
 
 export function GenKey(userId: string, typeKey: string): string {
@@ -49,33 +85,3 @@ export const JWT_CONST = {
     return 60 * 60 * 24 * 30 + new Date().getTime();
   }, // one month
 };
-
-export enum CATEGORY_TYPE {
-  CHILDREN = 'CHILDREN',
-  PARENT = 'PARENT',
-}
-
-export enum STATUS_ORDER {
-  PENDING = 'PENDING',
-  ON_SHIPPING = 'ON_SHIPPING',
-  CANCEL = 'CANCEL',
-  DONE = 'DONE',
-}
-
-export enum STATUS_PRODUCT {
-  ACTIVE = 'ACTIVE',
-  DELETED = 'DELETED',
-  ON_SALE = 'ON_SALE',
-  ON_PROMOTION = 'ON_PROMOTION',
-}
-
-export enum ABOUT_TYPE {
-  Q_AND_A = 'Q_AND_A',
-  MAIN = 'MAIN',
-  CHILD = 'CHILD',
-}
-
-export enum ABOUT_STATUS {
-  ACTIVE = 1,
-  DELETED = 0,
-}
