@@ -11,6 +11,8 @@ import { AuthModule } from './auth/auth.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { AppController } from './app.controller';
+import { PublishersModule } from './publishers/publishers.module';
+import { CategoriesModule } from './categories/categories.module';
 
 @Module({
   imports: [
@@ -47,6 +49,8 @@ import { AppController } from './app.controller';
     CartsModule,
     DatabaseModule,
     AuthModule,
+    PublishersModule,
+    CategoriesModule,
   ],
   controllers: [AppController],
   providers: [],

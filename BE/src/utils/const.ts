@@ -68,6 +68,11 @@ export enum PAYMENT_METHOD {
   CREDIT_CARD = 'CREDIT_CARD',
 }
 
+export enum CATEGORY_STATUS {
+  ACTIVE = 1,
+  INACTIVE = 0,
+}
+
 export function GenKey(userId: string, typeKey: string): string {
   return `${userId}:${typeKey}`;
 }

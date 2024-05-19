@@ -182,6 +182,7 @@ model Category {
   description String?
   type        CategoryType @default(PARENT)
   parentId    String?
+  status      Boolean      @default(true)
   parent      Category?    @relation("ChildCategories", fields: [parentId], references: [id])
   createdBy   String
   admin       HShopAdmin   @relation(fields: [createdBy], references: [id])
