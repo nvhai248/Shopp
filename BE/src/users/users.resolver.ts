@@ -12,7 +12,11 @@ import { User } from './entities/user.entity';
 import { UpdateUserInput } from './dto/updateUser.input';
 import { Cart } from 'src/carts/entities/cart.entity';
 import { UseGuards } from '@nestjs/common';
-import { CurrentUser, JwtAccessAuthGuard } from 'src/guard/jwt-auth.guard';
+import {
+  CurrentUser,
+  JwtAccessAuthGuard,
+  JwtAdminAuthGuard,
+} from 'src/guard/jwt-auth.guard';
 import { RequireActiveGuard } from 'src/guard/require-active.guard';
 import { UserRefreshPasswordInput } from './dto/refreshPw.input';
 import { ChangePasswordInput } from './dto/changePw.input';
@@ -55,6 +59,12 @@ export class UsersResolver {
   @UseGuards(JwtAccessAuthGuard)
   getProfile(@CurrentUser() user: any) {
     return this.usersService.findOne(user.id);
+  }
+
+  @Query(() => User)
+  @UseGuards(JwtAdminAuthGuard)
+  adminGetProfile(@CurrentUser() user: any) {
+    return this.usersService.adminFindOne(user.id);
   }
 
   @Mutation(() => User)

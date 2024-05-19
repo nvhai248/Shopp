@@ -46,6 +46,20 @@ export class UsersService {
     }
   }
 
+  async adminFindOne(id: string) {
+    try {
+      const user = await this.userRepository.findAdminById(id);
+
+      if (!user) {
+        throw new MyDBException('User not found');
+      }
+
+      return user;
+    } catch (error) {
+      throw error;
+    }
+  }
+
   async findOneByEmail(email: string) {
     try {
       const user = await this.userRepository.findOneByEmail(email);

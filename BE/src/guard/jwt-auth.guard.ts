@@ -25,6 +25,14 @@ export class JwtRefreshAuthGuard extends AuthGuard('refresh') {
   }
 }
 
+export class JwtAdminAuthGuard extends AuthGuard('admin') {
+  getRequest(context: ExecutionContext) {
+    const ctx = GqlExecutionContext.create(context);
+
+    return ctx.getContext().req;
+  }
+}
+
 export const CurrentUser = createParamDecorator(
   (data: unknown, context: ExecutionContext) => {
     const ctx = GqlExecutionContext.create(context);

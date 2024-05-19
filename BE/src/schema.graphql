@@ -63,6 +63,7 @@ type Query {
   users: [User!]!
   user(id: ID!): User!
   getProfile: User!
+  adminGetProfile: User!
 }
 
 type Mutation {
