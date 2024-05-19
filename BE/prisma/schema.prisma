@@ -199,7 +199,7 @@ model Publisher {
   avatar      String     @default("https://static-00.iconduck.com/assets.00/avatar-default-symbolic-icon-2048x1949-pq9uiebg.png")
   createdBy   String
   admin       HShopAdmin @relation(fields: [createdBy], references: [id])
-  status      Int        @default(0)
+  status      Boolean    @default(true)
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
   Product     Product[]

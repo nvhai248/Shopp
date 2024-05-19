@@ -58,8 +58,14 @@ type LogoutResponse {
 }
 
 type Publisher {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  id: ID!
+  name: String!
+  description: String!
+  avatar: String!
+  status: Boolean!
+  createdBy: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type CategoryChild {
@@ -94,7 +100,7 @@ type Query {
   getProfile: User!
   adminGetProfile: User!
   publishers: [Publisher!]!
-  publisher(id: Int!): Publisher!
+  publisher(id: String!): Publisher!
   categories: [Category!]!
   category(id: String!): Category!
 }
@@ -117,8 +123,7 @@ type Mutation {
   logout: LogoutResponse!
   refreshAccessToken: AuthResponse!
   createPublisher(createPublisherInput: CreatePublisherInput!): Publisher!
-  updatePublisher(updatePublisherInput: UpdatePublisherInput!): Publisher!
-  removePublisher(id: Int!): Publisher!
+  updatePublisher(updatePublisherInput: UpdatePublisherInput!): Boolean!
   createCategory(createCategoryInput: CreateCategoryInput!): Category!
   updateCategory(updateCategoryInput: UpdateCategoryInput!): Boolean!
 }
@@ -180,14 +185,17 @@ input RegisterInput {
 }
 
 input CreatePublisherInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+  name: String!
+  description: String!
+  avatar: String!
 }
 
 input UpdatePublisherInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
+  id: ID!
+  name: String
+  description: String
+  avatar: String
+  status: Boolean
 }
 
 input CreateCategoryInput {

@@ -1,26 +1,25 @@
 import { Injectable } from '@nestjs/common';
 import { CreatePublisherInput } from './dto/create-publisher.input';
 import { UpdatePublisherInput } from './dto/update-publisher.input';
+import { PublishersRepository } from './publishers.repository';
 
 @Injectable()
 export class PublishersService {
-  create(createPublisherInput: CreatePublisherInput) {
-    return 'This action adds a new publisher';
+  constructor(private readonly publisherRepository: PublishersRepository) {}
+
+  create(createdBy: string, createPublisherInput: CreatePublisherInput) {
+    return this.publisherRepository.create(createdBy, createPublisherInput);
   }
 
-  findAll() {
-    return `This action returns all publishers`;
+  findMany() {
+    return this.publisherRepository.findMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} publisher`;
+  findOne(id: string) {
+    return this.publisherRepository.findOne(id);
   }
 
-  update(id: number, updatePublisherInput: UpdatePublisherInput) {
-    return `This action updates a #${id} publisher`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} publisher`;
+  update(id: string, updatePublisherInput: UpdatePublisherInput) {
+    return this.publisherRepository.update(id, updatePublisherInput);
   }
 }

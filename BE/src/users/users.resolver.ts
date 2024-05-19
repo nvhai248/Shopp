@@ -20,6 +20,7 @@ import {
 import { RequireActiveGuard } from 'src/guard/require-active.guard';
 import { UserRefreshPasswordInput } from './dto/refreshPw.input';
 import { ChangePasswordInput } from './dto/changePw.input';
+import { CurrentUserInterface } from 'src/interfaces/current-user.interface';
 
 @Resolver(() => User)
 export class UsersResolver {
@@ -27,10 +28,12 @@ export class UsersResolver {
 
   @Mutation(() => Boolean)
   @UseGuards(JwtAccessAuthGuard)
-  async requireSendEmailVerifyUser(@CurrentUser() user: any): Promise<boolean> {
+  async requireSendEmailVerifyUser(
+    @CurrentUser() user: CurrentUserInterface,
+  ): Promise<boolean> {
     return this.usersService.requireSendEmailVerifyUser(
       user.email,
-      user.name,
+      user.firstName,
       user.secretOtp,
     );
   }
@@ -38,7 +41,7 @@ export class UsersResolver {
   @Mutation(() => Boolean)
   @UseGuards(JwtAccessAuthGuard)
   async verifyUser(
-    @CurrentUser() user: any,
+    @CurrentUser() user: CurrentUserInterface,
     @Args('otp') otp: string,
   ): Promise<Boolean> {
     // Verify OTP entered by the user
@@ -57,13 +60,13 @@ export class UsersResolver {
 
   @Query(() => User)
   @UseGuards(JwtAccessAuthGuard)
-  getProfile(@CurrentUser() user: any) {
+  getProfile(@CurrentUser() user: CurrentUserInterface) {
     return this.usersService.findOne(user.id);
   }
 
   @Query(() => User)
   @UseGuards(JwtAdminAuthGuard)
-  adminGetProfile(@CurrentUser() user: any) {
+  adminGetProfile(@CurrentUser() user: CurrentUserInterface) {
     return this.usersService.adminFindOne(user.id);
   }
 
@@ -71,7 +74,7 @@ export class UsersResolver {
   @UseGuards(JwtAccessAuthGuard, RequireActiveGuard)
   updateProfile(
     @Args('updateUserInput') updateUserInput: UpdateUserInput,
-    @CurrentUser() user: any,
+    @CurrentUser() user: CurrentUserInterface,
   ) {
     return this.usersService.update(user.id, updateUserInput);
   }
@@ -82,7 +85,7 @@ export class UsersResolver {
   }
 
   @ResolveField((returns) => [Cart], { name: 'cart' })
-  getUserCart(@Parent() user: User) {
+  getUserCart(@Parent() user: CurrentUserInterface) {
     return this.usersService.getUserCart(user.id);
   }
 
@@ -105,7 +108,7 @@ export class UsersResolver {
   @Mutation(() => Boolean)
   @UseGuards(JwtAccessAuthGuard)
   async changePassword(
-    @CurrentUser() user: any,
+    @CurrentUser() user: CurrentUserInterface,
     @Args('changePasswordInput') dto: ChangePasswordInput,
   ) {
     return this.usersService.changePassword(
