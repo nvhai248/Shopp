@@ -31,6 +31,7 @@ export class PublishersResolver {
   }
 
   @Mutation(() => Boolean)
+  @UseGuards(JwtAdminAuthGuard)
   updatePublisher(
     @Args('updatePublisherInput') updatePublisherInput: UpdatePublisherInput,
   ) {

@@ -1,42 +1,45 @@
-import {
-  ObjectType,
-  Field,
-  Int,
-  ID,
-  GraphQLISODateTime,
-} from '@nestjs/graphql';
+import { ObjectType, Field, ID, GraphQLISODateTime } from '@nestjs/graphql';
+import { IsEnum } from 'class-validator';
+import { STATUS_PRODUCT } from 'src/utils/const';
 
 @ObjectType()
 export class Product {
   @Field(() => ID)
   id: string;
 
-  @Field()
+  @Field({ nullable: true })
   name: string;
 
-  @Field()
-  price: number;
-
-  @Field()
-  sale: boolean;
-
-  @Field()
-  createdBy: number;
-
-  @Field()
-  categoryId: number;
-
-  @Field()
-  storeId: number;
+  @Field({ nullable: true })
+  description: string;
 
   @Field({ nullable: true })
-  type: string;
+  categoryId: string;
+
+  @Field({ nullable: true })
+  publisherId: string;
+
+  @Field({ nullable: true })
+  price: number;
+
+  @Field({ nullable: true })
+  priceSale: number;
+
+  @Field({ nullable: true })
+  isOnSale: boolean;
 
   @Field({ nullable: true })
   avatar: string;
 
   @Field(() => [String], { nullable: true })
-  cover: string[];
+  author: string[];
+
+  @Field(() => [String], { nullable: true })
+  images: string[];
+
+  @Field(() => String, { nullable: true })
+  @IsEnum(STATUS_PRODUCT)
+  status: STATUS_PRODUCT;
 
   @Field(() => GraphQLISODateTime)
   createdAt: Date;

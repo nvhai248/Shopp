@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { CreateProductInput } from './dto/create-product.input';
 import { UpdateProductInput } from './dto/update-product.input';
 import { ProductRepository } from './product.repository';
-import { unmaskId } from 'src/utils/mask';
 
 @Injectable()
 export class ProductsService {
@@ -10,36 +9,33 @@ export class ProductsService {
 
   async create(createProductInput: CreateProductInput, createdBy: string) {
     try {
-      const categoryId = createProductInput.categoryId
-        ? createProductInput.categoryId
-        : '1';
-      const publisherId = createProductInput.publisherId
-        ? createProductInput.publisherId
-        : '1';
-      return await this.productRepository.create(
-        createProductInput,
-        categoryId,
-        publisherId,
-        createdBy,
-      );
+      return await this.productRepository.create(createProductInput, createdBy);
     } catch (error) {
       throw error;
     }
   }
 
-  async findAll() {
-    return await this.productRepository.findAll();
+  async returnSearchProduct(limit: number, page: number) {
+    const total = await this.productRepository.count();
+    const offset = limit && page ? (page - 1) * limit : 0;
+    const products = await this.productRepository.findMany(offset, limit);
+    return {
+      total: total,
+      limit: limit,
+      page: page,
+      data: products,
+    };
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} product`;
+  /*  async findMany(limit: number, page: number) {
+    return products;
+  } */
+
+  findOne(id: string) {
+    return this.productRepository.findOne(id);
   }
 
-  update(id: number, updateProductInput: UpdateProductInput) {
-    return `This action updates a #${id} product`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} product`;
+  update(id: string, updateProductInput: UpdateProductInput) {
+    return this.productRepository.update(id, updateProductInput);
   }
 }

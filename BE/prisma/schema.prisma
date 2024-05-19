@@ -134,7 +134,7 @@ model Product {
   publisher    Publisher          @relation(fields: [publisherId], references: [id])
   avatar       String?
   status       StatusProduct      @default(ACTIVE)
-  author       String?
+  author       String[]
   images       String[]
   createdBy    String
   admin        HShopAdmin         @relation(fields: [createdBy], references: [id])

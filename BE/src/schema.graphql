@@ -4,15 +4,17 @@
 
 type Product {
   id: ID!
-  name: String!
-  price: Float!
-  sale: Boolean!
-  createdBy: Float!
-  categoryId: Float!
-  storeId: Float!
-  type: String
+  name: String
+  description: String
+  categoryId: String
+  publisherId: String
+  price: Float
+  priceSale: Float
+  isOnSale: Boolean
   avatar: String
-  cover: [String!]
+  author: [String!]
+  images: [String!]
+  status: String
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -21,6 +23,13 @@ type Product {
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
 scalar DateTime
+
+type PagingProduct {
+  data: [Product!]!
+  page: Int
+  limit: Int
+  total: Int
+}
 
 type Cart {
   productId: ID!
@@ -93,8 +102,8 @@ type Category {
 }
 
 type Query {
-  products: [Product!]!
-  product(id: Int!): Product!
+  products(page: Int, limit: Int): PagingProduct!
+  product(id: String!): Product!
   users: [User!]!
   user(id: ID!): User!
   getProfile: User!
@@ -107,8 +116,7 @@ type Query {
 
 type Mutation {
   createProduct(createProductInput: CreateProductInput!): Product!
-  updateProduct(updateProductInput: UpdateProductInput!): Product!
-  removeProduct(id: Int!): Product!
+  updateProduct(updateProductInput: UpdateProductInput!): Boolean!
   requireSendEmailVerifyUser: Boolean!
   verifyUser(otp: String!): Boolean!
   updateProfile(updateUserInput: UpdateUserInput!): User!
@@ -130,23 +138,28 @@ type Mutation {
 
 input CreateProductInput {
   name: String!
-  categoryId: String
-  description: String
-  publisherId: String
+  description: String!
+  categoryId: String!
+  publisherId: String!
   price: Float!
   avatar: String
+  author: [String!]
   images: [String!]
 }
 
 input UpdateProductInput {
+  id: ID!
   name: String
-  categoryId: String
   description: String
+  categoryId: String
   publisherId: String
   price: Float
+  priceSale: Float
+  isOnSale: Boolean
   avatar: String
+  author: [String!]
   images: [String!]
-  id: Int!
+  status: String
 }
 
 input UpdateUserInput {

@@ -5,13 +5,13 @@ export class CreateProductInput {
   @Field()
   name: string;
 
-  @Field({ nullable: true })
-  categoryId: string;
-
-  @Field({ nullable: true })
+  @Field()
   description: string;
 
-  @Field({ nullable: true })
+  @Field()
+  categoryId: string;
+
+  @Field()
   publisherId: string;
 
   @Field()
@@ -19,6 +19,9 @@ export class CreateProductInput {
 
   @Field({ nullable: true })
   avatar: string;
+
+  @Field(() => [String], { nullable: true })
+  author: string[];
 
   @Field(() => [String], { nullable: true })
   images: string[];
