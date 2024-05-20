@@ -27,10 +27,6 @@ export class ProductsService {
     };
   }
 
-  /*  async findMany(limit: number, page: number) {
-    return products;
-  } */
-
   findOne(id: string) {
     return this.productRepository.findOne(id);
   }

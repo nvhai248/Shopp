@@ -31,6 +31,30 @@ type PagingProduct {
   total: Int
 }
 
+type CategoryChild {
+  id: ID!
+  name: String!
+  description: String
+  type: String!
+  parentId: String
+  status: Boolean!
+  createdBy: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Category {
+  id: ID!
+  name: String!
+  description: String
+  type: String!
+  status: Boolean!
+  createdBy: String!
+  childs: [CategoryChild!]!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
 type Cart {
   productId: ID!
   userId: ID!
@@ -77,46 +101,24 @@ type Publisher {
   updatedAt: DateTime!
 }
 
-type CategoryChild {
-  id: ID!
-  name: String!
-  description: String
-  type: String!
-  parentId: String
-  status: Boolean!
-  createdBy: String!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-}
-
-type Category {
-  id: ID!
-  name: String!
-  description: String
-  type: String!
-  status: Boolean!
-  createdBy: String!
-  childs: [CategoryChild!]!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-}
-
 type Query {
   products(page: Int, limit: Int): PagingProduct!
   product(id: String!): Product!
+  categories: [Category!]!
+  category(id: String!): Category!
   users: [User!]!
   user(id: ID!): User!
   getProfile: User!
   adminGetProfile: User!
   publishers: [Publisher!]!
   publisher(id: String!): Publisher!
-  categories: [Category!]!
-  category(id: String!): Category!
 }
 
 type Mutation {
   createProduct(createProductInput: CreateProductInput!): Product!
   updateProduct(updateProductInput: UpdateProductInput!): Boolean!
+  createCategory(createCategoryInput: CreateCategoryInput!): Category!
+  updateCategory(updateCategoryInput: UpdateCategoryInput!): Boolean!
   requireSendEmailVerifyUser: Boolean!
   verifyUser(otp: String!): Boolean!
   updateProfile(updateUserInput: UpdateUserInput!): User!
@@ -132,8 +134,6 @@ type Mutation {
   refreshAccessToken: AuthResponse!
   createPublisher(createPublisherInput: CreatePublisherInput!): Publisher!
   updatePublisher(updatePublisherInput: UpdatePublisherInput!): Boolean!
-  createCategory(createCategoryInput: CreateCategoryInput!): Category!
-  updateCategory(updateCategoryInput: UpdateCategoryInput!): Boolean!
 }
 
 input CreateProductInput {
@@ -160,6 +160,22 @@ input UpdateProductInput {
   author: [String!]
   images: [String!]
   status: String
+}
+
+input CreateCategoryInput {
+  name: String!
+  description: String
+  type: String!
+  parentId: String
+}
+
+input UpdateCategoryInput {
+  id: ID!
+  name: String
+  description: String
+  type: String
+  parentId: String
+  status: Boolean
 }
 
 input UpdateUserInput {
@@ -208,21 +224,5 @@ input UpdatePublisherInput {
   name: String
   description: String
   avatar: String
-  status: Boolean
-}
-
-input CreateCategoryInput {
-  name: String!
-  description: String
-  type: String!
-  parentId: String
-}
-
-input UpdateCategoryInput {
-  id: ID!
-  name: String
-  description: String
-  type: String
-  parentId: String
   status: Boolean
 }

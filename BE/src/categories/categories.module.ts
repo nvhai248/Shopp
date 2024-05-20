@@ -5,5 +5,6 @@ import { CategoriesRepository } from './categories.repository';
 
 @Module({
   providers: [CategoriesResolver, CategoriesService, CategoriesRepository],
+  exports: [CategoriesService],
 })
 export class CategoriesModule {}

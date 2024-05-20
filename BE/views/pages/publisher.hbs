@@ -17,7 +17,7 @@
               <th
                 class='px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50'
               >
-                Phone Number
+                Description
               </th>
               <th
                 class='px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50'
@@ -29,7 +29,7 @@
           </thead>
 
           <tbody class='bg-white'>
-            {{#each users}}
+            {{#each publisher}}
               <tr>
                 <td
                   class='px-6 py-4 border-b border-gray-200 whitespace-nowrap'
@@ -45,11 +45,10 @@
 
                     <div class='ml-4'>
                       <div class='text-sm font-medium leading-5 text-gray-900'>
-                        {{firstName}}
-                        {{lastName}}
+                        {{name}}
                       </div>
                       <div class='text-sm leading-5 text-gray-500'>
-                        {{email}}
+                        {{id}}
                       </div>
                     </div>
                   </div>
@@ -59,22 +58,19 @@
                   class='px-6 py-4 border-b border-gray-200 whitespace-nowrap'
                 >
                   <div class='text-sm leading-5 text-gray-900'>
-                    {{phoneNumber}}
+                    {{description}}
                   </div>
                   <div class='text-sm leading-5 text-gray-500'>
-                    {{id}}
+                    {{createdBy}}
                   </div>
                 </td>
 
-                <td
-                  class='px-6 py-4 border-b border-gray-200 whitespace-nowrap'
-                >
-                  <span
-                    class='inline-flex px-2 text-xs font-semibold leading-5 rounded-full bg-green-500'
-                  >
-                    {{status}}
-                  </span>
+                <td class='px-6 py-4 border-b border-gray-200 whitespace-nowrap'>
+                <span class='inline-flex px-2 text-xs font-semibold leading-5 {{#if status}}text-green-800 bg-green-100{{else}}text-red-800 bg-red-100{{/if}} rounded-full'>
+                    {{#if status}}active{{else}}inactive{{/if}}
+                </span>
                 </td>
+
 
                 <td
                   class='px-6 py-4 text-sm font-medium leading-5 text-right border-b border-gray-200 whitespace-nowrap'

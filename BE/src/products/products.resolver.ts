@@ -36,11 +36,6 @@ export class ProductsResolver {
     return this.productsService.returnSearchProduct(limit, page);
   }
 
-  /* @ResolveField((returns) => [Product], { name: 'data' })
-  searchProducts(@Parent() parent: PagingProduct<Product>) {
-    return this.productsService.findMany(parent.limit, parent.page);
-  }
- */
   @Query(() => Product, { name: 'product' })
   findOne(@Args('id') id: string) {
     return this.productsService.findOne(id);

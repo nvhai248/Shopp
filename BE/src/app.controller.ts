@@ -6,14 +6,6 @@ export class AppController {
   @Render('pages/login')
   login() {}
 
-  @Get('/category-product')
-  @Render('pages/category-product')
-  category() {}
-
-  @Get('/user')
-  @Render('pages/user')
-  user() {}
-
   @Get('/order')
   @Render('pages/order')
   order() {}
