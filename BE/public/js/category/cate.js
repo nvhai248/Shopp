@@ -11,3 +11,19 @@ function toggleSubmenu(id) {
     icon.classList.remove('rotate-180');
   }
 }
+
+function deleteParent(parentId) {
+  alert('Delete Parent: ' + parentId);
+}
+
+function deleteChild(parentId, childrenId) {
+  alert('Delete Child: ' + childrenId, parentId);
+}
+
+function addChild(parentId) {
+  alert('Add Child: ' + parentId);
+}
+
+function addParent() {
+  alert('Add Parent: ');
+}

@@ -27,13 +27,13 @@ document
 
     if (result.errors) {
       document.getElementById('loginNotification').innerHTML =
-      result.errors[0].message;
+        result.errors[0].message;
     } else {
       const { accessToken, expired_accessToken } = result.data.adminLogin;
 
       localStorage.setItem('accessToken', accessToken);
       localStorage.setItem('expired_accessToken', expired_accessToken);
 
-      window.location.href = '/category-product';
+      window.location.href = '/user';
     }
   });
