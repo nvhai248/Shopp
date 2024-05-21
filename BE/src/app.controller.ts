@@ -6,6 +6,11 @@ export class AppController {
   @Render('pages/login')
   login() {}
 
+  @Get('/test')
+  test() {
+    return { test: 'OK' };
+  }
+
   @Get('/order')
   @Render('pages/order')
   order() {}

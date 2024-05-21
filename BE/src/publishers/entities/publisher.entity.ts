@@ -15,6 +15,12 @@ export class Publisher {
   avatar: string;
 
   @Field()
+  address: string;
+
+  @Field()
+  phoneNumber: string;
+
+  @Field()
   status: boolean;
 
   @Field()

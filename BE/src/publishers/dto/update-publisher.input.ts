@@ -15,5 +15,11 @@ export class UpdatePublisherInput {
   avatar: string;
 
   @Field({ nullable: true })
+  address: string;
+
+  @Field({ nullable: true })
+  phoneNumber: string;
+
+  @Field({ nullable: true })
   status: boolean;
 }

@@ -10,4 +10,10 @@ export class CreatePublisherInput {
 
   @Field()
   avatar: string;
+
+  @Field()
+  address: string;
+
+  @Field()
+  phoneNumber: string;
 }

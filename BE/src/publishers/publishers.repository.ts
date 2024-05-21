@@ -9,10 +9,11 @@ export class PublishersRepository {
   constructor(private readonly databaseService: DatabaseService) {}
 
   create(createdBy: string, createPublisherInput: CreatePublisherInput) {
-    const { name, description, avatar } = createPublisherInput;
+    const { name, description, avatar, phoneNumber, address } =
+      createPublisherInput;
 
     return this.databaseService.publisher.create({
-      data: { name, description, avatar, createdBy },
+      data: { name, description, avatar, address, phoneNumber, createdBy },
     });
   }
 

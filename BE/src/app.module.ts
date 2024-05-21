@@ -13,6 +13,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { AppController } from './app.controller';
 import { PublishersModule } from './publishers/publishers.module';
 import { CategoriesModule } from './categories/categories.module';
+import { FileUploadModule } from './upload/upload.module';
 
 @Module({
   imports: [
@@ -51,6 +52,7 @@ import { CategoriesModule } from './categories/categories.module';
     AuthModule,
     PublishersModule,
     CategoriesModule,
+    FileUploadModule,
   ],
   controllers: [AppController],
   providers: [],

@@ -95,6 +95,8 @@ type Publisher {
   name: String!
   description: String!
   avatar: String!
+  address: String!
+  phoneNumber: String!
   status: Boolean!
   createdBy: String!
   createdAt: DateTime!
@@ -218,6 +220,8 @@ input CreatePublisherInput {
   name: String!
   description: String!
   avatar: String!
+  address: String!
+  phoneNumber: String!
 }
 
 input UpdatePublisherInput {
@@ -225,5 +229,7 @@ input UpdatePublisherInput {
   name: String
   description: String
   avatar: String
+  address: String
+  phoneNumber: String
   status: Boolean
 }

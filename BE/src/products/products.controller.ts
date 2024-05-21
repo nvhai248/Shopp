@@ -36,4 +36,8 @@ export class ProductController {
       products: products.data,
     };
   }
+
+  @Get('/create')
+  @Render('pages/create-product')
+  async createProduct() {}
 }

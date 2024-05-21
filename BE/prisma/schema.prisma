@@ -67,7 +67,6 @@ model HShopAdmin {
   publishers  Publisher[]
   Product     Product[]
   Category    Category[]
-  Image       Image[]
 }
 
 model User {
@@ -90,7 +89,6 @@ model User {
   RefreshToken RefreshToken[]
   Order        Order[]
   Review       Review[]
-  Image        Image[]
 }
 
 model RefreshToken {
@@ -195,7 +193,9 @@ model Category {
 model Publisher {
   id          String     @id @default(uuid())
   name        String
-  description String
+  description String?
+  address     String?
+  phoneNumber String?
   avatar      String     @default("https://static-00.iconduck.com/assets.00/avatar-default-symbolic-icon-2048x1949-pq9uiebg.png")
   createdBy   String
   admin       HShopAdmin @relation(fields: [createdBy], references: [id])
@@ -252,17 +252,14 @@ model Review {
 }
 
 model Image {
-  id        String      @id @default(uuid())
-  ownerId   String
-  owner     User        @relation(fields: [ownerId], references: [id])
+  id        String   @id @default(uuid())
+  ownerId   String?
   width     Int?
   height    Int?
   url       String
   cloudName String?
-  createdAt DateTime    @default(now())
-  updatedAt DateTime    @updatedAt
-  Admin     HShopAdmin? @relation(fields: [adminId], references: [id])
-  adminId   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model About {
