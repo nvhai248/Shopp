@@ -36,4 +36,39 @@ export class CategoriesRepository {
 
     return result ? true : false;
   }
+
+  async removeCategoryParent(id: string) {
+    try {
+      this.databaseService.$transaction(async (prismaClient) => {
+        const children = await prismaClient.category.findMany({
+          where: {
+            parentId: id,
+          },
+        });
+
+        // Update children categories
+        for (const child of children) {
+          await prismaClient.category.update({
+            where: { id: child.id },
+            data: {
+              status: false,
+            },
+          });
+        }
+
+        // Update the parent category
+        await prismaClient.category.update({
+          where: { id },
+          data: {
+            status: false,
+          },
+        });
+      });
+
+      return true;
+    } catch (error) {
+      console.error('Error removing category parent:', error.message);
+      return false;
+    }
+  }
 }

@@ -23,4 +23,8 @@ export class CategoriesService {
   update(id: string, updateCategoryInput: UpdateCategoryInput) {
     return this.categoryRepository.update(id, updateCategoryInput);
   }
+
+  async removeCategoryParent(id: string) {
+    return await this.categoryRepository.removeCategoryParent(id);
+  }
 }

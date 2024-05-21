@@ -53,4 +53,10 @@ export class CategoriesResolver {
       updateCategoryInput,
     );
   }
+
+  @Mutation(() => Boolean)
+  @UseGuards(JwtAdminAuthGuard)
+  removeCategoryParent(@Args('id') id: string) {
+    return this.categoriesService.removeCategoryParent(id);
+  }
 }

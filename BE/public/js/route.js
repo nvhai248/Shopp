@@ -5,8 +5,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   );
   const currentTimestamp = new Date().getTime();
 
-  console.log(expired_accessToken, currentTimestamp);
-
   if (window.location.pathname === '/') {
     if (accessToken && expired_accessToken > currentTimestamp) {
       window.location.href = '/category-product';

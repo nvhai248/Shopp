@@ -12,18 +12,15 @@ function toggleSubmenu(id) {
   }
 }
 
-function deleteParent(parentId) {
-  alert('Delete Parent: ' + parentId);
+function closeModal() {
+  const modal = document.getElementById('modal');
+  modal.classList.remove('opacity-100', 'pointer-events-auto');
+  modal.classList.add('opacity-0', 'pointer-events-none');
 }
 
-function deleteChild(parentId, childrenId) {
-  alert('Delete Child: ' + childrenId, parentId);
-}
-
-function addChild(parentId) {
-  alert('Add Child: ' + parentId);
-}
-
-function addParent() {
-  alert('Add Parent: ');
-}
+// Close the modal when the ESC key is pressed
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape') {
+    closeModal();
+  }
+});

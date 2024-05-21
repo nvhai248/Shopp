@@ -119,6 +119,7 @@ type Mutation {
   updateProduct(updateProductInput: UpdateProductInput!): Boolean!
   createCategory(createCategoryInput: CreateCategoryInput!): Category!
   updateCategory(updateCategoryInput: UpdateCategoryInput!): Boolean!
+  removeCategoryParent(id: String!): Boolean!
   requireSendEmailVerifyUser: Boolean!
   verifyUser(otp: String!): Boolean!
   updateProfile(updateUserInput: UpdateUserInput!): User!
