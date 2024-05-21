@@ -3,14 +3,14 @@ import { ProductsService } from './products.service';
 import { CategoriesService } from 'src/categories/categories.service';
 import { CATEGORY_TYPE } from 'src/utils/const';
 
-@Controller('/category-product')
+@Controller('/')
 export class ProductController {
   constructor(
     private readonly productService: ProductsService,
     private readonly categoryService: CategoriesService,
   ) {}
 
-  @Get('/')
+  @Get('/category-product')
   @Render('pages/category-product')
   async categoryProduct() {
     const parents = await this.categoryService.findMany(
@@ -37,7 +37,7 @@ export class ProductController {
     };
   }
 
-  @Get('/create')
+  @Get('/create-category-product')
   @Render('pages/create-product')
   async createProduct() {}
 }
