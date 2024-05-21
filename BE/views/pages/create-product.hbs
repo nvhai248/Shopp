@@ -1,3 +1,7 @@
+<style>
+  .task-item { @apply flex items-center mb-2; } .delete-button { @apply
+  bg-red-500 text-white border-none py-1 px-2 rounded cursor-pointer; }
+</style>
 <div>
   <h3 class='text-2xl font-medium text-gray-700'>Create new Product</h3>
   <div class='flex flex-col mt-8 h-full w-full'>
@@ -86,34 +90,47 @@
               <div class='ml-4'>
                 <label
                   for='product-category'
-                  class='block text-gray-700 font-medium'
+                  class='block text-gray-700'
                 >Category</label>
                 <select
                   id='product-category'
                   name='product-category'
-                  class='w-full px-6 py-2.5 mt-1 border border-gray-300 bg-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500'
+                  class='w-[12rem] px-6 py-2 mt-1 border border-gray-300 bg-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500'
                 >
-                  <option value='category1'>Category 1</option>
-                  <option value='category2'>Category 2</option>
-                  <option value='category3'>Category 3</option>
+                  {{#each categories}}
+                    <option value='{{id}}'>{{name}}</option>
+                  {{/each}}
                 </select>
               </div>
+
               <div class='ml-4'>
                 <label
                   for='product-authors'
                   class='block text-gray-700'
                 >Authors</label>
-                <input
-                  type='text'
-                  id='product-authors'
-                  name='authors'
-                  class='w-full px-3 py-2 mt-1 border rounded-md'
-                  placeholder='Add multiple authors separated by commas'
-                />
-                <div id='authors-container' class='mt-2'></div>
+                <div class='flex flex-row'>
+                  <input
+                    type='text'
+                    id='product-authors'
+                    name='authors'
+                    class='w-full px-3 mt-1 h-[2.6rem] border rounded-md'
+                    placeholder='Add multiple authors separated by commas'
+                  />
+                  <button
+                    type='button'
+                    onclick='addAuthors()'
+                    class='bg-black ml-4 rounded-md mt-1 text-white px-4 hover:bg-gray-800'
+                  >Add</button>
+                </div>
+
               </div>
             </div>
           </div>
+
+          <div
+            id='authors-container'
+            class='mt-2 col-span-2 flex flex-row'
+          ></div>
 
           <div class='col-span-3'>
             <label
@@ -156,7 +173,9 @@
           </div>
 
           <button
-            class='col-span-3 bg-blue-400 py-2 rounded-md hover:bg-blue-500'
+            type='button'
+            onclick='submitCreateProduct()'
+            class='col-span-3 bg-black text-white py-2 rounded-md hover:bg-gray-800'
           >Submit</button>
         </div>
       </form>

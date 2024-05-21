@@ -39,5 +39,14 @@ export class ProductController {
 
   @Get('/create-category-product')
   @Render('pages/create-product')
-  async createProduct() {}
+  async createProduct() {
+    const categories = await this.categoryService.findMany(
+      CATEGORY_TYPE.CHILDREN,
+      undefined,
+    );
+
+    return {
+      categories: categories,
+    };
+  }
 }

@@ -1,4 +1,3 @@
-// JavaScript to handle image preview
 function previewImage(event) {
   const input = event.target;
   const reader = new FileReader();
@@ -54,7 +53,7 @@ function previewThumbnails(event) {
       removeButton.innerHTML = '&times;';
       removeButton.onclick = () => {
         thumbnailDiv.remove();
-        updateInputFiles(input, thumbnailImage.src); // Xóa hình ảnh khỏi danh sách khi người dùng loại bỏ nó
+        updateInputFiles(input, file.name);
       };
 
       thumbnailDiv.appendChild(thumbnailImage);
@@ -66,12 +65,69 @@ function previewThumbnails(event) {
   }
 }
 
-// Hàm này cập nhật tệp đính kèm trong trường input
-function updateInputFiles(input, removedSrc) {
-  const newFiles = Array.from(input.files).filter(
-    (file) => file.src !== removedSrc,
+function updateInputFiles(input, removedFileName) {
+  const dt = new DataTransfer();
+  for (const file of input.files) {
+    if (file.name !== removedFileName) {
+      dt.items.add(file);
+    }
+  }
+  input.files = dt.files;
+}
+let authors = [];
+
+function addAuthors() {
+  const input = document.getElementById('product-authors').value;
+  if (input.trim() !== '') {
+    const container = document.getElementById('authors-container');
+
+    const authorDiv = document.createElement('div');
+    authorDiv.className =
+      'flex items-center justify-between bg-gray-100 p-2 rounded-md mb-2 mr-2';
+
+    const authorName = document.createElement('span');
+    authorName.className = 'text-gray-700';
+    authorName.textContent = input;
+
+    authors.push(input);
+
+    const deleteButton = document.createElement('button');
+    deleteButton.className =
+      'bg-red-500 text-white py-1 px-2 rounded-md hover:bg-red-600 ml-2';
+    deleteButton.textContent = 'Delete';
+    deleteButton.onclick = function () {
+      authorDiv.remove();
+      authors = authors.filter((author) => author !== input);
+    };
+
+    authorDiv.appendChild(authorName);
+    authorDiv.appendChild(deleteButton);
+    container.appendChild(authorDiv);
+
+    document.getElementById('product-authors').value = '';
+  }
+}
+
+document
+  .getElementById('product-authors')
+  .addEventListener('keypress', function (event) {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      addAuthors();
+    }
+  });
+
+function submitCreateProduct() {
+  const name = document.getElementById('product-name').value;
+  const description = document.getElementById('product-description').value;
+  const price = document.getElementById('product-price').value;
+  const categoryId = document.getElementById('product-category').value;
+
+  console.log(
+    name + ' ' + description + ' ' + price,
+    ' ',
+    categoryId,
+    ' ',
+    authors,
   );
-  const newInput = new DataTransfer();
-  newFiles.forEach((file) => newInput.items.add(file));
-  input.files = newInput.files;
 }
