@@ -88,29 +88,18 @@ export class AuthService {
     return this.jwtService.sign(payload, options);
   }
 
-  async register(registerInput: RegisterInput): Promise<AuthResponse> {
+  async register(registerInput: RegisterInput): Promise<boolean> {
     try {
       const salt = await GenSalt();
       registerInput.password = await HashPW(registerInput.password, salt);
       const user = await this.userRepository.create(registerInput, salt);
       await this.otpService.generateSecret(user.id);
 
-      const accessToken = await this.generateJwtToken(
-        { userId: user.id, role: ROLE.CUSTOMER },
-        JWT_CONST.ACCESS_EXPIRED(),
-        JWT_CONST.ACCESS_SECRET,
-      );
-
       this.mailerService
         .sendMail(NewThankyouForRegisterEmailOption(user.email, user.firstName))
         .catch((err) => console.log(err));
 
-      return {
-        accessToken: accessToken,
-        expired_accessToken: JWT_CONST.ACCESS_EXPIRED(),
-        refreshToken: null,
-        expired_refreshToken: null,
-      };
+      return true;
     } catch (error) {
       if (error.code === 'P2002' && error.meta.target.includes('email')) {
         throw new MyBadRequestException('Email already exists');

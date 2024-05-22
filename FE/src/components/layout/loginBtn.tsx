@@ -14,7 +14,6 @@ import React from "react";
 
 const DynamicLoginBtn = () => {
   const { data: session } = useSession();
-  console.log({ session });
 
   if (session && session.user) {
     return (
@@ -24,7 +23,11 @@ const DynamicLoginBtn = () => {
             <AvatarImage src={session.user.avatar as string} alt="Avatar" />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
-          <p>{session.user.firstName + " " + session.user.lastName}</p>
+          <p>
+            {session.user.firstName && session.user.lastName
+              ? session.user.firstName + " " + session.user.lastName
+              : session.user.email}
+          </p>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="rounded-none">
           <DropdownMenuItem>My Profile</DropdownMenuItem>

@@ -1,10 +1,7 @@
 // app/api/auth/[...nextauth]/route.ts
 
-import { LoginMutation } from "@/+core/definegql/mutations/login";
-import { refreshATMutation } from "@/+core/definegql/mutations/refreshATK";
-import { LoginQuery } from "@/+core/definegql/queries/getProfile";
-import { LoginInput } from "@/+core/interfaces/login";
-import { MyApolloClient } from "@/lib/apolloClient";
+import { Login, RefreshAccessToken } from "@/+core/services";
+import { GetProfile } from "@/+core/services/user/getProfile";
 import { NextAuthOptions } from "next-auth";
 import { JWT } from "next-auth/jwt";
 import NextAuth from "next-auth/next";
@@ -12,29 +9,21 @@ import CredentialsProvider from "next-auth/providers/credentials";
 
 async function refreshToken(token: JWT): Promise<JWT> {
   try {
-    const { data } = await MyApolloClient.mutate({
-      mutation: refreshATMutation,
-      context: {
-        headers: {
-          Authorization: `Bearer ${token.refreshToken}`,
-        },
-      },
-    });
+    const { data } = await RefreshAccessToken(token.refreshToken);
 
     if (data?.refreshAccessToken) {
       return {
         ...token,
-        backendTokens: data.refreshAccessToken,
+        accessToken: data.refreshAccessToken.accessToken,
+        expired_accessToken: data.refreshAccessToken.expired_accessToken,
       };
     }
   } catch (err) {
     console.error("Error refreshing token", err);
-    //return null;
+    // Optionally handle token refresh failure
   }
 
-  return {
-    ...token,
-  };
+  return { ...token, error: "RefreshAccessTokenError" };
 }
 
 export const authOptions: NextAuthOptions = {
@@ -42,23 +31,18 @@ export const authOptions: NextAuthOptions = {
     CredentialsProvider({
       name: "Credentials",
       credentials: {
-        email: {},
-        password: {},
-        isRememberMe: {},
+        email: { label: "Email", type: "email" },
+        password: { label: "Password", type: "password" },
+        isRememberMe: { label: "Remember Me", type: "checkbox" },
       },
       async authorize(credentials, req) {
         if (!credentials?.email || !credentials?.password) return null;
 
-        const loginInput: LoginInput = {
-          email: credentials.email,
-          password: credentials.password,
-          isRememberMe: credentials?.isRememberMe == "false" ? false : true,
-        };
-
-        const { data, errors } = await MyApolloClient.mutate({
-          mutation: LoginMutation,
-          variables: { loginInput: loginInput },
-        });
+        const { data, errors } = await Login(
+          credentials.email,
+          credentials.password,
+          credentials.isRememberMe === "true"
+        );
 
         if (data?.login) {
           return data.login;
@@ -70,26 +54,25 @@ export const authOptions: NextAuthOptions = {
   ],
 
   callbacks: {
-    async jwt({ token, user, account }) {
+    async jwt({ token, user }) {
       if (user) return { ...token, ...user };
-      if (new Date().getTime() > token.expired_accessToken) {
+
+      if (Date.now() < token.expired_accessToken) {
         return token;
       }
 
       return await refreshToken(token);
     },
 
-    async session({ token, session }) {
-      const { data } = await MyApolloClient.query({
-        query: LoginQuery,
-        context: {
-          headers: {
-            Authorization: `Bearer ${token.accessToken}`,
-          },
-        },
-      });
+    async session({ session, token }) {
+      try {
+        const { data } = await GetProfile(token.accessToken);
 
-      session.user = data?.getProfile;
+        session.user = data?.getProfile ?? null;
+      } catch (err) {
+        console.error("Error fetching profile", err);
+        session.error = "SessionFetchError";
+      }
 
       return session;
     },

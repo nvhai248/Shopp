@@ -26,7 +26,7 @@ export class AuthResolver {
     return result;
   }
 
-  @Mutation(() => AuthResponse)
+  @Mutation(() => Boolean)
   register(@Args('registerInput') registerInput: RegisterInput) {
     return this.authService.register(registerInput);
   }

@@ -95,7 +95,7 @@ model RefreshToken {
   refreshToken String   @unique
   user         User     @relation(fields: [userId], references: [id])
   userId       String
-  expired      Int
+  expired      BigInt
   createdAt    DateTime @default(now())
 
   @@id([refreshToken, userId])

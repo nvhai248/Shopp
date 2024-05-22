@@ -144,7 +144,7 @@ export default function LoginForm() {
           </form>
         </Form>
       </CardContent>
-      <CardFooter className="flex flex-col">
+      <CardFooter className="flex flex-col mt-[-25px]">
         <Link href="/reset" className="hover:text-blue-700">
           Forgot password?
         </Link>

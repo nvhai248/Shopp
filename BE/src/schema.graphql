@@ -134,7 +134,7 @@ type Mutation {
   addProductToCart(productId: String!, quantity: Float!): Cart!
   login(loginInput: LoginInput!): AuthResponse!
   adminLogin(loginInput: AdminLoginInput!): AuthResponse!
-  register(registerInput: RegisterInput!): AuthResponse!
+  register(registerInput: RegisterInput!): Boolean!
   logout: LogoutResponse!
   refreshAccessToken: AuthResponse!
 }

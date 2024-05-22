@@ -6,8 +6,8 @@ const MainHeader = () => {
   return (
     <header className="flex bg-gradient-to-l from-blue-600 to-blue-700 pl-40 pr-40 text-white justify-between items-center h-10 shadow-md">
       <div>
-        <a href="/seller" className="hover:text-black">
-          GO TO SELLER PAGE
+        <a href="/about" className="hover:text-black">
+          For more information about us ?
         </a>
       </div>
 

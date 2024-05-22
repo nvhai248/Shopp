@@ -1,12 +1,10 @@
 import { gql } from "@apollo/client";
 
-export const refreshATMutation = gql`
+export const RefreshATMutation = gql`
   mutation RefreshAccessToken {
     refreshAccessToken {
-      accessToken
       refreshToken
       expired_accessToken
-      expired_refreshToken
     }
   }
 `;

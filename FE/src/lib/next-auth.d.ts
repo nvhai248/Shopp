@@ -1,3 +1,5 @@
+// Type declarations for NextAuth and JWT
+
 import NextAuth from "next-auth";
 
 declare module "next-auth" {
@@ -8,7 +10,8 @@ declare module "next-auth" {
       firstName: string;
       lastName: string;
       avatar: string;
-    };
+    } | null;
+    error?: string;
   }
 }
 
@@ -20,5 +23,6 @@ declare module "next-auth/jwt" {
     expired_accessToken: number;
     refreshToken: string;
     expired_refreshToken: number;
+    error?: string;
   }
 }
