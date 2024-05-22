@@ -4,10 +4,11 @@ import { ProductsResolver } from './products.resolver';
 import { ProductRepository } from './product.repository';
 import { ProductController } from './products.controller';
 import { CategoriesModule } from 'src/categories/categories.module';
+import { PublishersModule } from 'src/publishers/publishers.module';
 
 @Module({
   providers: [ProductsResolver, ProductsService, ProductRepository],
-  imports: [CategoriesModule],
+  imports: [CategoriesModule, PublishersModule],
   controllers: [ProductController],
 })
 export class ProductsModule {}

@@ -2,12 +2,14 @@ import { Controller, Get, Render } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CategoriesService } from 'src/categories/categories.service';
 import { CATEGORY_TYPE } from 'src/utils/const';
+import { PublishersService } from 'src/publishers/publishers.service';
 
 @Controller('/')
 export class ProductController {
   constructor(
     private readonly productService: ProductsService,
     private readonly categoryService: CategoriesService,
+    private readonly publisherService: PublishersService,
   ) {}
 
   @Get('/category-product')
@@ -45,8 +47,11 @@ export class ProductController {
       undefined,
     );
 
+    const publishers = await this.publisherService.findMany();
+
     return {
       categories: categories,
+      publishers: publishers,
     };
   }
 }

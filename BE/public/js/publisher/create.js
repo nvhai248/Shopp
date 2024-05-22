@@ -1,4 +1,4 @@
-let urlImage = '';
+let newAvatar;
 
 function openCreatePublisher() {
   const modal = document.getElementById('modal');
@@ -104,7 +104,7 @@ function openCreatePublisher() {
       const previewContainer = document.getElementById('preview-container');
 
       if (file) {
-        uploadFile(file);
+        newAvatar = file;
 
         const reader = new FileReader();
 
@@ -121,39 +121,13 @@ function openCreatePublisher() {
     });
 }
 
-async function uploadFile(file) {
-  const url = 'http://localhost:8080/upload';
-
-  const formData = new FormData();
-  formData.append('image', file);
-
-  try {
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-      },
-      body: formData,
-    });
-
-    if (!response.ok) {
-      const errorResponse = await response.json();
-      throw new Error(errorResponse.message || 'File upload failed');
-    }
-
-    const result = await response.json();
-
-    urlImage = result.data.url;
-  } catch (error) {
-    console.error('Error uploading file:', error.message);
-  }
-}
-
 async function createNewPublisher() {
   const name = document.getElementById('publisher-name').value;
   const description = document.getElementById('publisher-description').value;
   const address = document.getElementById('publisher-address').value;
   const phoneNumber = document.getElementById('publisher-phoneNumber').value;
+
+  const urlImage = await uploadFile(newAvatar);
 
   const query = `
   mutation CreatePublisher {

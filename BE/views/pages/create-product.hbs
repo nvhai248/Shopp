@@ -105,6 +105,26 @@
 
               <div class='ml-4'>
                 <label
+                  for='product-publisher'
+                  class='block text-gray-700'
+                >Publisher</label>
+                <select
+                  id='product-publisher'
+                  name='product-publisher'
+                  class='w-[12rem] px-6 py-2 mt-1 border border-gray-300 bg-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500'
+                >
+                  {{#each publishers}}
+                    <option value='{{id}}'><img
+                        src='{{avatar}}'
+                        class='w-10 h-10'
+                        alt='avt'
+                      />{{name}}</option>
+                  {{/each}}
+                </select>
+              </div>
+
+              <div class='ml-4'>
+                <label
                   for='product-authors'
                   class='block text-gray-700'
                 >Authors</label>
@@ -125,12 +145,12 @@
 
               </div>
             </div>
-          </div>
+            <div
+              id='authors-container'
+              class='mt-2 col-span-2 flex flex-row max-w-[30rem]'
+            ></div>
 
-          <div
-            id='authors-container'
-            class='mt-2 col-span-2 flex flex-row'
-          ></div>
+          </div>
 
           <div class='col-span-3'>
             <label
@@ -184,3 +204,4 @@
 </div>
 
 <script src='js/product/create.js'></script>
+<script src='js/upload.js'></script>

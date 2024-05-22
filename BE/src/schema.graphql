@@ -55,6 +55,19 @@ type Category {
   updatedAt: DateTime!
 }
 
+type Publisher {
+  id: ID!
+  name: String!
+  description: String!
+  avatar: String!
+  address: String!
+  phoneNumber: String!
+  status: Boolean!
+  createdBy: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
 type Cart {
   productId: ID!
   userId: ID!
@@ -90,30 +103,17 @@ type LogoutResponse {
   result: Boolean
 }
 
-type Publisher {
-  id: ID!
-  name: String!
-  description: String!
-  avatar: String!
-  address: String!
-  phoneNumber: String!
-  status: Boolean!
-  createdBy: String!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-}
-
 type Query {
   products(page: Int, limit: Int): PagingProduct!
   product(id: String!): Product!
   categories: [Category!]!
   category(id: String!): Category!
+  publishers: [Publisher!]!
+  publisher(id: String!): Publisher!
   users: [User!]!
   user(id: ID!): User!
   getProfile: User!
   adminGetProfile: User!
-  publishers: [Publisher!]!
-  publisher(id: String!): Publisher!
 }
 
 type Mutation {
@@ -122,6 +122,8 @@ type Mutation {
   createCategory(createCategoryInput: CreateCategoryInput!): Category!
   updateCategory(updateCategoryInput: UpdateCategoryInput!): Boolean!
   removeCategoryParent(id: String!): Boolean!
+  createPublisher(createPublisherInput: CreatePublisherInput!): Publisher!
+  updatePublisher(updatePublisherInput: UpdatePublisherInput!): Boolean!
   requireSendEmailVerifyUser: Boolean!
   verifyUser(otp: String!): Boolean!
   updateProfile(updateUserInput: UpdateUserInput!): User!
@@ -135,8 +137,6 @@ type Mutation {
   register(registerInput: RegisterInput!): AuthResponse!
   logout: LogoutResponse!
   refreshAccessToken: AuthResponse!
-  createPublisher(createPublisherInput: CreatePublisherInput!): Publisher!
-  updatePublisher(updatePublisherInput: UpdatePublisherInput!): Boolean!
 }
 
 input CreateProductInput {
@@ -181,6 +181,24 @@ input UpdateCategoryInput {
   status: Boolean
 }
 
+input CreatePublisherInput {
+  name: String!
+  description: String!
+  avatar: String!
+  address: String!
+  phoneNumber: String!
+}
+
+input UpdatePublisherInput {
+  id: ID!
+  name: String
+  description: String
+  avatar: String
+  address: String
+  phoneNumber: String
+  status: Boolean
+}
+
 input UpdateUserInput {
   firstName: String
   lastName: String
@@ -214,22 +232,4 @@ input AdminLoginInput {
 input RegisterInput {
   email: String!
   password: String!
-}
-
-input CreatePublisherInput {
-  name: String!
-  description: String!
-  avatar: String!
-  address: String!
-  phoneNumber: String!
-}
-
-input UpdatePublisherInput {
-  id: ID!
-  name: String
-  description: String
-  avatar: String
-  address: String
-  phoneNumber: String
-  status: Boolean
 }

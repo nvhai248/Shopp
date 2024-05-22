@@ -7,5 +7,6 @@ import { PublisherController } from './publisher.controller';
 @Module({
   providers: [PublishersResolver, PublishersService, PublishersRepository],
   controllers: [PublisherController],
+  exports: [PublishersService],
 })
 export class PublishersModule {}
