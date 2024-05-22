@@ -217,19 +217,20 @@ model productOrder {
 }
 
 model Order {
-  id            String         @id @default(uuid())
-  ownerId       String
-  owner         User           @relation(fields: [ownerId], references: [id])
-  products      productOrder[]
-  contact       Contact        @relation(fields: [contactId], references: [id])
-  isPayed       Boolean        @default(false)
-  paymentMethod PaymentMethod  @default(COD)
-  totalPrice    Float
-  status        StatusOrder    @default(PENDING)
-  reason        String?
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
-  contactId     String
+  id                 String         @id @default(uuid())
+  ownerId            String
+  owner              User           @relation(fields: [ownerId], references: [id])
+  products           productOrder[]
+  contact            Contact        @relation(fields: [contactId], references: [id])
+  isPayed            Boolean        @default(false)
+  paymentMethod      PaymentMethod  @default(COD)
+  totalPrice         Float
+  discountPercentage Float
+  status             StatusOrder    @default(PENDING)
+  reason             String?
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @updatedAt
+  contactId          String
 
   @@index([ownerId], name: "owner_order_index")
 }

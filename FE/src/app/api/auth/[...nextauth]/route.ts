@@ -19,7 +19,6 @@ async function refreshToken(token: JWT): Promise<JWT> {
       };
     }
   } catch (err) {
-    console.error("Error refreshing token", err);
     // Optionally handle token refresh failure
   }
 
@@ -46,6 +45,10 @@ export const authOptions: NextAuthOptions = {
 
         if (data?.login) {
           return data.login;
+        }
+
+        if (errors) {
+          throw errors[0];
         }
 
         return null;

@@ -25,6 +25,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { signIn } from "next-auth/react";
 import { FRONTEND_URL } from "@/lib/constants";
 import { useState } from "react";
+import Spinner from "@/components/ui/spinner";
 
 const formSchema = z.object({
   email: z.string().email({
@@ -38,6 +39,7 @@ const formSchema = z.object({
 
 export default function LoginForm() {
   const [notification, setNotification] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -49,6 +51,8 @@ export default function LoginForm() {
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    setIsLoading(true);
+
     const result = await signIn("credentials", {
       email: values.email,
       password: values.password,
@@ -61,6 +65,8 @@ export default function LoginForm() {
     } else {
       window.location.href = FRONTEND_URL;
     }
+
+    setIsLoading(false);
   }
 
   return (
@@ -135,12 +141,21 @@ export default function LoginForm() {
 
             <p className="mt-2 text-red-500 text-sm">{notification}</p>
 
-            <Button
-              type="submit"
-              className="w-full mb-3 h-12 rounded-none mt-2"
-            >
-              Sign In
-            </Button>
+            {isLoading ? (
+              <Button
+                type="button"
+                className="w-full mb-3 h-12 rounded-none mt-2"
+              >
+                <Spinner size={30} />
+              </Button>
+            ) : (
+              <Button
+                type="submit"
+                className="w-full mb-3 h-12 rounded-none mt-2"
+              >
+                Sign In
+              </Button>
+            )}
           </form>
         </Form>
       </CardContent>

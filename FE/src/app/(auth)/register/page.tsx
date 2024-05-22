@@ -24,7 +24,38 @@ import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { SignUp } from "@/+core/services";
-import { useNotification } from "@/+core/providers/notification";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import Spinner from "@/components/ui/spinner";
+
+function AlertDialogReturnToLogin({ onClose }: { onClose: () => void }) {
+  return (
+    <AlertDialog open onOpenChange={onClose}>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Success Sign Up</AlertDialogTitle>
+          <AlertDialogDescription>
+            Congratulations, you have successfully registered, please log in.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogAction asChild>
+            <Link href="/login">
+              <Button onClick={onClose}>Go to Sign In</Button>
+            </Link>
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+}
 
 const formSchema = z
   .object({
@@ -45,7 +76,8 @@ const formSchema = z
 
 export default function Register() {
   const [notification, setNotification] = useState<string>("");
-  const { addNotification } = useNotification();
+  const [isShowDialog, setIsShowDialog] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -57,23 +89,28 @@ export default function Register() {
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    const { data, errors } = await SignUp(values.email, values.password);
+    setIsLoading(true);
 
-    if (errors) {
-      setNotification(errors[0]?.message);
-    } else {
-      addNotification({
-        type: "success", // 'info', 'warning', 'error'
-        title: "Success Sign Up",
-        message: "Success Sign Up, Please go to Sign In!",
-        autoClose: true,
-        duration: 3000,
-      });
+    try {
+      const { data, errors } = await SignUp(values.email, values.password);
+
+      if (errors) {
+        setNotification(errors[0]?.message);
+      } else {
+        setIsShowDialog(true);
+      }
+    } catch (error: any) {
+      setNotification(error.message);
     }
+
+    setIsLoading(false);
   }
 
   return (
     <Card className="w-[400px] h-[580px] ml-10 rounded-none">
+      {isShowDialog && (
+        <AlertDialogReturnToLogin onClose={() => setIsShowDialog(false)} />
+      )}
       <CardHeader className="text-center">
         <CardTitle className="text-3xl">Sign Up</CardTitle>
       </CardHeader>
@@ -142,9 +179,15 @@ export default function Register() {
 
             <p className="mt-2 text-red-500 text-sm">{notification}</p>
 
-            <Button type="submit" className="w-full h-12 rounded-none">
-              Sign In
-            </Button>
+            {isLoading ? (
+              <Button type="button" className="w-full h-12 rounded-none">
+                <Spinner size={30} />
+              </Button>
+            ) : (
+              <Button type="submit" className="w-full h-12 rounded-none">
+                Sign Up
+              </Button>
+            )}
           </form>
         </Form>
       </CardContent>
@@ -156,7 +199,7 @@ export default function Register() {
         </div>
         <Button className="w-full h-12 mb-3 rounded-none">Google</Button>
         <p>
-          Already had account?{" "}
+          Already had account?
           <Link className="hover:text-blue-700" href="/login">
             Sign in
           </Link>

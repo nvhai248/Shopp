@@ -21,16 +21,22 @@ export async function Login(
       variables: { loginInput: loginInput },
     });
 
+    if (errors) {
+      return {
+        data: null,
+        errors: errors.map((error: any) => new GraphQLError(error.message)),
+      };
+    }
+
     return {
       data: data || null,
-      errors: errors ? [...errors] : null,
+      errors: null,
     };
-  } catch (error) {
-    console.error("Something went wrong: ", error);
+  } catch (error: any) {
     return {
       data: null,
       errors: [
-        new GraphQLError("An error occurred during refresh accessToken."),
+        new GraphQLError(error.message || "An error occurred during login."),
       ],
     };
   }
