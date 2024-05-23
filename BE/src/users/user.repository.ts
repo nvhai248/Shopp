@@ -58,7 +58,6 @@ export class UserRepository {
         data: updateInfo,
       });
     } catch (error) {
-      console.error(error.message);
       throw new MyDBException(error.message);
     }
   }

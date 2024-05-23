@@ -21,6 +21,7 @@ import { RequireActiveGuard } from 'src/guard/require-active.guard';
 import { UserRefreshPasswordInput } from './dto/refreshPw.input';
 import { ChangePasswordInput } from './dto/changePw.input';
 import { CurrentUserInterface } from 'src/interfaces/current-user.interface';
+import { UpdateUserStatusInput } from './dto/updateStatus.input';
 
 @Resolver(() => User)
 export class UsersResolver {
@@ -49,6 +50,7 @@ export class UsersResolver {
   }
 
   @Query(() => [User], { name: 'users' })
+  @UseGuards(JwtAdminAuthGuard)
   findAll() {
     return this.usersService.findAll();
   }
@@ -115,6 +117,17 @@ export class UsersResolver {
       user.id,
       dto.currentPassword,
       dto.newPassword,
+    );
+  }
+
+  @Mutation(() => Boolean)
+  @UseGuards(JwtAdminAuthGuard)
+  async updateUserStatus(
+    @Args('updateUserStatusInput') updateUserStatusInput: UpdateUserStatusInput,
+  ) {
+    return await this.usersService.updateUserStatus(
+      updateUserStatusInput.id,
+      updateUserStatusInput.status,
     );
   }
 }

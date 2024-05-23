@@ -84,8 +84,10 @@ export class UsersService {
     return `This action removes a #${id} user`;
   }
 
-  async updateUserStatus(id: string, status: string) {
+  async updateUserStatus(id: string, status: USER_STATUS) {
     await this.userRepository.updateOne(id, { status: status });
+
+    return true;
   }
 
   async requireSendEmailVerifyUser(

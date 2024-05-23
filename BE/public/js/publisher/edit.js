@@ -1,6 +1,9 @@
-let newAvatar;
+var publisherId;
+var updatedAvatar;
 
-function openCreatePublisher() {
+function edit(id, avatar, name, description, address, phoneNumber) {
+  publisherId = id;
+
   const modal = document.getElementById('modal');
   document.getElementById('modal-title').innerHTML = 'Create new Publisher';
   document.getElementById('modal-content').innerHTML = `
@@ -35,8 +38,8 @@ function openCreatePublisher() {
     </div>
   </div>
 
-  <div id="preview-container" class="hidden">
-    <img id="image-preview" class="w-[180px] rounded-md mt-2" />
+  <div id="preview-container">
+    <img id="image-preview" class="w-[180px] rounded-md mt-2" src="${avatar}" />
   </div>
     </div>
 
@@ -47,6 +50,7 @@ function openCreatePublisher() {
       type="text"
       id="publisher-name"
       name="name"
+      value="${name}"
       class="w-full px-3 py-2 mt-1 border rounded-md"
     />
   </div>
@@ -56,6 +60,7 @@ function openCreatePublisher() {
     <textarea
       id="publisher-description"
       name="description"
+      value="${description}"
       class="w-full px-3 py-2 mt-1 border rounded-md"
     ></textarea>
   </div>
@@ -66,6 +71,7 @@ function openCreatePublisher() {
       type="text"
       id="publisher-address"
       name="address"
+      value="${address}"
       class="w-full px-3 py-2 mt-1 border rounded-md"
     />
   </div>
@@ -76,6 +82,7 @@ function openCreatePublisher() {
       type="text"
       id="publisher-phoneNumber"
       name="phoneNumber"
+      value="${phoneNumber}"
       class="w-full px-3 py-2 mt-1 border rounded-md"
     />
   </div>
@@ -87,10 +94,10 @@ function openCreatePublisher() {
 </form>
 `;
   document.getElementById('modal-action').innerHTML = `<button
-    onclick="createNewPublisher()"
+    onclick="updatePublisherInformation()"
     class="px-6 py-3 font-medium tracking-wide text-white bg-indigo-600 rounded-md hover:bg-indigo-500 focus:outline-none"
   >
-    Create publisher
+    Update publisher
   </button>`;
   modal.classList.remove('opacity-0', 'pointer-events-none');
   modal.classList.add('opacity-100', 'pointer-events-auto');
@@ -104,7 +111,7 @@ function openCreatePublisher() {
       const previewContainer = document.getElementById('preview-container');
 
       if (file) {
-        newAvatar = file;
+        updatedAvatar = file;
 
         const reader = new FileReader();
 
@@ -121,29 +128,44 @@ function openCreatePublisher() {
     });
 }
 
-async function createNewPublisher() {
+async function updatePublisherInformation() {
   const name = document.getElementById('publisher-name').value;
   const description = document.getElementById('publisher-description').value;
   const address = document.getElementById('publisher-address').value;
   const phoneNumber = document.getElementById('publisher-phoneNumber').value;
-
-  const urlImage = await uploadFile(newAvatar);
-
-  const query = `
-  mutation CreatePublisher {
-      createPublisher(
-          createPublisherInput: {
-              name: "${name}"
-              description: "${description}"
-              address: "${address}"
-              phoneNumber: "${phoneNumber}"
-              avatar: "${urlImage}"
+  let query = '';
+  if (updatedAvatar)
+    query = `
+  mutation UpdatePublisher {
+    updatePublisher(
+        updatePublisherInput: {
+            id: "${publisherId}"
+            name: "${name}"
+            description: "${description}"
+            address: "${address}"
+            phoneNumber: "${phoneNumber}"
+            avatar: "${await uploadFile(updatedAvatar)}"
           }
-      ) {
-          id
-      }
+      )
   }
   `;
+  else {
+    query = `
+  mutation UpdatePublisher {
+    updatePublisher(
+        updatePublisherInput: {
+            id: "${publisherId}"
+            name: "${name}"
+            description: "${description}"
+            address: "${address}"
+            phoneNumber: "${phoneNumber}"
+          }
+      )
+  }
+  `;
+  }
+
+  console.log(query);
 
   const response = await fetch('http://localhost:8080/graphql', {
     method: 'POST',
@@ -158,7 +180,7 @@ async function createNewPublisher() {
 
   if (result.errors) {
     showNotification(
-      'Can not create new Publisher, Some thing when wrong!',
+      'Can not update Publisher, Some thing when wrong!',
       'fail',
     );
   } else {
