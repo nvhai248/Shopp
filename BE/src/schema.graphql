@@ -57,11 +57,11 @@ type Category {
 
 type Publisher {
   id: ID!
-  name: String!
-  description: String!
-  avatar: String!
-  address: String!
-  phoneNumber: String!
+  name: String
+  description: String
+  avatar: String
+  address: String
+  phoneNumber: String
   status: Boolean!
   createdBy: String!
   createdAt: DateTime!
@@ -131,6 +131,7 @@ type Mutation {
   requireSendEmailResetPassword(email: String!): Boolean!
   refreshUserPassword(userRefreshPasswordInput: UserRefreshPasswordInput!): Boolean!
   changePassword(changePasswordInput: ChangePasswordInput!): Boolean!
+  updateUserStatus(updateUserStatusInput: UpdateUserStatusInput!): Boolean!
   addProductToCart(productId: String!, quantity: Float!): Cart!
   login(loginInput: LoginInput!): AuthResponse!
   adminLogin(loginInput: AdminLoginInput!): AuthResponse!
@@ -216,6 +217,11 @@ input UserRefreshPasswordInput {
 input ChangePasswordInput {
   currentPassword: String!
   newPassword: String!
+}
+
+input UpdateUserStatusInput {
+  id: ID!
+  status: String!
 }
 
 input LoginInput {

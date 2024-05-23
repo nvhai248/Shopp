@@ -80,9 +80,14 @@
                   class='px-6 py-4 text-sm font-medium leading-5 text-right border-b border-gray-200 whitespace-nowrap'
                 >
                   <a
-                    href='#'
-                    class='text-indigo-600 hover:text-indigo-900'
-                  >Edit</a>
+                    onclick="banned('{{id}}',  '{{email}}')"
+                    class='text-orange-600 hover:text-orange-900 hover:cursor-pointer'
+                  >Banned</a>
+
+                  <a
+                    onclick="unbanned('{{id}}', '{{email}}')"
+                    class='text-indigo-600 hover:text-indigo-900 ml-5 hover:cursor-pointer'
+                  >Unbaned</a>
                 </td>
               </tr>{{/each}}
 
@@ -91,5 +96,8 @@
       </div>
     </div>
   </div>
-
 </div>
+
+<script src='js/user/banned.js'></script>
+<script src='js/user/unbanned.js'></script>
+<script src='js/user/delete.js'></script>

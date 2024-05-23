@@ -5,19 +5,19 @@ export class Publisher {
   @Field(() => ID)
   id: string;
 
-  @Field()
+  @Field({ nullable: true })
   name: string;
 
-  @Field()
+  @Field({ nullable: true })
   description: string;
 
-  @Field()
+  @Field({ nullable: true })
   avatar: string;
 
-  @Field()
+  @Field({ nullable: true })
   address: string;
 
-  @Field()
+  @Field({ nullable: true })
   phoneNumber: string;
 
   @Field()
