@@ -39,7 +39,7 @@ function ProductDetail({
       <div className="flex justify-between">
         <Link
           href={`product/${id}`}
-          className="text-black text-lg ml-1 hover:text-blue-600"
+          className="text-black ml-1 hover:text-blue-600"
         >
           {title}
         </Link>
@@ -79,7 +79,7 @@ export default function ProductCard({
 
   return (
     <Card
-      className="w-[18rem] rounded-none relative overflow-hidden"
+      className="w-[15rem] text-xs rounded-none relative overflow-hidden"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -87,7 +87,7 @@ export default function ProductCard({
         <img
           src="https://cdn-icons-png.flaticon.com/512/1374/1374072.png"
           alt={title || description}
-          className="h-10 w-10 rotate-45 absolute"
+          className="w-10 rotate-45 absolute"
         />
       </CardHeader>
       <CardContent>
@@ -104,23 +104,23 @@ export default function ProductCard({
         ) : (
           <>
             <img src={img} alt={title} />
-            <CardTitle className="flex text-left mt-2 font-normal">
+            <CardTitle className="flex text-left mt-1 font-normal">
               {title}
             </CardTitle>
-            <CardDescription className="flex text-left mt-3">
+            <CardDescription className="flex text-left mt-1">
               <Rating score={score} />
             </CardDescription>
-            <div className="flex mt-2">
-              <p className="line-through text-gray-500">
-                {price + price * 0.2}$
-              </p>{" "}
-              <p className="text-black ml-3">{price}$</p>
-            </div>
           </>
         )}
       </CardContent>
-      <CardFooter className="flex justify-start">
-        <FaMapMarkerAlt className="mr-2" /> <p>{address}</p>
+      <CardFooter className="flex flex-col justify-start">
+        <div className="flex mt-1">
+          <p className="line-through text-gray-500">{price + price * 0.2}$</p>{" "}
+          <p className="text-black ml-3">{price}$</p>
+        </div>
+        <div className="flex flex-row mt-2">
+          <FaMapMarkerAlt className="mr-2" /> <p>{address}</p>
+        </div>
       </CardFooter>
     </Card>
   );

@@ -11,9 +11,22 @@ import {
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import React from "react";
+import { Skeleton } from "../ui/skeleton";
 
 const DynamicLoginBtn = () => {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
+
+  if (status === "loading") {
+    return (
+      <div className="flex items-center space-x-4">
+        <Skeleton className="h-5 w-5 rounded-full" />
+        <div className="space-y-2">
+          <Skeleton className="h-3 w-[100px]" />
+          <Skeleton className="h-2 w-[80px]" />
+        </div>
+      </div>
+    );
+  }
 
   if (session && session.user) {
     return (
