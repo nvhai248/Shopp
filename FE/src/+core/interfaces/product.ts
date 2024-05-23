@@ -6,4 +6,5 @@ export interface ProductType {
   price: number;
   description: string;
   address: string;
+  isOnSale: boolean;
 }

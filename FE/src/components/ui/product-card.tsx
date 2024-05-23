@@ -7,11 +7,10 @@ import {
   CardContent,
   CardDescription,
   CardFooter,
-  CardHeader,
   CardTitle,
 } from "./card";
 import Rating from "./rating";
-import { FaMapMarkerAlt, FaEye } from "react-icons/fa";
+import { FaEye } from "react-icons/fa";
 import Link from "next/link";
 import { FaHeart } from "react-icons/fa6";
 
@@ -23,6 +22,7 @@ interface ProductCardProps {
   price: number;
   description: string;
   address: string;
+  isOnSale: boolean;
 }
 
 function ProductDetail({
@@ -74,22 +74,24 @@ export default function ProductCard({
   price,
   description,
   address,
+  isOnSale,
 }: ProductCardProps) {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
     <Card
-      className="!w-[300px] text-sm rounded-none relative overflow-hidden !h-[360px]"
+      className="!w-[300px] text-sm rounded-none relative overflow-hidden !h-[400px]"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {/* <CardHeader className="min-h-10 w-full" >
+      {isOnSale && (
         <img
           src="https://cdn-icons-png.flaticon.com/512/1374/1374072.png"
           alt={title || description}
           className="w-10 rotate-45 object-cover"
         />
-      </CardHeader> */}
+      )}
+
       <CardContent>
         {isHovered ? (
           <ProductDetail
@@ -100,13 +102,14 @@ export default function ProductCard({
             price={price}
             description={description}
             address={address}
+            isOnSale={false}
           />
         ) : (
           <>
             <img
               src={img}
               alt={title}
-              className="w-full h-[230px] object-cover"
+              className="w-full h-[230px] object-cover mt-2"
             />
             <CardTitle className="flex text-left mt-4 font-normal text-sm">
               {title}
