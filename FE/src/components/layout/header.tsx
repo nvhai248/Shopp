@@ -4,7 +4,8 @@ import DynamicLoginBtn from "./loginBtn";
 
 const MainHeader = () => {
   return (
-    <header className="flex bg-gradient-to-l from-blue-600 to-blue-700 pl-40 pr-40 text-white justify-between items-center h-10 shadow-md">
+    <div className="w-full justify-center flex bg-gradient-to-l from-blue-600 to-blue-700">
+  <header className="flex w-4/5 text-white justify-between items-center h-10 shadow-md">
       <div>
         <a href="/about" className="hover:text-black">
           For more information about us ?
@@ -23,6 +24,8 @@ const MainHeader = () => {
         <DynamicLoginBtn />
       </div>
     </header>
+    </div>
+  
   );
 };
 

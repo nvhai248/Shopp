@@ -19,10 +19,13 @@ export default function LayoutLanding({
         <MainHeader />
         <LandingHeader />
         <MainNavBar />
-        <div className="w-[100%] min-h-[45rem] flex align-middle text-center pl-40 pr-40">
+        <div className="w-full flex justify-center">
+        <div className="w-4/5 min-h-[45rem] flex align-middle text-center">
           {" "}
           {children}
         </div>
+        </div>
+        
       </MySessionProvider>
     </ApolloProvider>
   );

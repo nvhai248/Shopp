@@ -3,9 +3,12 @@ import CollectionDropDown from "./collection-dropdown";
 
 const MainNavBar = () => {
   return (
-    <nav className="flex bg-gray-800 pl-40 pr-40 text-white justify-between items-center h-12 shadow-md">
+    <div className="flex justify-center w-full bg-gray-800">
+ <nav className="flex w-4/5 text-white items-center h-12 shadow-md">
       <CollectionDropDown />
     </nav>
+    </div>
+   
   );
 };
 

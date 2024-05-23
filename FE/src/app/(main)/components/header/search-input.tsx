@@ -22,9 +22,9 @@ const SearchInput = () => {
 
   return (
     <div className="flex w-full max-w-2xl items-center">
-      <SearchDropdown />
+      {/* <SearchDropdown /> */}
       <Input
-        className="rounded-none h-12"
+        className="rounded-none !h-12"
         type="text"
         value={searchKeyword}
         onChange={handleChange}
@@ -32,7 +32,7 @@ const SearchInput = () => {
       />
       <Button
         onClick={handleSearch}
-        className="rounded-none bg-blue-700 h-12"
+        className="rounded-none bg-blue-700 !h-12"
         type="button"
       >
         <SearchIcon />

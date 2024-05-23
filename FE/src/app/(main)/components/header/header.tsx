@@ -4,7 +4,8 @@ import SearchInput from "./search-input";
 
 const LandingHeader = () => {
   return (
-    <header className="flex bg-white pl-40 pr-40 pt-5 pb-5 text-black justify-between items-center">
+    <div className="w-full bg-white flex justify-center">
+ <header className="flex pt-5 pb-5 text-black justify-between items-center w-4/5">
       <Link
         href="/"
         className="flex text-6xl font-mono font-semibold hover:cursor-pointer "
@@ -22,6 +23,8 @@ const LandingHeader = () => {
         <p className="mt-3">$ 0.00 USD</p>
       </div>
     </header>
+    </div>
+   
   );
 };
 

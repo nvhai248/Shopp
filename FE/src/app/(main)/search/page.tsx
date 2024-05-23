@@ -6,13 +6,13 @@ export default function Search() {
   return (
     <div className="flex">
       <NavFilter />
-      <div className="w-3/4 p-5">
+      <div className="w-3/4 p-5 flex flex-col items-center">
         <h1 className="text-center text-3xl mb-5">
           Your search for "laptop" revealed the following:
         </h1>
         <div className="mx-auto w-32 border-b border-gray-500 mb-5"></div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-x-10 gap-y-8">
           {products.map((product) => {
             return (
               <ProductCard

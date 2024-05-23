@@ -23,7 +23,7 @@ export function NavFilter() {
   return (
     <div className="w-1/4 pr-5 py-5  border-r border-gray-300">
       <div className="border">
-        <h2 className="text-xl mb-4 font-bold bg-gradient-to-t text-white from-blue-600 to-blue-700 py-2">
+        <h2 className="text-xl mb-4 font-bold bg-gradient-to-t text-white from-blue-600 to-blue-700 py-2 text-left p-4">
           ALL CATEGORIES
         </h2>
 
@@ -41,15 +41,16 @@ export function NavFilter() {
             "Tablet",
             "Television",
           ].map((item, index) => (
-            <li key={index} className="mb-2">
-              <button
+            <li key={index} className="mb-2 text-left px-4 py-1">
+              <div
                 onClick={() => setCategory(item.toLowerCase())}
-                className={`${
+                className={`flex justify-between items-center ${
                   category === item.toLowerCase() ? "font-bold" : ""
                 }`}
               >
-                {item} <span className="text-gray-500">(8)</span>
-              </button>
+                <span>{item} </span>
+                <span className="text-gray-500">(8)</span>
+              </div>
             </li>
           ))}
         </ul>
