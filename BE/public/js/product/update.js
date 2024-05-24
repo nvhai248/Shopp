@@ -1,6 +1,6 @@
+async function submitUpdateProduct() {
+  const id = document.getElementById('idProduct').innerHTML;
 
-
-async function submitCreateProduct() {
   const name = document.getElementById('product-name').value;
   const description = document.getElementById('product-description').value;
   const price = document.getElementById('product-price').value;
@@ -15,23 +15,22 @@ async function submitCreateProduct() {
   }
 
   const query = `
-  mutation CreateProduct {
-      createProduct(
-          createProductInput: {
-              name: "${name}"
-              description: "${description}"
-              categoryId: "${categoryId}"
-              publisherId: "${publisherId}"
-              price: ${price}
-              avatar: "${urlAvatar}"
-              author: ${JSON.stringify(authors)}
-              images: ${JSON.stringify(imageUrls)}
-          }
-      ) {
-          id
+    mutation UpdateProduct {
+        updateProduct(
+            updateProductInput: {
+                id: "${id}"
+                name: "${name}"
+                description: "${description}"
+                categoryId: "${categoryId}"
+                publisherId: "${publisherId}"
+                price: ${price}
+                avatar: "${urlAvatar}"
+                author: ${JSON.stringify(authors)}
+                images: ${JSON.stringify(imageUrls)}
+            }
+        )
       }
-    }
-  `;
+    `;
 
   const response = await fetch('http://localhost:8080/graphql', {
     method: 'POST',
@@ -48,12 +47,12 @@ async function submitCreateProduct() {
     console.log(result.errors);
 
     showNotification(
-      `Can not create new Publisher: ${result.errors[0].message}!`,
+      `Can not update Publisher: ${result.errors[0].message}!`,
       'fail',
     );
   } else {
     closeModal();
-    alert('Successfully created Product!');
-    window.location.href = '/category-product';
+    alert('Successfully update Product!');
+    window.location.reload();
   }
 }

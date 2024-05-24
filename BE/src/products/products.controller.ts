@@ -1,4 +1,4 @@
-import { Controller, Get, Render } from '@nestjs/common';
+import { Controller, Get, Param, Query, Render } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CategoriesService } from 'src/categories/categories.service';
 import { CATEGORY_TYPE } from 'src/utils/const';
@@ -52,6 +52,25 @@ export class ProductController {
     return {
       categories: categories,
       publishers: publishers,
+    };
+  }
+
+  @Get('/update-category-product')
+  @Render('pages/update-product')
+  async updateProduct(@Query('id') id: string) {
+    const categories = await this.categoryService.findMany(
+      CATEGORY_TYPE.CHILDREN,
+      undefined,
+    );
+
+    const publishers = await this.publisherService.findMany();
+
+    const product = await this.productService.findOne(id);
+
+    return {
+      categories: categories,
+      publishers: publishers,
+      product: product,
     };
   }
 }
