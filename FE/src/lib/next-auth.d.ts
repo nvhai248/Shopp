@@ -1,5 +1,6 @@
 // Type declarations for NextAuth and JWT
 
+import { USER_STATUS } from "@/+core/enums";
 import NextAuth from "next-auth";
 
 declare module "next-auth" {
@@ -10,7 +11,9 @@ declare module "next-auth" {
       firstName: string;
       lastName: string;
       avatar: string;
+      status: USER_STATUS;
     } | null;
+    accessToken: string;
     error?: string;
   }
 }

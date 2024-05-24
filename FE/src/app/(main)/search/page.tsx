@@ -24,6 +24,7 @@ export default function Search() {
                 price={product.price}
                 description={product.description}
                 address={product.address}
+                isOnSale={new Date().getTime() % 2 === 0 ? true : false}
               />
             );
           })}
