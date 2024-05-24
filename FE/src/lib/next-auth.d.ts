@@ -14,6 +14,7 @@ declare module "next-auth" {
       status: USER_STATUS;
     } | null;
     accessToken: string;
+    refreshToken: string;
     error?: string;
   }
 }

@@ -73,6 +73,7 @@ export const authOptions: NextAuthOptions = {
 
         session.user = data?.getProfile ?? null;
         session.accessToken = token.accessToken;
+        session.refreshToken = token.refreshToken;
       } catch (err) {
         console.error("Error fetching profile", err);
         session.error = "SessionFetchError";

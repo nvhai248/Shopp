@@ -27,9 +27,7 @@ export default function Verification() {
 
   if (status === "loading") {
     return <Spinner size={80} />;
-  }
-
-  if (status === "unauthenticated") {
+  } else if (status === "unauthenticated") {
     window.location.href = "/";
   }
 
@@ -42,8 +40,6 @@ export default function Verification() {
     setDialogMessage(message);
     setDialogOpen(true);
   };
-
-  console.log(session?.accessToken);
 
   async function verifyAccount() {
     setIsLoading(true);
@@ -78,14 +74,12 @@ export default function Verification() {
       });
     }
 
-    if (data?.requireSendEmailVerifyUser) {
-      return toast({
-        variant: "default",
-        title: "We hav sent email verification",
-        description: new Date().toDateString(),
-        action: <ToastAction altText="Goto schedule to undo">Undo</ToastAction>,
-      });
-    }
+    toast({
+      variant: "default",
+      title: "We hav sent email verification",
+      description: new Date().toDateString(),
+      action: <ToastAction altText="Goto schedule to undo">Undo</ToastAction>,
+    });
   }
 
   return (
