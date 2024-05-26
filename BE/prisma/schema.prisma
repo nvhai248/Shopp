@@ -50,6 +50,16 @@ enum UserStatus {
   DELETED
 }
 
+enum PromotionLevel {
+  ORDER
+  ITEM
+}
+
+enum PromotionType {
+  PERCENT
+  VALUE
+}
+
 model HShopAdmin {
   id          String      @id @default(uuid())
   firstName   String?
@@ -150,9 +160,12 @@ model Promotion {
   id                 String             @id @default(uuid())
   name               String
   description        String
+  level              PromotionLevel     @default(ORDER)
+  type               PromotionType      @default(VALUE)
   banner             String?            @default("https://img.freepik.com/free-vector/horizontal-sale-banner-template-world-book-day-celebration_23-2150181295.jpg?w=1380&t=st=1715965165~exp=1715965765~hmac=57900c36234f20ee17bd27f376407ef837816cd9161eecb49e4bde9ab6eeea4a")
-  discountPercentage Float
-  totalPrice         Float
+  discountPercentage Float?
+  discountValue      Float?
+  minValue           Float?
   startDate          DateTime
   endDate            DateTime
   status             Boolean            @default(true)
@@ -160,13 +173,13 @@ model Promotion {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  Order     Order[]
 }
 
 model ProductPromotion {
   productId   String
   promotionId String
   quantity    Int
-  price       Float
 
   product   Product   @relation(fields: [productId], references: [id])
   promotion Promotion @relation(fields: [promotionId], references: [id])
@@ -217,20 +230,22 @@ model productOrder {
 }
 
 model Order {
-  id                 String         @id @default(uuid())
-  ownerId            String
-  owner              User           @relation(fields: [ownerId], references: [id])
-  products           productOrder[]
-  contact            Contact        @relation(fields: [contactId], references: [id])
-  isPayed            Boolean        @default(false)
-  paymentMethod      PaymentMethod  @default(COD)
-  totalPrice         Float
-  discountPercentage Float
-  status             StatusOrder    @default(PENDING)
-  reason             String?
-  createdAt          DateTime       @default(now())
-  updatedAt          DateTime       @updatedAt
-  contactId          String
+  id            String         @id @default(uuid())
+  ownerId       String
+  contactId     String
+  promotionId   String?
+  owner         User           @relation(fields: [ownerId], references: [id])
+  contact       Contact        @relation(fields: [contactId], references: [id])
+  promotion     Promotion?     @relation(fields: [promotionId], references: [id])
+  products      productOrder[]
+  isPaid        Boolean        @default(false)
+  paymentMethod PaymentMethod  @default(COD)
+  totalPrice    Float
+  reducePrice   Float          @default(0)
+  status        StatusOrder    @default(PENDING)
+  reason        String?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
 
   @@index([ownerId], name: "owner_order_index")
 }

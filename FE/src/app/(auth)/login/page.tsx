@@ -23,7 +23,6 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Checkbox } from "@/components/ui/checkbox";
 import { signIn } from "next-auth/react";
-import { FRONTEND_URL } from "@/lib/constants";
 import { useState } from "react";
 import Spinner from "@/components/ui/spinner";
 
@@ -63,7 +62,7 @@ export default function LoginForm() {
     if (result?.error) {
       setNotification(result.error);
     } else {
-      window.location.href = FRONTEND_URL;
+      window.location.href = "/";
     }
 
     setIsLoading(false);
