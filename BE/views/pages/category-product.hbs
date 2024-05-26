@@ -171,25 +171,28 @@
                   </td>
 
                   <td
-                    class='px-6 py-4 text-sm font-medium leading-5 text-right border-b border-gray-200 whitespace-nowrap'
+                    class='px-6 text-sm font-medium leading-5 text-right border-b border-gray-200 whitespace-nowrap'
                   >
-                    <a
-                      href='/update-category-product?id={{id}}'
-                      class='text-indigo-600 hover:text-indigo-900'
-                    >Edit</a>
-                    <a
-                      onclick="deletedProduct('{{id}}', '{{name}}')"
-                      class='text-red-600 hover:text-red-900 hover:cursor-pointer ml-4'
-                    >Delete</a>
+                    <div class='flex flex-col'>
+                      <a
+                        href='/update-category-product?id={{id}}'
+                        class='text-indigo-600 hover:text-indigo-900'
+                      >Edit</a>
+                      <a
+                        onclick="deletedProduct('{{id}}', '{{name}}')"
+                        class='text-red-600 hover:text-red-900 hover:cursor-pointer ml-4'
+                      >Delete</a>
 
-                    <a
-                      onclick="inactiveProduct('{{id}}', '{{name}}')"
-                      class='text-orange-600 hover:text-orange-900 hover:cursor-pointer ml-4'
-                    >Inactive</a>
-                    <a
-                      onclick="activeProduct('{{id}}', '{{name}}')"
-                      class='text-green-600 hover:text-green-900 hover:cursor-pointer ml-4'
-                    >Active</a>
+                      <a
+                        onclick="inactiveProduct('{{id}}', '{{name}}')"
+                        class='text-orange-600 hover:text-orange-900 hover:cursor-pointer ml-4'
+                      >Inactive</a>
+                      <a
+                        onclick="activeProduct('{{id}}', '{{name}}')"
+                        class='text-green-600 hover:text-green-900 hover:cursor-pointer ml-4'
+                      >Active</a>
+                    </div>
+
                   </td>
                 </tr>{{/each}}
 

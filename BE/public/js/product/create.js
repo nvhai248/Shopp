@@ -1,5 +1,3 @@
-
-
 async function submitCreateProduct() {
   const name = document.getElementById('product-name').value;
   const description = document.getElementById('product-description').value;

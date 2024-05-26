@@ -3,8 +3,10 @@
   bg-red-500 text-white border-none py-1 px-2 rounded cursor-pointer; }
 </style>
 <div>
-  {{#with product}}
-  <h3 class='text-2xl font-medium text-gray-700'>Update Product: <span id="idProduct">{{id}}</span> </h3>
+
+  <h3 class='text-2xl font-medium text-gray-700'>Update Product:
+    <span id='idProduct'>{{product.id}}</span>
+  </h3>
   <div class='flex flex-col mt-8 h-full w-full'>
     <div class='py-2 overflow-x-auto sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8'>
       <form>
@@ -48,7 +50,7 @@
             <div id='preview-container'>
               <img
                 id='image-preview'
-                src='{{avatar}}'
+                src='{{product.avatar}}'
                 class='w-[300px] rounded-md mt-2'
               />
             </div>
@@ -62,7 +64,7 @@
                 type='text'
                 id='product-name'
                 name='name'
-                value='{{name}}'
+                value='{{product.name}}'
                 class='w-full px-3 py-2 mt-1 border rounded-md'
               />
             </div>
@@ -71,13 +73,12 @@
               <label
                 for='product-description'
                 class='block text-gray-700'
-
               >Description</label>
               <textarea
                 id='product-description'
                 name='description'
                 class='w-full px-3 py-2 mt-1 border rounded-md'
-              >{{description}}</textarea>
+              >{{product.description}}</textarea>
             </div>
 
             <div class='mb-4 flex flex-row'>
@@ -90,7 +91,7 @@
                   type='number'
                   id='product-price'
                   name='price'
-                  value='{{price}}'
+                  value='{{product.price}}'
                   class='w-full px-3 py-2 mt-1 border rounded-md'
                 />
               </div>
@@ -106,7 +107,7 @@
                   class='w-[12rem] px-6 py-2 mt-1 border border-gray-300 bg-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500'
                 >
                   {{#each categories}}
-                    <option value='{{id}}' {{#if product.categoryId}} selected {{/if}}>{{name}}</option>
+                    <option value='{{id}}'>{{name}}</option>
                   {{/each}}
                 </select>
               </div>
@@ -122,7 +123,7 @@
                   class='w-[12rem] px-6 py-2 mt-1 border border-gray-300 bg-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500'
                 >
                   {{#each publishers}}
-                    <option value='{{id}}' {{#if product.publisherId}} selected {{/if}}><img
+                    <option value='{{id}}'><img
                         src='{{avatar}}'
                         class='w-10 h-10'
                         alt='avt'
@@ -157,12 +158,7 @@
               id='authors-container'
               class='mt-2 col-span-2 flex flex-row max-w-[30rem]'
             >
-            {{#each author}}
-              <div class="flex items-center justify-between bg-gray-100 p-2 rounded-md mb-2 mr-2">
-                <span class="text-gray-700">{{this}}</span>
-                <button class="bg-red-500 text-white py-1 px-2 rounded-md hover:bg-red-600 ml-2">Delete</button>
-              </div>
-            {{/each}}
+
             </div>
 
           </div>
@@ -201,21 +197,8 @@
               </svg>
               <span class='text-gray-500'>Add Thumbnail</span>
             </div>
-            <div
-              id='thumbnails-container'
-              class='mt-2 flex flex-wrap gap-2'
-            >
-            {{#each images}}
-              <div class="relative">
-                <img
-                  src='{{this}}'
-                  class='w-24 h-24 rounded-md object-cover'
-                  alt='avt'
-                />
-                <button class="absolute top-0 personal-thumbnails right-0 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center"
-                >&times;</button>
-              </div>
-            {{/each}}
+            <div id='thumbnails-container' class='mt-2 flex flex-wrap gap-2'>
+
             </div>
           </div>
 
@@ -228,7 +211,7 @@
       </form>
     </div>
   </div>
-  {{/with}}
+
 </div>
 
 <script src='js/product/core.js'></script>
