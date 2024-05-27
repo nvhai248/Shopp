@@ -4,6 +4,7 @@ import { MyDBException } from 'src/utils/error';
 import { CreateProductInput } from './dto/create-product.input';
 import { STATUS_PRODUCT } from 'src/utils/const';
 import { UpdateProductInput } from './dto/update-product.input';
+import { SearchConditionInput } from './dto/serch-condition.input';
 
 @Injectable()
 export class ProductRepository {
@@ -44,10 +45,20 @@ export class ProductRepository {
     return await this.databaseService.product.count();
   }
 
-  async findMany(offset: number, limit: number, searchConditions: any = null) {
+  async findMany(
+    offset: number,
+    limit: number,
+    searchConditions: SearchConditionInput = null,
+  ) {
+    const where: any = {};
+    if (searchConditions) {
+      where.isOnSale = searchConditions.isOnSale;
+    }
+
     return await this.databaseService.product.findMany({
       skip: offset,
       take: limit,
+      where: where,
     });
   }
 

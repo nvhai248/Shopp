@@ -25,10 +25,10 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 scalar DateTime
 
 type PagingProduct {
-  data: [Product!]!
   page: Int
   limit: Int
   total: Int
+  data: [Product!]!
 }
 
 type CategoryChild {
@@ -104,7 +104,7 @@ type LogoutResponse {
 }
 
 type Query {
-  products(page: Int, limit: Int): PagingProduct!
+  products(searchConditionInput: SearchConditionInput!): PagingProduct!
   product(id: String!): Product!
   categories: [Category!]!
   category(id: String!): Category!
@@ -114,6 +114,15 @@ type Query {
   user(id: ID!): User!
   getProfile: User!
   adminGetProfile: User!
+}
+
+input SearchConditionInput {
+  page: Int
+  limit: Int
+  keyword: String
+  categoryId: String
+  publisherId: String
+  isOnSale: Boolean
 }
 
 type Mutation {

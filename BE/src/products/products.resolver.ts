@@ -14,6 +14,7 @@ import { UpdateProductInput } from './dto/update-product.input';
 import { CurrentUser, JwtAdminAuthGuard } from 'src/guard/jwt-auth.guard';
 import { UseGuards } from '@nestjs/common';
 import { PagingProduct } from './entities/paging-product.entity';
+import { SearchConditionInput } from './dto/serch-condition.input';
 
 @Resolver(() => Product)
 export class ProductsResolver {
@@ -29,11 +30,8 @@ export class ProductsResolver {
   }
 
   @Query(() => PagingProduct, { name: 'products' })
-  search(
-    @Args('page', { type: () => Int, nullable: true }) page: number = 1,
-    @Args('limit', { type: () => Int, nullable: true }) limit: number = 10,
-  ) {
-    return this.productsService.returnSearchProduct(limit, page);
+  search(@Args('searchConditionInput') condition: SearchConditionInput) {
+    return this.productsService.returnSearchProduct(condition);
   }
 
   @Query(() => Product, { name: 'product' })

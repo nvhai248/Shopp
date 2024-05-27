@@ -1,5 +1,13 @@
 let avatar;
 let thumbnails = [];
+let authors = [];
+
+document
+  .getElementById('product-price')
+  .addEventListener('input', function (e) {
+    // This will replace any non-numeric characters with an empty string
+    this.value = this.value.replace(/[^0-9.]/g, '');
+  });
 
 function previewImage(event) {
   const input = event.target;
@@ -85,8 +93,6 @@ function updateInputFiles(input, removedFileName) {
   }
   input.files = dt.files;
 }
-
-let authors = [];
 
 function addAuthors() {
   const input = document.getElementById('product-authors').value;

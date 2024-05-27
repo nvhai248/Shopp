@@ -19,10 +19,6 @@ export class AppController {
   @Render('pages/review')
   review() {}
 
-  @Get('/on-sale')
-  @Render('pages/on-sale')
-  onSale() {}
-
   @Get('/on-promotion')
   @Render('pages/on-promotion')
   onPromotion() {}

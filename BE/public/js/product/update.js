@@ -1,11 +1,12 @@
-authors;
-thumbnails;
+let thumbnailUrls = [];
 
 async function fetchData() {
   try {
+    const id = document.getElementById('idProduct').innerHTML;
+
     const query = `
     query Product {
-        product(id: "f28f439e-4d9c-47c9-87b3-d7f78fe31eae") {
+        product(id: "${id}") {
             categoryId
             publisherId
             author
@@ -22,9 +23,22 @@ async function fetchData() {
       },
       body: JSON.stringify({ query }),
     });
-    const data = await response.json();
-    authors = data.product.author;
-    thumbnails = data.product.images;
+
+    const result = await response.json();
+
+    if (!result.errors) {
+      const { author, images, categoryId, publisherId } = result.data?.product;
+      authors = author;
+      thumbnailUrls = images;
+      const categorySelect = document.getElementById('product-category');
+      // Set the selected category
+      categorySelect.value = categoryId;
+
+      // Select the publisher dropdown element
+      const publisherSelect = document.getElementById('product-publisher');
+      // Set the selected publisher
+      publisherSelect.value = publisherId;
+    }
 
     renderAuthors();
     renderThumbnails();
@@ -32,6 +46,8 @@ async function fetchData() {
     console.error('Error fetching data:', error);
   }
 }
+
+fetchData();
 
 function renderAuthors() {
   const authorsContainer = document.getElementById('authors-container');
@@ -49,7 +65,7 @@ function renderAuthors() {
 
 function renderThumbnails() {
   const thumbnailsContainer = document.getElementById('thumbnails-container');
-  thumbnailsContainer.innerHTML = thumbnails
+  thumbnailsContainer.innerHTML = thumbnailUrls
     .map(
       (thumbnail, index) => `
     <div class="relative" data-index="${index}">
@@ -62,16 +78,12 @@ function renderThumbnails() {
 }
 
 function deleteAuthor(index) {
-  // Xóa khỏi mảng authors
   authors.splice(index, 1);
-  // Render lại authors
   renderAuthors();
 }
 
 function deleteThumbnail(index) {
-  // Xóa khỏi mảng thumbnails
-  thumbnails.splice(index, 1);
-  // Render lại thumbnails
+  thumbnailUrls.splice(index, 1);
   renderThumbnails();
 }
 
@@ -84,11 +96,12 @@ async function submitUpdateProduct() {
   const categoryId = document.getElementById('product-category').value;
   const publisherId = document.getElementById('product-publisher').value;
 
-  const urlAvatar = await uploadFile(avatar);
-  let imageUrls = [];
+  const urlAvatar = avatar
+    ? await uploadFile(avatar)
+    : document.getElementById('image-preview').src;
 
   for (let i = 0; i < thumbnails.length; i++) {
-    imageUrls.push(await uploadFile(thumbnails[i]));
+    thumbnailUrls.push(await uploadFile(thumbnails[i]));
   }
 
   const query = `
@@ -103,7 +116,7 @@ async function submitUpdateProduct() {
                 price: ${price}
                 avatar: "${urlAvatar}"
                 author: ${JSON.stringify(authors)}
-                images: ${JSON.stringify(imageUrls)}
+                images: ${JSON.stringify(thumbnailUrls)}
             }
         )
       }

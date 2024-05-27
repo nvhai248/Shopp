@@ -1,17 +1,9 @@
-import { ObjectType, Field, Int } from '@nestjs/graphql';
+import { ObjectType, Field } from '@nestjs/graphql';
 import { Product } from './product.entity';
+import { PagingResponse } from 'src/interfaces/paging.response';
 
 @ObjectType()
-export class PagingProduct<Product> {
+export class PagingProduct extends PagingResponse {
   @Field(() => [Product], { defaultValue: [] })
   data: Product[];
-
-  @Field(() => Int, { nullable: true })
-  page: number;
-
-  @Field(() => Int, { nullable: true })
-  limit: number;
-
-  @Field(() => Int, { nullable: true })
-  total: number;
 }

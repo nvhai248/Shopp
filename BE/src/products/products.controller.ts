@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Query, Render } from '@nestjs/common';
+import { Controller, Get, Query, Render } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CategoriesService } from 'src/categories/categories.service';
 import { CATEGORY_TYPE } from 'src/utils/const';
@@ -31,7 +31,14 @@ export class ProductController {
         childs: childs,
       });
     }
-    const products = await this.productService.returnSearchProduct(10, 1);
+    const products = await this.productService.returnSearchProduct({
+      page: 0,
+      limit: 10,
+      keyword: null,
+      categoryId: null,
+      publisherId: null,
+      isOnSale: undefined,
+    });
 
     return {
       categories: result,
@@ -71,6 +78,23 @@ export class ProductController {
       categories: categories,
       publishers: publishers,
       product: product,
+    };
+  }
+
+  @Get('/on-sale')
+  @Render('pages/on-sale')
+  async onSale() {
+    const products = await this.productService.returnSearchProduct({
+      isOnSale: true,
+      page: 1,
+      limit: 10,
+      keyword: null,
+      categoryId: null,
+      publisherId: null,
+    });
+
+    return {
+      products: products.data,
     };
   }
 }

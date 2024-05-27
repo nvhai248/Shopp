@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateProductInput } from './dto/create-product.input';
 import { UpdateProductInput } from './dto/update-product.input';
 import { ProductRepository } from './product.repository';
+import { SearchConditionInput } from './dto/serch-condition.input';
 
 @Injectable()
 export class ProductsService {
@@ -15,14 +16,21 @@ export class ProductsService {
     }
   }
 
-  async returnSearchProduct(limit: number, page: number) {
+  async returnSearchProduct(conditions: SearchConditionInput) {
     const total = await this.productRepository.count();
-    const offset = limit && page ? (page - 1) * limit : 0;
-    const products = await this.productRepository.findMany(offset, limit);
+    const offset =
+      conditions.limit && conditions.page
+        ? (conditions.page - 1) * conditions.limit
+        : 0;
+    const products = await this.productRepository.findMany(
+      offset,
+      conditions.limit,
+      conditions,
+    );
     return {
       total: total,
-      limit: limit,
-      page: page,
+      limit: conditions.limit,
+      page: conditions.page,
       data: products,
     };
   }
