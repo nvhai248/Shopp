@@ -13,7 +13,7 @@ export class ProductController {
   ) {}
 
   @Get('/category-product')
-  @Render('pages/category-product')
+  @Render('pages/product/category-product')
   async categoryProduct() {
     const parents = await this.categoryService.findMany(
       CATEGORY_TYPE.PARENT,
@@ -47,7 +47,7 @@ export class ProductController {
   }
 
   @Get('/create-category-product')
-  @Render('pages/create-product')
+  @Render('pages/product/create-product')
   async createProduct() {
     const categories = await this.categoryService.findMany(
       CATEGORY_TYPE.CHILDREN,
@@ -63,7 +63,7 @@ export class ProductController {
   }
 
   @Get('/update-category-product')
-  @Render('pages/update-product')
+  @Render('pages/product/update-product')
   async updateProduct(@Query('id') id: string) {
     const categories = await this.categoryService.findMany(
       CATEGORY_TYPE.CHILDREN,
@@ -82,7 +82,7 @@ export class ProductController {
   }
 
   @Get('/on-sale')
-  @Render('pages/on-sale')
+  @Render('pages/product/on-sale')
   async onSale() {
     const products = await this.productService.returnSearchProduct({
       isOnSale: true,

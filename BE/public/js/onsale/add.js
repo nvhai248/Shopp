@@ -3,7 +3,7 @@ async function returnAllProductNotSale() {
       query Products {
         products(searchConditionInput: {
           isOnSale: false,
-          limit: 100,
+          limit: 1000,
           page: 1
         }) {
           data {

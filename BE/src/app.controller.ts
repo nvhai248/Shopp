@@ -6,11 +6,6 @@ export class AppController {
   @Render('pages/login')
   login() {}
 
-  @Get('/test')
-  test() {
-    return { test: 'OK' };
-  }
-
   @Get('/order')
   @Render('pages/order')
   order() {}
@@ -18,10 +13,6 @@ export class AppController {
   @Get('/review')
   @Render('pages/review')
   review() {}
-
-  @Get('/on-promotion')
-  @Render('pages/on-promotion')
-  onPromotion() {}
 
   @Get('/about')
   @Render('pages/about')

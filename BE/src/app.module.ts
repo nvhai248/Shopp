@@ -14,6 +14,7 @@ import { AppController } from './app.controller';
 import { PublishersModule } from './publishers/publishers.module';
 import { CategoriesModule } from './categories/categories.module';
 import { FileUploadModule } from './upload/upload.module';
+import { PromotionsModule } from './promotions/promotions.module';
 
 @Module({
   imports: [
@@ -53,6 +54,7 @@ import { FileUploadModule } from './upload/upload.module';
     PublishersModule,
     CategoriesModule,
     FileUploadModule,
+    PromotionsModule,
   ],
   controllers: [AppController],
   providers: [],

@@ -60,6 +60,7 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token, user }) {
       if (user) return { ...token, ...user };
 
+      // access token not expired
       if (Date.now() < token.expired_accessToken) {
         return token;
       }
@@ -83,7 +84,9 @@ export const authOptions: NextAuthOptions = {
     },
   },
 
-  secret: process.env.NEXTAUTH_SECRET,
+  session: {
+    strategy: "jwt",
+  },
 };
 
 const handler = NextAuth(authOptions);

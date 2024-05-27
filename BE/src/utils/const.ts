@@ -63,6 +63,16 @@ export enum PAYMENT_METHOD {
   CREDIT_CARD = 'CREDIT_CARD',
 }
 
+export enum PROMOTION_LEVEL {
+  ORDER = 'ORDER',
+  ITEM = 'ITEM',
+}
+
+export enum PROMOTION_TYPE {
+  PERCENT = 'PERCENT',
+  VALUE = 'VALUE',
+}
+
 export function GenKey(userId: string, typeKey: string): string {
   return `${userId}:${typeKey}`;
 }

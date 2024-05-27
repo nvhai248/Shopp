@@ -103,6 +103,29 @@ type LogoutResponse {
   result: Boolean
 }
 
+type Promotion {
+  id: ID!
+  name: String!
+  description: String!
+  level: String!
+  type: String!
+  banner: String
+  discountPercentage: Float
+  discountValue: Float
+  minValue: Float
+  startDate: String
+  endDate: String
+  status: Boolean
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type PromotionItem {
+  productId: String!
+  promotionId: String!
+  quantity: Float!
+}
+
 type Query {
   products(searchConditionInput: SearchConditionInput!): PagingProduct!
   product(id: String!): Product!
@@ -114,6 +137,8 @@ type Query {
   user(id: ID!): User!
   getProfile: User!
   adminGetProfile: User!
+  promotions: [Promotion!]!
+  promotion(id: String!): Promotion!
 }
 
 input SearchConditionInput {
@@ -147,6 +172,9 @@ type Mutation {
   register(registerInput: RegisterInput!): Boolean!
   logout: LogoutResponse!
   refreshAccessToken: AuthResponse!
+  createPromotion(createPromotionInput: CreatePromotionInput!): Promotion!
+  createItemPromotion(createPromotionItemInput: CreatePromotionItemInput!): PromotionItem!
+  updatePromotion(updatePromotionInput: UpdatePromotionInput!): Promotion!
 }
 
 input CreateProductInput {
@@ -247,4 +275,38 @@ input AdminLoginInput {
 input RegisterInput {
   email: String!
   password: String!
+}
+
+input CreatePromotionInput {
+  name: String!
+  description: String!
+  level: String!
+  type: String!
+  banner: String
+  discountPercentage: Float
+  discountValue: Float
+  minValue: Float
+  startDate: String!
+  endDate: String!
+}
+
+input CreatePromotionItemInput {
+  productId: String!
+  promotionId: String!
+  quantity: Float!
+}
+
+input UpdatePromotionInput {
+  id: ID!
+  name: String
+  description: String
+  level: String
+  type: String
+  banner: String
+  discountPercentage: Float
+  discountValue: Float
+  minValue: Float
+  startDate: String
+  endDate: String
+  status: Boolean
 }
