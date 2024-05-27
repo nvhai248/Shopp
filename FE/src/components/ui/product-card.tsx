@@ -13,27 +13,17 @@ import Rating from "./rating";
 import { FaEye } from "react-icons/fa";
 import Link from "next/link";
 import { FaHeart } from "react-icons/fa6";
-
-interface ProductCardProps {
-  id: string;
-  img: string;
-  title: string;
-  score: number;
-  price: number;
-  description: string;
-  address: string;
-  isOnSale: boolean;
-}
+import { ProductType } from "@/+core/interfaces";
 
 function ProductDetail({
   id,
-  img,
-  title,
+  avatar,
+  name,
   score,
   price,
   description,
   address,
-}: ProductCardProps) {
+}: ProductType) {
   return (
     <div className="absolute inset-0 bg-white bg-opacity-95 py-4 flex flex-col">
       <div className="flex flex-col w-full items-start gap-2 px-4">
@@ -41,7 +31,7 @@ function ProductDetail({
           href={`/product?id=${id}`}
           className="text-black hover:text-blue-600 text-sm"
         >
-          {title}
+          {name}
         </Link>
 
         <div className="flex items-center gap-2">
@@ -68,14 +58,14 @@ function ProductDetail({
 
 export default function ProductCard({
   id,
-  img,
-  title,
+  avatar,
+  name,
   score,
   price,
   description,
   address,
   isOnSale,
-}: ProductCardProps) {
+}: ProductType) {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
@@ -87,7 +77,7 @@ export default function ProductCard({
       {isOnSale && (
         <img
           src="https://cdn-icons-png.flaticon.com/512/1374/1374072.png"
-          alt={title || description}
+          alt={name || description}
           className="w-10 rotate-45 object-cover"
         />
       )}
@@ -96,23 +86,28 @@ export default function ProductCard({
         {isHovered ? (
           <ProductDetail
             id={id}
-            img={img}
-            title={title}
+            author={avatar}
+            name={name}
             score={score}
             price={price}
             description={description}
             address={address}
             isOnSale={false}
+            categoryId={""}
+            publisherId={""}
+            avatar={""}
+            images={[]}
+            status={""}
           />
         ) : (
           <>
             <img
-              src={img}
-              alt={title}
+              src={avatar}
+              alt={name}
               className="w-full h-[230px] object-cover mt-2"
             />
             <CardTitle className="flex text-left mt-4 font-normal text-sm">
-              {title}
+              {name}
             </CardTitle>
             <CardDescription className="flex text-left mt-1">
               <Rating score={score} />
