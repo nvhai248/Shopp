@@ -50,6 +50,7 @@ export class PromotionRepository {
   async findMany() {
     return await this.databaseService.promotion.findMany({
       where: { status: true },
+      orderBy: { updatedAt: 'desc' },
     });
   }
 

@@ -36,12 +36,23 @@
                 <th
                   class='px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50'
                 >
-                  Default Price
+                  Start Date
                 </th>
                 <th
                   class='px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50'
                 >
-                  Sale Price
+                  End Date
+                </th>
+
+                <th
+                  class='px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50'
+                >
+                  Level
+                </th>
+                <th
+                  class='px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50'
+                >
+                  Type
                 </th>
                 <th
                   class='px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50'
@@ -69,9 +80,6 @@
                         >
                           {{name}}
                         </div>
-                        <div class='text-sm leading-5 text-gray-500'>
-                          {{id}}
-                        </div>
                       </div>
                     </div>
                   </td>
@@ -97,6 +105,18 @@
                   </td>
 
                   <td
+                    class='px-6 py-4 text-sm leading-5 text-gray-500 border-b border-gray-200 whitespace-nowrap'
+                  >
+                    {{level}}
+                  </td>
+
+                  <td
+                    class='px-6 py-4 text-sm leading-5 text-gray-500 border-b border-gray-200 whitespace-nowrap'
+                  >
+                    {{type}}
+                  </td>
+
+                  <td
                     class='px-6 py-4 border-b border-gray-200 whitespace-nowrap'
                   >
                     <span
@@ -109,13 +129,13 @@
                   >
                     <div class='flex flex-col'>
                       <a
-                        onclick="updateSale('{{id}}' ,'{{name}}', '{{avatar}}', '{{price}}', '{{salePrice}}')"
+                        href='/update-promotion?id={{id}}'
                         class='text-indigo-600 hover:text-indigo-900 cursor-pointer'
-                      >Edit Sale</a>
+                      >Edit Promotion</a>
                       <a
-                        onclick="deleteSale('{{id}}', '{{name}}',  '{{avatar}}')"
+                        onclick="deletePromotion('{{id}}', '{{name}}',  '{{banner}}')"
                         class='text-red-600 hover:text-red-900 hover:cursor-pointer ml-4'
-                      >Remove Sale</a>
+                      >Remove Promotion</a>
                     </div>
 
                   </td>

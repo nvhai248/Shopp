@@ -35,7 +35,7 @@ export class PromotionsResolver {
     return this.promotionsService.findOne(id);
   }
 
-  @Mutation(() => Promotion)
+  @Mutation(() => Boolean)
   updatePromotion(
     @Args('updatePromotionInput') updatePromotionInput: UpdatePromotionInput,
   ) {

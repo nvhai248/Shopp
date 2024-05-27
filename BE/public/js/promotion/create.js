@@ -83,49 +83,9 @@ document
           'fail',
         );
       } else {
-        if (type === 'ORDER') {
-          let createItemQuery = `mutation CreateItemPromotion {`;
-
-          items.forEach((item) => {
-            createItemQuery += `
-            createItemPromotion(createPromotionItemInput: {
-              promotionId: "${result.data.createPromotion.id}",
-              productId: "${item.id}",
-              quantity: ${item.quantity}
-            }) {
-              promotionId
-            }
-          `;
-          });
-
-          createItemQuery += '}';
-
-          const itemResponse = await fetch('http://localhost:8080/graphql', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-            },
-            body: JSON.stringify({ query: createItemQuery }),
-          });
-
-          const itemResult = await itemResponse.json();
-
-          if (itemResult.errors) {
-            showNotification(
-              `Cannot create new Promotion: ${itemResult.errors[0].message}!`,
-              'fail',
-            );
-          } else {
-            closeModal();
-            alert('Successfully created Promotion!');
-            window.location.href = '/promotion';
-          }
-        } else {
-          closeModal();
-          alert('Successfully created Promotion!');
-          window.location.href = '/promotion';
-        }
+        closeModal();
+        alert('Successfully created Promotion!');
+        window.location.href = '/promotion';
       }
     }
   });

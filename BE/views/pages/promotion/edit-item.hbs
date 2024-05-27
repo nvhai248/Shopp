@@ -1,0 +1,32 @@
+<div class='col-span-4 flex justify-end'>
+  <button
+    type='button'
+    onclick='showModalAddPromotionItem()'
+    id='add-new-item-button'
+    class='bg-black hover:bg-gray-800 w-full text-white px-4 py-2 rounded-md'
+    disabled
+  >
+    Add new Item (for ORDER TYPE)
+  </button>
+</div>
+
+<table class='col-span-4 w-full'>
+  <thead>
+    <tr>
+      <th
+        class='px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50'
+      >
+        Name
+      </th>
+      <th
+        class='px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50'
+      >
+        Quantity
+      </th>
+    </tr>
+  </thead>
+
+  <tbody id='container-item' class='bg-white'>
+
+  </tbody>
+</table>

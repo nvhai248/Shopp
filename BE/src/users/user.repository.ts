@@ -7,7 +7,9 @@ export class UserRepository {
   constructor(private readonly databaseService: DatabaseService) {}
 
   async find() {
-    return await this.databaseService.user.findMany();
+    return await this.databaseService.user.findMany({
+      orderBy: { updatedAt: 'desc' },
+    });
   }
 
   async create(userRegisterInput: any, salt: string) {

@@ -19,6 +19,7 @@ export class CategoriesRepository {
   findMany(type: CATEGORY_TYPE, parentId: string) {
     return this.databaseService.category.findMany({
       where: { type: type, parentId: parentId, status: true },
+      orderBy: { updatedAt: 'desc' },
     });
   }
 

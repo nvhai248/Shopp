@@ -59,6 +59,7 @@ export class ProductRepository {
       skip: offset,
       take: limit,
       where: where,
+      orderBy: { updatedAt: 'desc' },
     });
   }
 
