@@ -3,8 +3,6 @@ import LandingHeader from "./components/header/header";
 import MainHeader from "@/components/layout/header";
 import MyProvider from "@/+core/providers/custom";
 
-console.log(process.env.BACKEND_URL);
-
 export default function LayoutLanding({
   children,
 }: Readonly<{

@@ -4,3 +4,13 @@ export enum USER_STATUS {
   UNVERIFIED = "UNVERIFIED",
   DELETED = "DELETED",
 }
+
+export enum PROMOTION_LEVEL {
+  ORDER = "ORDER",
+  ITEM = "ITEM",
+}
+
+export enum PROMOTION_TYPE {
+  PERCENT = "PERCENT",
+  VALUE = "VALUE",
+}

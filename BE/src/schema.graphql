@@ -113,8 +113,8 @@ type Promotion {
   discountPercentage: Float
   discountValue: Float
   minValue: Float
-  startDate: String
-  endDate: String
+  startDate: DateTime!
+  endDate: DateTime!
   status: Boolean
   createdAt: DateTime!
   updatedAt: DateTime!

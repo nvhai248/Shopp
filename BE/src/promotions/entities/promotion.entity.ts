@@ -39,10 +39,10 @@ export class Promotion {
   @Field({ nullable: true })
   minValue?: number;
 
-  @Field({ nullable: true })
+  @Field(() => GraphQLISODateTime)
   startDate?: string;
 
-  @Field({ nullable: true })
+  @Field(() => GraphQLISODateTime)
   endDate?: string;
 
   @Field({ nullable: true })
