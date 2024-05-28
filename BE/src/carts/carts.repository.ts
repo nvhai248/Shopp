@@ -29,7 +29,9 @@ export class CartsRepository {
 
   async getCart(userId: string): Promise<any> {
     const cartKey = this.getCartKey(userId);
-    return (await this.cacheService.hgetall(cartKey)) || {};
+    const result = await this.cacheService.hgetall(cartKey);
+
+    return result || {};
   }
 
   async updateProductQuantity(

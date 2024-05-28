@@ -10,7 +10,6 @@ import {
 import { UsersService } from './users.service';
 import { User } from './entities/user.entity';
 import { UpdateUserInput } from './dto/updateUser.input';
-import { Cart } from 'src/carts/entities/cart.entity';
 import { UseGuards } from '@nestjs/common';
 import {
   CurrentUser,
@@ -84,11 +83,6 @@ export class UsersResolver {
   @Mutation(() => User)
   removeUser(@Args('id', { type: () => ID }) id: string) {
     return this.usersService.remove(id);
-  }
-
-  @ResolveField((returns) => [Cart], { name: 'cart' })
-  getUserCart(@Parent() user: CurrentUserInterface) {
-    return this.usersService.getUserCart(user.id);
   }
 
   @Mutation(() => Boolean)

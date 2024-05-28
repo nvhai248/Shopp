@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { CartsRepository } from './carts.repository'; // Ensure the path to your CartsRepository is correct
+import { CartItem } from './entities/cart.entity';
 
 @Injectable()
 export class CartsService {
@@ -19,8 +20,16 @@ export class CartsService {
       : false;
   }
 
-  async getCart(userId: string): Promise<any> {
-    return await this.cartsRepository.getCart(userId);
+  async getCart(userId: string): Promise<CartItem[]> {
+    const result = await this.cartsRepository.getCart(userId);
+
+    return result
+      ? Object.entries(result).map(([key, value]) => ({
+          productId: key,
+          quantity: Number(value),
+          product: null,
+        }))
+      : [];
   }
 
   async updateProductQuantity(

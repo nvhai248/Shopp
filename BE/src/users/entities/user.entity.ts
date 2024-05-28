@@ -6,7 +6,6 @@ import {
   GraphQLISODateTime,
 } from '@nestjs/graphql';
 import { IsEnum } from 'class-validator';
-import { Cart } from 'src/carts/entities/cart.entity';
 import { GENDER, USER_STATUS } from 'src/utils/const';
 
 @ObjectType()
@@ -39,9 +38,6 @@ export class User {
   @Field(() => String)
   @IsEnum(USER_STATUS)
   status: string;
-
-  @Field((type) => [Cart], { defaultValue: [] })
-  cart: Cart[];
 
   @Field(() => GraphQLISODateTime)
   createdAt: Date;

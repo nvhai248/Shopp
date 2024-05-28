@@ -1,14 +1,26 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
 import { CartsService } from './carts.service';
-import { Cart } from './entities/cart.entity';
+import { CartItem } from './entities/cart.entity';
 import { AddProductInput } from './dto/cart.input';
 import { UseGuards } from '@nestjs/common';
 import { CurrentUser, JwtAccessAuthGuard } from 'src/guard/jwt-auth.guard';
 import { CurrentUserInterface } from 'src/interfaces';
+import { Product } from 'src/products/entities/product.entity';
+import { ProductsService } from 'src/products/products.service';
 
-@Resolver(() => Cart)
+@Resolver(() => CartItem)
 export class CartsResolver {
-  constructor(private readonly cartsService: CartsService) {}
+  constructor(
+    private readonly cartsService: CartsService,
+    private readonly productService: ProductsService,
+  ) {}
 
   @Mutation(() => Boolean)
   @UseGuards(JwtAccessAuthGuard)
@@ -23,41 +35,43 @@ export class CartsResolver {
     );
   }
 
-  @Query(() => Cart)
+  @Query(() => [CartItem])
   @UseGuards(JwtAccessAuthGuard)
-  async getCart(@CurrentUser() user: CurrentUserInterface): Promise<boolean> {
+  async getCart(@CurrentUser() user: CurrentUserInterface): Promise<any> {
     return this.cartsService.getCart(user.id);
   }
 
-  @Mutation(() => Cart)
+  @ResolveField((returns) => Product, { name: 'product' })
+  getProduct(@Parent() cartItem: CartItem) {
+    return this.productService.findOne(cartItem.productId);
+  }
+
+  @Mutation(() => Boolean)
   @UseGuards(JwtAccessAuthGuard)
   async updateProductQuantity(
     @Args('updateProductQuantityInput')
     updateProductQuantityInput: AddProductInput,
     @CurrentUser() user: CurrentUserInterface,
   ): Promise<boolean> {
-    await this.cartsService.updateProductQuantity(
+    return await this.cartsService.updateProductQuantity(
       updateProductQuantityInput.productId,
       user.id,
       updateProductQuantityInput.quantity,
     );
-    return this.cartsService.getCart(user.id);
   }
 
-  @Mutation(() => Cart)
+  @Mutation(() => Boolean)
   @UseGuards(JwtAccessAuthGuard)
   async removeProductFromCart(
     @Args('productId') productId: string,
     @CurrentUser() user: CurrentUserInterface,
   ): Promise<boolean> {
-    await this.cartsService.removeProductFromCart(productId, user.id);
-    return this.cartsService.getCart(user.id);
+    return await this.cartsService.removeProductFromCart(productId, user.id);
   }
 
-  @Mutation(() => Cart)
+  @Mutation(() => Boolean)
   @UseGuards(JwtAccessAuthGuard)
   async clearCart(@CurrentUser() user: CurrentUserInterface): Promise<boolean> {
-    await this.cartsService.clearCart(user.id);
-    return this.cartsService.getCart(user.id);
+    return await this.cartsService.clearCart(user.id);
   }
 }

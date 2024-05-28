@@ -68,15 +68,6 @@ type Publisher {
   updatedAt: DateTime!
 }
 
-type Cart {
-  productId: ID!
-  userId: ID!
-  name: String!
-  avatar: String!
-  quantity: Float!
-  price: Float!
-}
-
 type User {
   id: ID!
   firstName: String
@@ -87,9 +78,14 @@ type User {
   gender: String
   avatar: String
   status: String!
-  cart: [Cart!]!
   createdAt: DateTime!
   updatedAt: DateTime!
+}
+
+type CartItem {
+  productId: ID!
+  quantity: Float!
+  product: Product!
 }
 
 type AuthResponse {
@@ -137,7 +133,7 @@ type Query {
   user(id: ID!): User!
   getProfile: User!
   adminGetProfile: User!
-  getCart: Cart!
+  getCart: [CartItem!]!
   promotions: [Promotion!]!
   promotion(id: String!): Promotion!
 }
@@ -168,9 +164,9 @@ type Mutation {
   changePassword(changePasswordInput: ChangePasswordInput!): Boolean!
   updateUserStatus(updateUserStatusInput: UpdateUserStatusInput!): Boolean!
   addProductToCart(addProductInput: AddProductInput!): Boolean!
-  updateProductQuantity(updateProductQuantityInput: AddProductInput!): Cart!
-  removeProductFromCart(productId: String!): Cart!
-  clearCart: Cart!
+  updateProductQuantity(updateProductQuantityInput: AddProductInput!): Boolean!
+  removeProductFromCart(productId: String!): Boolean!
+  clearCart: Boolean!
   login(loginInput: LoginInput!): AuthResponse!
   adminLogin(loginInput: AdminLoginInput!): AuthResponse!
   register(registerInput: RegisterInput!): Boolean!
