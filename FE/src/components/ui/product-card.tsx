@@ -78,11 +78,11 @@ export default function ProductCard({
         <img
           src="https://cdn-icons-png.flaticon.com/512/1374/1374072.png"
           alt={name || description}
-          className="w-10 rotate-45 object-cover"
+          className="w-10 rotate-45 object-cover absolute"
         />
       )}
 
-      <CardContent>
+      <CardContent className="mt-5">
         {isHovered ? (
           <ProductDetail
             id={id}

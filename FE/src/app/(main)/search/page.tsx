@@ -1,20 +1,14 @@
-"use client";
-
 import ProductCard from "@/components/ui/product-card";
 import { NavFilter } from "./navbar";
-import { useQuery } from "@apollo/client";
-import { SearchProductQuery } from "@/+core/definegql";
 import { ProductType } from "@/+core/interfaces";
+import { SearchProductService } from "@/+core/services";
 
-export default function Search() {
-  const { data, loading, error } = useQuery(SearchProductQuery, {
-    variables: {
-      searchConditionInput: {
-        page: 1,
-        limit: 10,
-      },
-    },
-  });
+export default async function Search() {
+  const { data, errors } = await SearchProductService({ page: 1, limit: 10 });
+
+  if (errors) {
+    console.log("Error: ", errors[0].message);
+  }
 
   const products: ProductType[] = data?.products?.data || [];
 
@@ -28,18 +22,18 @@ export default function Search() {
         <div className="mx-auto w-32 border-b border-gray-500 mb-5"></div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-x-10 gap-y-8">
-          {products.map((product) => {
+          {products?.map((product) => {
             return (
               <ProductCard
                 key={product.id}
                 id={product.id}
                 avatar={product.avatar}
                 name={product.name}
-                score={product.score}
+                score={5}
                 price={product.price}
                 description={product.description}
                 address={product.address}
-                isOnSale={new Date().getTime() % 2 === 0 ? true : false}
+                isOnSale={product.isOnSale}
                 categoryId={""}
                 publisherId={""}
                 author={""}

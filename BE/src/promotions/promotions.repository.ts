@@ -1,7 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { DatabaseService } from 'src/database/database.service';
 import { MyDBException } from 'src/utils/error';
-import { STATUS_PRODUCT } from 'src/utils/const';
 import { CreatePromotionInput } from './dto/create-promotion.input';
 import { UpdatePromotionInput } from './dto/update-promotion.input';
 

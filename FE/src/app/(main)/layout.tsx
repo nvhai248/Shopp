@@ -1,12 +1,9 @@
-"use client";
-
 import MainNavBar from "@/components/nav/navbar";
 import LandingHeader from "./components/header/header";
 import MainHeader from "@/components/layout/header";
-import MySessionProvider from "@/+core/providers/session";
+import MyProvider from "@/+core/providers/custom";
 
-import { MyApolloClient } from "@/lib/apolloClient";
-import { ApolloProvider } from "@apollo/client";
+console.log(process.env.BACKEND_URL);
 
 export default function LayoutLanding({
   children,
@@ -14,18 +11,16 @@ export default function LayoutLanding({
   children: React.ReactNode;
 }>) {
   return (
-    <ApolloProvider client={MyApolloClient}>
-      <MySessionProvider>
-        <MainHeader />
-        <LandingHeader />
-        <MainNavBar />
-        <div className="w-full flex justify-center">
-          <div className="w-4/5 min-h-[45rem] flex align-middle text-center">
-            {" "}
-            {children}
-          </div>
+    <MyProvider>
+      <MainHeader />
+      <LandingHeader />
+      <MainNavBar />
+      <div className="w-full flex justify-center">
+        <div className="w-4/5 min-h-[45rem] flex align-middle text-center">
+          {" "}
+          {children}
         </div>
-      </MySessionProvider>
-    </ApolloProvider>
+      </div>
+    </MyProvider>
   );
 }
