@@ -68,6 +68,7 @@ export default async function Home() {
                     price={product.price}
                     description={product.description}
                     address={product.address}
+                    priceSale={product.priceSale}
                     isOnSale={product.isOnSale}
                     categoryId={""}
                     publisherId={""}

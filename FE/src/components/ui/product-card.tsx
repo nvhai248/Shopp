@@ -10,9 +10,8 @@ import {
   CardTitle,
 } from "./card";
 import Rating from "./rating";
-import { FaEye } from "react-icons/fa";
+import { FaCartPlus, FaEye } from "react-icons/fa";
 import Link from "next/link";
-import { FaHeart } from "react-icons/fa6";
 import { ProductType } from "@/+core/interfaces";
 
 function ProductDetail({
@@ -20,8 +19,10 @@ function ProductDetail({
   avatar,
   name,
   score,
+  priceSale,
   price,
   description,
+  isOnSale,
   address,
 }: ProductType) {
   return (
@@ -35,8 +36,14 @@ function ProductDetail({
         </Link>
 
         <div className="flex items-center gap-2">
-          <p className="line-through text-gray-500">{price + price * 0.2}$</p>{" "}
-          <p className="text-black">{price}$</p>
+          {isOnSale ? (
+            <>
+              <p className="line-through text-gray-500">{priceSale}$</p>
+              <p className="text-black">{price}$</p>
+            </>
+          ) : (
+            <p className="text-black">{price}$</p>
+          )}
         </div>
       </div>
 
@@ -45,7 +52,7 @@ function ProductDetail({
 
       <div className="flex justify-between m-1 flex-1 relative">
         <Button className="rounded-full aspect-square w-12 h-12 flex items-center  absolute left-4 bottom-0 justify-center border-2 bg-slate-50 text-black hover:bg-gray-800 hover:text-white transition duration-300 ease-in-out">
-          <FaHeart />
+          <FaCartPlus />
         </Button>
 
         <Button className="rounded-full aspect-square w-12 h-12 flex items-center justify-center absolute right-4 bottom-0 border-2 bg-slate-50 text-black hover:bg-gray-800 hover:text-white transition duration-300 ease-in-out">
@@ -60,6 +67,7 @@ export default function ProductCard({
   id,
   avatar,
   name,
+  priceSale,
   score,
   price,
   description,
@@ -117,10 +125,14 @@ export default function ProductCard({
       </CardContent>
       <CardFooter className="flex flex-col justify-start">
         <div className="flex mt-1 justify-start w-full">
-          <span className="line-through text-gray-500">
-            {price + price * 0.2}$
-          </span>
-          <span className="text-black ml-3">{price}$</span>
+          {isOnSale ? (
+            <>
+              <span className="line-through text-gray-500">{price}$</span>
+              <span className="text-black ml-3">{priceSale}$</span>
+            </>
+          ) : (
+            <span className="text-black ml-3">{price}$</span>
+          )}
         </div>
       </CardFooter>
     </Card>

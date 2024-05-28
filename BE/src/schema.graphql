@@ -137,6 +137,7 @@ type Query {
   user(id: ID!): User!
   getProfile: User!
   adminGetProfile: User!
+  getCart: Cart!
   promotions: [Promotion!]!
   promotion(id: String!): Promotion!
 }
@@ -166,7 +167,10 @@ type Mutation {
   refreshUserPassword(userRefreshPasswordInput: UserRefreshPasswordInput!): Boolean!
   changePassword(changePasswordInput: ChangePasswordInput!): Boolean!
   updateUserStatus(updateUserStatusInput: UpdateUserStatusInput!): Boolean!
-  addProductToCart(productId: String!, quantity: Float!): Cart!
+  addProductToCart(addProductInput: AddProductInput!): Boolean!
+  updateProductQuantity(updateProductQuantityInput: AddProductInput!): Cart!
+  removeProductFromCart(productId: String!): Cart!
+  clearCart: Cart!
   login(loginInput: LoginInput!): AuthResponse!
   adminLogin(loginInput: AdminLoginInput!): AuthResponse!
   register(registerInput: RegisterInput!): Boolean!
@@ -261,6 +265,11 @@ input ChangePasswordInput {
 input UpdateUserStatusInput {
   id: ID!
   status: String!
+}
+
+input AddProductInput {
+  productId: String!
+  quantity: Float!
 }
 
 input LoginInput {

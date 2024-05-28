@@ -34,6 +34,7 @@ export default async function Search() {
                 description={product.description}
                 address={product.address}
                 isOnSale={product.isOnSale}
+                priceSale={product.priceSale}
                 categoryId={""}
                 publisherId={""}
                 author={""}

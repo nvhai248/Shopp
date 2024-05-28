@@ -1,5 +1,5 @@
 import AuthHeader from "./components/header";
-import MySessionProvider from "@/+core/providers/session";
+import MyProvider from "@/+core/providers/custom";
 
 export default function RootLayout({
   children,
@@ -7,7 +7,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <MySessionProvider>
+    <MyProvider>
       <div className="bg-[#f4fefd] min-h-[50rem] flex flex-col">
         <AuthHeader />
         <div className="flex-1 flex items-center justify-center pl-40 pr-40">
@@ -22,6 +22,6 @@ export default function RootLayout({
           <div className="w-1/3">{children}</div>
         </div>
       </div>
-    </MySessionProvider>
+    </MyProvider>
   );
 }

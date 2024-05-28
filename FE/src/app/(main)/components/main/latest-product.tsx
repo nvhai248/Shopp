@@ -5,8 +5,7 @@ import ProductCard from "@/components/ui/product-card";
 export default async function LatestProduct() {
   const { data, errors } = await SearchProductService({
     page: 1,
-    limit: 24,
-    isOnSale: true,
+    limit: 13,
   });
 
   if (errors) {
@@ -34,6 +33,7 @@ export default async function LatestProduct() {
                 price={product.price}
                 description={product.description}
                 address={product.address}
+                priceSale={product.priceSale}
                 isOnSale={product.isOnSale}
                 categoryId={""}
                 publisherId={""}
