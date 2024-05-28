@@ -29,6 +29,27 @@ export class PromotionsService {
   }
 
   createItem(createPromotionItemInput: CreatePromotionItemInput) {
-    return this.itemPromotionRepository.create(createPromotionItemInput);
+    return this.itemPromotionRepository.createOrUpdate(
+      createPromotionItemInput,
+    );
+  }
+
+  async findAllItem(id: string) {
+    return this.itemPromotionRepository.findAllByPromotionId(id);
+  }
+
+  updateItemQuantity(productId: string, promotionId: string, quantity: number) {
+    return this.itemPromotionRepository.updateQuantity(
+      productId,
+      promotionId,
+      quantity,
+    );
+  }
+
+  deletePromotionItem(productId: string, promotionId: string) {
+    return this.itemPromotionRepository.deletePromotionItem(
+      productId,
+      promotionId,
+    );
   }
 }

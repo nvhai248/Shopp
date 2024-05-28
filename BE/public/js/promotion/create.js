@@ -23,8 +23,12 @@ document
     // Validation checks
     const errors = [];
 
-    if (isNaN(discountPercentage) || discountPercentage < 0) {
-      errors.push('Discount Percentage must be a positive number.');
+    if (
+      isNaN(discountPercentage) ||
+      discountPercentage < 0 ||
+      discountPercentage > 100
+    ) {
+      errors.push('Discount Percentage must be in 0 to 100.');
     }
 
     if (isNaN(discountValue) || discountValue < 0) {

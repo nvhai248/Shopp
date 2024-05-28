@@ -9,6 +9,7 @@ import { PublishersModule } from 'src/publishers/publishers.module';
 @Module({
   providers: [ProductsResolver, ProductsService, ProductRepository],
   imports: [CategoriesModule, PublishersModule],
+  exports: [ProductsService],
   controllers: [ProductController],
 })
 export class ProductsModule {}

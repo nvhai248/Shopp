@@ -4,6 +4,7 @@ import { PromotionsResolver } from './promotions.resolver';
 import { PromotionController } from './promotions.controller';
 import { PromotionRepository } from './promotions.repository';
 import { ItemPromotionRepository } from './item-promotions.repository';
+import { ProductsModule } from 'src/products/products.module';
 
 @Module({
   providers: [
@@ -13,5 +14,6 @@ import { ItemPromotionRepository } from './item-promotions.repository';
     ItemPromotionRepository,
   ],
   controllers: [PromotionController],
+  imports: [ProductsModule],
 })
 export class PromotionsModule {}

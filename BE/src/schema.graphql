@@ -175,6 +175,8 @@ type Mutation {
   createPromotion(createPromotionInput: CreatePromotionInput!): Promotion!
   createItemPromotion(createPromotionItemInput: CreatePromotionItemInput!): PromotionItem!
   updatePromotion(updatePromotionInput: UpdatePromotionInput!): Boolean!
+  updateQuantityPromotionItem(updateQuantityPromotionItem: CreatePromotionItemInput!): Boolean!
+  deletePromotionItem(promotionId: String!, productId: String!): Boolean!
 }
 
 input CreateProductInput {

@@ -7,17 +7,97 @@ import { CreatePromotionItemInput } from './dto/create-item.input';
 export class ItemPromotionRepository {
   constructor(private readonly databaseService: DatabaseService) {}
 
-  async create(createItemPromotionInput: CreatePromotionItemInput) {
+  async createOrUpdate(createItemPromotionInput: CreatePromotionItemInput) {
     try {
       const { productId, promotionId, quantity } = createItemPromotionInput;
 
-      return await this.databaseService.productPromotion.create({
-        data: {
-          promotionId,
-          productId,
-          quantity,
+      // Check if the promotion already exists
+      const existingPromotion =
+        await this.databaseService.productPromotion.findUnique({
+          where: {
+            productId_promotionId: {
+              productId,
+              promotionId,
+            },
+          },
+        });
+
+      if (existingPromotion) {
+        // If the promotion exists, update the quantity
+        return await this.databaseService.productPromotion.update({
+          where: {
+            productId_promotionId: {
+              productId,
+              promotionId,
+            },
+          },
+          data: {
+            quantity: existingPromotion.quantity + quantity,
+          },
+        });
+      } else {
+        // If the promotion doesn't exist, create a new one
+        return await this.databaseService.productPromotion.create({
+          data: {
+            promotionId,
+            productId,
+            quantity,
+          },
+        });
+      }
+    } catch (error) {
+      throw new MyDBException(error.message);
+    }
+  }
+
+  async findAllByPromotionId(id: string) {
+    try {
+      return this.databaseService.productPromotion.findMany({
+        where: {
+          promotionId: id,
         },
       });
+    } catch (error) {
+      throw new MyDBException(error.message);
+    }
+  }
+
+  async updateQuantity(
+    productId: string,
+    promotionId: string,
+    quantity: number,
+  ) {
+    try {
+      await this.databaseService.productPromotion.update({
+        where: {
+          productId_promotionId: {
+            productId,
+            promotionId,
+          },
+        },
+        data: {
+          quantity: quantity,
+        },
+      });
+
+      return true;
+    } catch (error) {
+      throw new MyDBException(error.message);
+    }
+  }
+
+  async deletePromotionItem(productId: string, promotionId: string) {
+    try {
+      await this.databaseService.productPromotion.delete({
+        where: {
+          productId_promotionId: {
+            productId,
+            promotionId,
+          },
+        },
+      });
+
+      return true;
     } catch (error) {
       throw new MyDBException(error.message);
     }

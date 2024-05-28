@@ -44,4 +44,23 @@ export class PromotionsResolver {
       updatePromotionInput,
     );
   }
+
+  @Mutation(() => Boolean)
+  updateQuantityPromotionItem(
+    @Args('updateQuantityPromotionItem') update: CreatePromotionItemInput,
+  ) {
+    return this.promotionsService.updateItemQuantity(
+      update.productId,
+      update.promotionId,
+      update.quantity,
+    );
+  }
+
+  @Mutation(() => Boolean)
+  deletePromotionItem(
+    @Args('promotionId') promotionId: string,
+    @Args('productId') productId: string,
+  ) {
+    return this.promotionsService.deletePromotionItem(productId, promotionId);
+  }
 }

@@ -1,9 +1,13 @@
 import { Controller, Get, Query, Render } from '@nestjs/common';
 import { PromotionsService } from './promotions.service';
+import { ProductsService } from 'src/products/products.service';
 
 @Controller('/')
 export class PromotionController {
-  constructor(private readonly promotionService: PromotionsService) {}
+  constructor(
+    private readonly promotionService: PromotionsService,
+    private readonly productService: ProductsService,
+  ) {}
 
   @Get('/promotion')
   @Render('pages/promotion/promotion')
@@ -39,10 +43,18 @@ export class PromotionController {
   @Get('/update-promotion-item')
   @Render('pages/promotion/edit-item')
   async itemPromotion(@Query('id') id: string) {
-    const promotion = await this.promotionService.findOne(id);
+    const items = await this.promotionService.findAllItem(id);
+
+    let products = [];
+
+    for (let item of items) {
+      const product = await this.productService.findOne(item.productId);
+      products.push({ ...product, quantity: item.quantity });
+    }
 
     return {
-      ...promotion,
+      id: id,
+      products: products,
     };
   }
 }
