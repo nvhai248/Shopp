@@ -1,17 +1,25 @@
 "use client";
 
-import { SearchProductQuery } from "@/+core/definegql";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 import { ProductType } from "@/+core/interfaces";
 import ProductCard from "@/components/ui/product-card";
-import Spinner from "@/components/ui/spinner";
 import { useQuery } from "@apollo/client";
+import { SearchProductQuery } from "@/+core/definegql";
+import Spinner from "@/components/ui/spinner";
 
-export default function LatestProduct() {
+export default function OnSaleProduct() {
   const { data, loading, error } = useQuery(SearchProductQuery, {
     variables: {
       searchConditionInput: {
         page: 1,
-        limit: 12,
+        limit: 10,
+        isOnSale: true,
       },
     },
   });
@@ -25,20 +33,24 @@ export default function LatestProduct() {
   }
 
   return (
-    <div className="mb-10">
-      <div className="flex p-4 bg-gradient-to-l my-5 justify-between start-0 border">
-        <h1 className="bolder font-bold text-3xl">LATEST BOOK</h1>
-      </div>
-
-      <div>
-        <div className="grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-4 gap-x-[5rem] gap-y-8">
-          {loading ? (
-            <div className="flex flex-auto w-full justify-center items-center">
-              <Spinner size={60} />
-            </div>
-          ) : (
-            products?.map((product) => {
-              return (
+    <Carousel
+      opts={{
+        align: "start",
+      }}
+      className="w-full my-5"
+    >
+      <CarouselContent>
+        {loading ? (
+          <div className="flex flex-auto w-full justify-center items-center">
+            <Spinner size={60} />
+          </div>
+        ) : (
+          products?.map((product) => (
+            <CarouselItem
+              key={product.id}
+              className="md:basis-1/3 lg:basis-1/4 mr-2 ml-2"
+            >
+              <div className="p-1">
                 <ProductCard
                   key={product.id}
                   id={product.id}
@@ -56,11 +68,13 @@ export default function LatestProduct() {
                   images={[]}
                   status={""}
                 />
-              );
-            })
-          )}
-        </div>
-      </div>
-    </div>
+              </div>
+            </CarouselItem>
+          ))
+        )}
+      </CarouselContent>
+      <CarouselPrevious className="ml-10" />
+      <CarouselNext className="mr-10" />
+    </Carousel>
   );
 }

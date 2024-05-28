@@ -55,12 +55,14 @@ export default function LandingCarouse() {
                       backgroundImage: `url('${promotion.banner}') `,
                     }}
                   >
-                    <div className="bg-black opacity-55 inset-0 w-full h-full absolute"></div>
+                    <div className="bg-black opacity-70 inset-0 w-full h-full absolute"></div>
                     <div className="text-white absolute z-10 opacity-100 p-4 animate-fadeInUp space-y-4">
-                      <h1 className="text-4xl font-bold uppercase">
+                      <h1 className="text-5xl font-bold uppercase">
                         {promotion.name}
                       </h1>
-                      <h2 className="text-2xl">{promotion.description}</h2>
+                      <h2 className="text-xl mx-64 text-balance">
+                        {promotion.description}
+                      </h2>
                       <h3 className="text-lg">
                         {promotion.startDate
                           ? formatter.format(new Date(promotion.startDate))

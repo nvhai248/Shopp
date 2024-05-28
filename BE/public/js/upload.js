@@ -1,5 +1,5 @@
 async function uploadFile(file) {
-  const url = 'http://localhost:8080/upload';
+  const url = HOST_UPLOAD;
 
   const formData = new FormData();
   formData.append('image', file);

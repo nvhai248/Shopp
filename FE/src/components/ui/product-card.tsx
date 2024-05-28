@@ -1,5 +1,3 @@
-"use client";
-
 import { useState } from "react";
 import { Button } from "./button";
 import {
@@ -13,6 +11,11 @@ import Rating from "./rating";
 import { FaCartPlus, FaEye } from "react-icons/fa";
 import Link from "next/link";
 import { ProductType } from "@/+core/interfaces";
+import { useMutation } from "@apollo/client";
+import { AddToCartMutation } from "@/+core/definegql";
+import { useSession } from "next-auth/react";
+import { useToast } from "./use-toast";
+import { ToastAction } from "./toast";
 
 function ProductDetail({
   id,
@@ -25,6 +28,50 @@ function ProductDetail({
   isOnSale,
   address,
 }: ProductType) {
+  const { data: session } = useSession();
+  const { toast } = useToast();
+
+  // Define useMutation outside of the component
+  const [addToCartMutation] = useMutation(AddToCartMutation);
+
+  const addToCart = () => {
+    addToCartMutation({
+      variables: {
+        addProductInput: {
+          productId: id,
+          quantity: 1,
+        },
+      },
+      context: {
+        headers: {
+          Authorization: `Bearer ${session?.accessToken}`,
+        },
+      },
+    })
+      .then(() => {
+        // if successful
+
+        console.log("Successfully!");
+
+        toast({
+          variant: "default",
+          title: "Successfully added to cart",
+          description: new Date().toDateString(),
+          action: <ToastAction altText="Close">Close</ToastAction>,
+        });
+      })
+      .catch((error) => {
+        // if not successful
+        console.log("Not Successfully!");
+        toast({
+          variant: "destructive",
+          title: "Cannot add to cart. Please sign in first!",
+          description: new Date().toDateString(),
+          action: <ToastAction altText="Close">Close</ToastAction>,
+        });
+      });
+  };
+
   return (
     <div className="absolute inset-0 bg-white bg-opacity-95 py-4 flex flex-col">
       <div className="flex flex-col w-full items-start gap-2 px-4">
@@ -51,7 +98,10 @@ function ProductDetail({
       <p className="px-4 text-left">{description}</p>
 
       <div className="flex justify-between m-1 flex-1 relative">
-        <Button className="rounded-full aspect-square w-12 h-12 flex items-center  absolute left-4 bottom-0 justify-center border-2 bg-slate-50 text-black hover:bg-gray-800 hover:text-white transition duration-300 ease-in-out">
+        <Button
+          onClick={addToCart}
+          className="rounded-full aspect-square w-12 h-12 flex items-center  absolute left-4 bottom-0 justify-center border-2 bg-slate-50 text-black hover:bg-gray-800 hover:text-white transition duration-300 ease-in-out"
+        >
           <FaCartPlus />
         </Button>
 
@@ -78,7 +128,7 @@ export default function ProductCard({
 
   return (
     <Card
-      className="!w-[300px] text-sm rounded-none relative overflow-hidden !h-[400px]"
+      className="!w-[300px] text-sm rounded-none relative overflow-hidden !h-[29rem]"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -112,7 +162,7 @@ export default function ProductCard({
             <img
               src={avatar}
               alt={name}
-              className="w-full h-[230px] object-cover mt-2"
+              className="w-full h-[20rem] object-cover mt-2"
             />
             <CardTitle className="flex text-left mt-4 font-normal text-sm">
               {name}

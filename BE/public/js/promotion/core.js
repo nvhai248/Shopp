@@ -5,7 +5,7 @@ function checkPromotionLevel() {
   var promotionLevel = document.getElementById('promotion-level').value;
   var addButton = document.getElementById('view-item-button');
 
-  if (promotionLevel === 'ORDER') {
+  if (promotionLevel === 'ITEM') {
     addButton.disabled = false;
   } else {
     addButton.disabled = true;
