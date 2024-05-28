@@ -1,68 +1,73 @@
+"use client";
+
 import React from "react";
 import ToTalCart from "./components/total";
 import CartElement from "./components/cartElement";
+import { useSession } from "next-auth/react";
+import { useQuery } from "@apollo/client";
+import { GetCartQuery } from "@/+core/definegql";
+import { CartItem } from "@/+core/interfaces";
+import Spinner from "@/components/ui/spinner";
 
 export default function PaymentMethods() {
+  const { data: session } = useSession();
+  const { data, loading, error } = useQuery(GetCartQuery, {
+    context: {
+      headers: {
+        Authorization: `Bearer ${session?.accessToken}`,
+      },
+    },
+  });
+
+  let totalPrice = 0;
+  let length = 0;
+
+  let cartItems: CartItem[] = [];
+  if (error) {
+    console.log(error);
+  } else {
+    cartItems = data?.getCart || []; // Provide a default empty array
+  }
+
+  length = cartItems.length;
+
+  for (let item of cartItems) {
+    if (item.product.isOnSale) {
+      totalPrice += item.product.priceSale;
+    } else {
+      totalPrice += item.product.price;
+    }
+  }
+
   return (
     <section className="h-full bg-gradient-to-r w-full text-start">
       <div className="container mx-auto py-5 h-full">
         <div className="flex justify-center my-4">
           <div className="w-2/3">
             <div className="mb-4 bg-white shadow-md rounded-none">
-              <div className="py-3 px-4 bg-gray-100 rounded-none">
-                <h5 className="text-xl font-semibold mb-0">Cart - 2 items</h5>
+              <div className="py-3 px-4 bg-gradient-to-l from-blue-600 to-blue-700 rounded-none">
+                <h5 className="text-xl text-white font-semibold mb-0">
+                  Cart - {length} items
+                </h5>
               </div>
               <div className="p-4">
-                <CartElement />
-                <hr className="my-4" />
+                {loading ? (
+                  <div className="flex flex-auto w-full justify-center items-center">
+                    <Spinner size={80} />
+                  </div>
+                ) : error ? (
+                  <p>Error: {error.message}</p>
+                ) : (
+                  cartItems.map((cartItem) => (
+                    <CartElement
+                      key={cartItem.product.id}
+                      product={cartItem.product}
+                      quantity={cartItem.quantity}
+                    />
+                  ))
+                )}
 
-                <div className="flex flex-wrap mb-4">
-                  <div className="lg:w-1/4 w-full mb-4 lg:mb-0">
-                    <div className="bg-white rounded overflow-hidden shadow hover:shadow-lg transition-shadow duration-300">
-                      <img
-                        src="https://mdbcdn.b-cdn.net/img/Photos/Horizontal/E-commerce/Vertical/13a.webp"
-                        className="w-full"
-                        alt="Red hoodie"
-                      />
-                    </div>
-                  </div>
-                  <div className="lg:w-1/2 w-full mb-4 lg:mb-0">
-                    <p className="font-semibold">Red hoodie</p>
-                    <p>Color: red</p>
-                    <p>Size: M</p>
-                    <div className="flex space-x-2">
-                      <button
-                        className="text-sm text-gray-600 hover:text-gray-800"
-                        title="Remove item"
-                      >
-                        <i className="fas fa-trash"></i>
-                      </button>
-                      <button
-                        className="text-sm text-red-600 hover:text-red-800"
-                        title="Move to the wish list"
-                      >
-                        <i className="fas fa-heart"></i>
-                      </button>
-                    </div>
-                  </div>
-                  <div className="lg:w-1/4 w-full">
-                    <div className="flex mb-4">
-                      <button className="px-3 py-1 border border-gray-300 rounded-l">
-                        <i className="fas fa-minus"></i>
-                      </button>
-                      <input
-                        type="number"
-                        className="w-16 text-center border-t border-b border-gray-300"
-                        defaultValue={1}
-                        min={0}
-                      />
-                      <button className="px-3 py-1 border border-gray-300 rounded-r">
-                        <i className="fas fa-plus"></i>
-                      </button>
-                    </div>
-                    <p className="text-center font-semibold">$17.99</p>
-                  </div>
-                </div>
+                <hr className="my-4" />
               </div>
             </div>
 

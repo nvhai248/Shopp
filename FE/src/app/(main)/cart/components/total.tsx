@@ -2,8 +2,8 @@ export default function ToTalCart() {
   return (
     <div className="w-1/3 ml-10">
       <div className="mb-4 bg-white shadow-md rounded-none">
-        <div className="py-3 px-4 bg-gray-100 rounded-none">
-          <h5 className="text-xl font-semibold mb-0">Summary</h5>
+        <div className="py-3 px-4 bg-gradient-to-l from-blue-600 to-blue-700 rounded-none">
+          <h5 className="text-xl font-semibold text-white mb-0">Summary</h5>
         </div>
         <div className="p-4">
           <ul className="list-none">
@@ -25,7 +25,7 @@ export default function ToTalCart() {
               </span>
             </li>
           </ul>
-          <button className="w-full py-2 mt-4 bg-blue-600 text-white font-semibold rounded-none hover:bg-blue-700 transition-colors duration-300">
+          <button className="w-full py-2 mt-4 bg-black text-white font-semibold rounded-none hover:bg-gray-700 transition-colors duration-300">
             Go to checkout
           </button>
         </div>

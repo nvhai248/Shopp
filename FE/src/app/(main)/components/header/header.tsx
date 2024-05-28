@@ -1,6 +1,6 @@
-import { IoCart } from "react-icons/io5";
 import Link from "next/link";
 import SearchInput from "./search-input";
+import CartIcon from "./cartIcon";
 
 const LandingHeader = () => {
   return (
@@ -18,13 +18,7 @@ const LandingHeader = () => {
 
         <SearchInput />
 
-        <div className="flex mr-10 hover:cursor-pointer">
-          <Link href="/cart">
-            <IoCart className="text-5xl" />
-          </Link>
-
-          <p className="mt-3">$ 0.00 USD</p>
-        </div>
+        <CartIcon />
       </header>
     </div>
   );
