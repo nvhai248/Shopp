@@ -32,9 +32,9 @@ export default function CartIcon() {
 
   for (let item of cartItems) {
     if (item.product.isOnSale) {
-      totalPrice += item.product.priceSale;
+      totalPrice += item.product.priceSale * item.quantity;
     } else {
-      totalPrice += item.product.price;
+      totalPrice += item.product.price * item.quantity;
     }
   }
 

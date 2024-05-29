@@ -3,7 +3,10 @@
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 
-export default function UpdateQuantity() {
+interface QuantityProps {
+  current: number;
+}
+export default function UpdateQuantity({ current = 1}) {
   const [quantity, setQuantity] = useState<number>(1);
 
   return (
@@ -19,7 +22,7 @@ export default function UpdateQuantity() {
           id="quantity"
           name="quantity"
           min="1"
-          value={quantity}
+          value={current || quantity}
           onChange={(e) =>
             setQuantity(Math.max(1, parseInt(e.target.value, 10)))
           }

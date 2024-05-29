@@ -2,6 +2,7 @@
 
 import { Login, RefreshAccessToken } from "@/+core/services";
 import { GetProfile } from "@/+core/services/user/getProfile";
+import { NEXTAUTH_SECRET } from "@/lib/constants";
 import { NextAuthOptions } from "next-auth";
 import { JWT } from "next-auth/jwt";
 import NextAuth from "next-auth/next";
@@ -87,6 +88,7 @@ export const authOptions: NextAuthOptions = {
   session: {
     strategy: "jwt",
   },
+  secret: NEXTAUTH_SECRET,
 };
 
 const handler = NextAuth(authOptions);

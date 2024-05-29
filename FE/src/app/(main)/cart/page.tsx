@@ -8,6 +8,9 @@ import { useQuery } from "@apollo/client";
 import { GetCartQuery } from "@/+core/definegql";
 import { CartItem } from "@/+core/interfaces";
 import Spinner from "@/components/ui/spinner";
+import { FaExclamationTriangle } from "react-icons/fa";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 export default function PaymentMethods() {
   const { data: session } = useSession();
@@ -33,9 +36,9 @@ export default function PaymentMethods() {
 
   for (let item of cartItems) {
     if (item.product.isOnSale) {
-      totalPrice += item.product.priceSale;
+      totalPrice += item.product.priceSale * item.quantity;
     } else {
-      totalPrice += item.product.price;
+      totalPrice += item.product.price * item.quantity;
     }
   }
 
@@ -46,7 +49,7 @@ export default function PaymentMethods() {
           <div className="w-2/3">
             <div className="mb-4 bg-white shadow-md rounded-none">
               <div className="py-3 px-4 bg-gradient-to-l from-blue-600 to-blue-700 rounded-none">
-                <h5 className="text-xl text-white font-semibold mb-0">
+                <h5 className="text-xl text-white mb-0">
                   Cart - {length} items
                 </h5>
               </div>
@@ -56,7 +59,17 @@ export default function PaymentMethods() {
                     <Spinner size={80} />
                   </div>
                 ) : error ? (
-                  <p>Error: {error.message}</p>
+                  <div className="flex flex-col items-center justify-center p-6 bg-red-100 border border-red-400 text-red-700 rounded-none">
+                    <FaExclamationTriangle className="text-4xl mb-4" />
+                    <p className="text-xl mb-4">
+                      Cart not available, please sign in first
+                    </p>
+                    <Link href="/login">
+                      <Button className="px-4 py-2 bg-black text-white rounded-none hover:bg-gray-700 transition duration-300">
+                        Sign In
+                      </Button>
+                    </Link>
+                  </div>
                 ) : (
                   cartItems.map((cartItem) => (
                     <CartElement
@@ -73,14 +86,14 @@ export default function PaymentMethods() {
 
             <div className="mb-4 bg-white shadow-md rounded-none">
               <div className="p-4">
-                <p className="font-semibold">Expected shipping delivery</p>
+                <p>Expected shipping delivery</p>
                 <p className="mb-0">12.10.2020 - 14.10.2020</p>
               </div>
             </div>
 
             <div className="mb-4 bg-white shadow-md rounded-none">
               <div className="p-4">
-                <p className="font-semibold">We accept</p>
+                <p>We accept</p>
                 <div className="flex space-x-2">
                   <img
                     className="w-12"
@@ -107,7 +120,7 @@ export default function PaymentMethods() {
             </div>
           </div>
 
-          <ToTalCart />
+          <ToTalCart total={totalPrice} />
         </div>
       </div>
     </section>
