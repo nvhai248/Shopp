@@ -10,15 +10,15 @@ import { Skeleton } from "@/components/ui/skeleton";
 export default function NavBarUser() {
   const { data: session, status } = useSession();
 
-  /* if (status === "loading") {
-    <div className="w-1/4 flex items-center space-x-4">
-      <Skeleton className="h-[40px] w-[40px] rounded-full" />
-      <div className="space-y-2">
-        <Skeleton className="h-[30px] w-full" />
-        <Skeleton className="h-[30px] w-full" />
+  if (status === "loading") {
+    return (
+      <div className="w-1/4 flex space-x-4 flex-col mt-5">
+        <Skeleton className="h-[100px] w-[100px] rounded-full" />
+        <Skeleton className="h-[30px] w-[300px] mt-5" />
+        <Skeleton className="h-[30px] w-[300px] mt-5" />
       </div>
-    </div>;
-  } */
+    );
+  }
 
   return (
     <aside className="w-1/4 text-start bg-white pt-4 border-r-2">
@@ -48,7 +48,7 @@ export default function NavBarUser() {
           </li>
           <li className="px-4 py-4 text-black hover:bg-gray-200 flex flex-row cursor-pointer">
             <RiContactsBook3Fill className=" mr-10 text-2xl" />{" "}
-            <span>Addresses</span>
+            <span>Contacts</span>
           </li>
           <li className="px-4 py-4 text-black hover:bg-gray-200 flex flex-row cursor-pointer">
             <PiPasswordBold className=" mr-10 text-2xl" />{" "}

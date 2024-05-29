@@ -33,8 +33,12 @@ export default function LatestProduct() {
       <div>
         <div className="grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-4 gap-x-[5rem] gap-y-8">
           {loading ? (
-            <div className="flex flex-auto w-full justify-center items-center">
-              <Spinner size={60} />
+            <div className="p-8 w-full min-h-screen">
+              <div className="flex items-center w-full space-x-4">
+                <div className="space-y-2 w-full">
+                  <Spinner size={80} />
+                </div>
+              </div>
             </div>
           ) : (
             products?.map((product) => {

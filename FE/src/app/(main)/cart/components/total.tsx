@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 interface TotalProps {
   total: number;
 }
@@ -29,9 +31,11 @@ export default function ToTalCart({ total = 0 }) {
               </span>
             </li>
           </ul>
-          <button className="w-full py-2 mt-4 bg-black text-white rounded-none hover:bg-gray-700 transition-colors duration-300">
-            Go to checkout
-          </button>
+          <Link href="/checkout">
+            <button className="w-full py-2 mt-4 bg-black text-white rounded-none hover:bg-gray-700 transition-colors duration-300">
+              Go to checkout
+            </button>
+          </Link>
         </div>
       </div>
     </div>

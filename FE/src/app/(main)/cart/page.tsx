@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import ToTalCart from "./components/total";
 import CartElement from "./components/cartElement";
 import { useSession } from "next-auth/react";
@@ -10,7 +10,7 @@ import { CartItem } from "@/+core/interfaces";
 import Spinner from "@/components/ui/spinner";
 import RequireSignIn from "@/components/ui/require-signin";
 
-export default function PaymentMethods() {
+export default function CartPage() {
   const { data: session } = useSession();
   const { data, loading, error } = useQuery(GetCartQuery, {
     context: {
@@ -20,17 +20,20 @@ export default function PaymentMethods() {
     },
   });
 
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
+
+  useEffect(() => {
+    if (data && !error) {
+      setCartItems(data.getCart || []);
+    }
+  }, [data, error]);
+
+  const handleRemoveFromCart = (productId: string) => {
+    setCartItems(cartItems.filter((item) => item.product.id !== productId));
+  };
+
   let totalPrice = 0;
-  let length = 0;
-
-  let cartItems: CartItem[] = [];
-  if (error) {
-    console.log(error);
-  } else {
-    cartItems = data?.getCart || []; // Provide a default empty array
-  }
-
-  length = cartItems.length;
+  let length = cartItems.length;
 
   for (let item of cartItems) {
     if (item.product.isOnSale) {
@@ -64,6 +67,7 @@ export default function PaymentMethods() {
                       key={cartItem.product.id}
                       product={cartItem.product}
                       quantity={cartItem.quantity}
+                      onRemove={handleRemoveFromCart}
                     />
                   ))
                 )}

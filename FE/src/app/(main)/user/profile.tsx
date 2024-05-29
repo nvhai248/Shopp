@@ -22,13 +22,14 @@ import Avatar from "./components/avatar";
 import { useSession } from "next-auth/react";
 import RequireSignIn from "@/components/ui/require-signin";
 import Spinner from "@/components/ui/spinner";
+import { USER_GENDER } from "@/+core/enums";
 
 const profileSchema = z.object({
   firstName: z.string().nonempty({ message: "First Name is required" }),
   lastName: z.string().optional(),
   email: z.string(),
   status: z.string(),
-  gender: z.enum(["male", "female", "other"]),
+  gender: z.enum([USER_GENDER.FEMALE, USER_GENDER.MALE, USER_GENDER.UNDEFINED]),
   dateOfBirth: z.object({
     day: z.string(),
     month: z.string(),
@@ -91,6 +92,7 @@ export default function FormProfile() {
                 <Input
                   {...form.register("firstName")}
                   className="mt-1 block w-full border-gray-300 rounded-none shadow-sm"
+                  defaultValue={session.user?.firstName}
                 />
                 {form.formState.errors.firstName && (
                   <p className="mt-1 text-sm text-red-600">
@@ -106,6 +108,7 @@ export default function FormProfile() {
                 <Input
                   {...form.register("lastName")}
                   className="mt-1 block w-full border-gray-300 rounded-none shadow-sm"
+                  defaultValue={session.user?.lastName}
                 />
               </div>
 
@@ -117,6 +120,7 @@ export default function FormProfile() {
                   {...form.register("email")}
                   className="mt-1 block w-full border-gray-300 rounded-none shadow-sm"
                   type="email"
+                  defaultValue={session.user?.email}
                   disabled
                 />
               </div>
@@ -128,6 +132,7 @@ export default function FormProfile() {
                 <Input
                   {...form.register("status")}
                   className="mt-1 block w-full border-gray-300 rounded-none shadow-sm"
+                  defaultValue={session.user?.status}
                   disabled
                 />
               </div>
@@ -139,21 +144,30 @@ export default function FormProfile() {
                 <RadioGroup
                   {...form.register("gender")}
                   className="mt-4 flex space-x-4"
-                  defaultValue="MALE"
+                  defaultValue={session.user?.gender}
                 >
                   <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="MALE" id="MALE" />
-                    <Label htmlFor="MALE">Male</Label>
+                    <RadioGroupItem
+                      value={USER_GENDER.MALE}
+                      id={USER_GENDER.MALE}
+                    />
+                    <Label htmlFor={USER_GENDER.MALE}>Male</Label>
                   </div>
 
                   <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="FEMALE" id="FEMALE" />
-                    <Label htmlFor="FEMALE">Female</Label>
+                    <RadioGroupItem
+                      value={USER_GENDER.FEMALE}
+                      id={USER_GENDER.FEMALE}
+                    />
+                    <Label htmlFor={USER_GENDER.FEMALE}>Female</Label>
                   </div>
 
                   <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="UNDEFINED" id="UNDEFINED" />
-                    <Label htmlFor="UNDEFINED">Undefined</Label>
+                    <RadioGroupItem
+                      value={USER_GENDER.UNDEFINED}
+                      id={USER_GENDER.UNDEFINED}
+                    />
+                    <Label htmlFor={USER_GENDER.UNDEFINED}>Undefined</Label>
                   </div>
                 </RadioGroup>
                 {form.formState.errors.gender && (
@@ -167,7 +181,7 @@ export default function FormProfile() {
                 <label className="block text-sm font-medium text-gray-700">
                   Date of Birth
                 </label>
-                <div className="flex space-x-4 mt-1">
+                <div className="flex space-x-4 mt-1 pr-10">
                   <div className="block w-1/3 border-gray-300 rounded-none shadow-sm">
                     <Select {...form.register("dateOfBirth.day")}>
                       <SelectTrigger className="w-[100px]">

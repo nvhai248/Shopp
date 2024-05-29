@@ -8,6 +8,7 @@ import { Skeleton } from "../ui/skeleton";
 import LogoutButton from "./logoutBtn";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Button } from "../ui/button";
+import Link from "next/link";
 
 const DynamicLoginBtn = () => {
   const { data: session, status } = useSession();
@@ -40,9 +41,11 @@ const DynamicLoginBtn = () => {
         </PopoverTrigger>
         <PopoverContent className="rounded-none">
           <div>
-            <Button className="w-full h-full rounded-none text-black border-none bg-white hover:text-white">
-              My Profile
-            </Button>
+            <Link href="/user">
+              <Button className="w-full h-full rounded-none text-black border-none bg-white hover:text-white">
+                My Profile
+              </Button>
+            </Link>
           </div>
           <DropdownMenuSeparator />
           <div>

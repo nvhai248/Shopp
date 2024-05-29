@@ -1,6 +1,6 @@
 // Type declarations for NextAuth and JWT
 
-import { USER_STATUS } from "@/+core/enums";
+import { USER_STATUS, USER_GENDER } from "@/+core/enums";
 import NextAuth from "next-auth";
 
 declare module "next-auth" {
