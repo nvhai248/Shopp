@@ -12,6 +12,8 @@ declare module "next-auth" {
       lastName: string;
       avatar: string;
       status: USER_STATUS;
+      gender: USER_GENDER;
+      birthDate: string;
     } | null;
     accessToken: string;
     refreshToken: string;

@@ -5,6 +5,12 @@ export enum USER_STATUS {
   DELETED = "DELETED",
 }
 
+export enum USER_GENDER {
+  MALE = "MALE",
+  FEMALE = "FEMALE",
+  UNDEFINED = "UNDEFINED",
+}
+
 export enum PROMOTION_LEVEL {
   ORDER = "ORDER",
   ITEM = "ITEM",

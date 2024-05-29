@@ -1,6 +1,6 @@
 "use client";
 
-import { FaExclamationTriangle, FaMapMarkerAlt } from "react-icons/fa";
+import { FaMapMarkerAlt } from "react-icons/fa";
 import { IoCart } from "react-icons/io5";
 import { BiSolidDiscount } from "react-icons/bi";
 
@@ -12,8 +12,8 @@ import { useSession } from "next-auth/react";
 import { GetCartQuery } from "@/+core/definegql";
 import { MdOutlinePayments } from "react-icons/md";
 import CheckoutProduct from "./checkoutProduct";
-import Link from "next/link";
 import Spinner from "@/components/ui/spinner";
+import RequireSignIn from "@/components/ui/require-signin";
 
 const Checkout = () => {
   const { data: session } = useSession();
@@ -58,19 +58,7 @@ const Checkout = () => {
   }
 
   if (error) {
-    return (
-      <div className="flex flex-col w-full my-10 items-center justify-center p-6 bg-red-100 border border-red-400 text-red-700 rounded-none">
-        <FaExclamationTriangle className="text-4xl mb-4" />
-        <p className="text-xl mb-4">
-          Checkout not available, please sign in first
-        </p>
-        <Link href="/login">
-          <Button className="px-4 py-2 bg-black text-white rounded-none hover:bg-gray-700 transition duration-300">
-            Sign In
-          </Button>
-        </Link>
-      </div>
-    );
+    return <RequireSignIn />;
   }
 
   return (

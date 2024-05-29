@@ -8,9 +8,7 @@ import { useQuery } from "@apollo/client";
 import { GetCartQuery } from "@/+core/definegql";
 import { CartItem } from "@/+core/interfaces";
 import Spinner from "@/components/ui/spinner";
-import { FaExclamationTriangle } from "react-icons/fa";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
+import RequireSignIn from "@/components/ui/require-signin";
 
 export default function PaymentMethods() {
   const { data: session } = useSession();
@@ -59,17 +57,7 @@ export default function PaymentMethods() {
                     <Spinner size={80} />
                   </div>
                 ) : error ? (
-                  <div className="flex flex-col items-center justify-center p-6 bg-red-100 border border-red-400 text-red-700 rounded-none">
-                    <FaExclamationTriangle className="text-4xl mb-4" />
-                    <p className="text-xl mb-4">
-                      Cart not available, please sign in first
-                    </p>
-                    <Link href="/login">
-                      <Button className="px-4 py-2 bg-black text-white rounded-none hover:bg-gray-700 transition duration-300">
-                        Sign In
-                      </Button>
-                    </Link>
-                  </div>
+                  <RequireSignIn />
                 ) : (
                   cartItems.map((cartItem) => (
                     <CartElement
