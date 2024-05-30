@@ -4,6 +4,8 @@ import { UpdatePromotionInput } from './dto/update-promotion.input';
 import { PromotionRepository } from './promotions.repository';
 import { CreatePromotionItemInput } from './dto/create-item.input';
 import { ItemPromotionRepository } from './item-promotions.repository';
+import { RecommendInput } from './dto/recommend.input';
+import { PROMOTION_LEVEL } from 'src/utils/const';
 
 @Injectable()
 export class PromotionsService {
@@ -51,5 +53,35 @@ export class PromotionsService {
       productId,
       promotionId,
     );
+  }
+
+  async getRecommendPromotions(recommendInput: RecommendInput) {
+    let result = [];
+    result = await this.promotionRepository.recommend(
+      recommendInput.totalValue,
+      PROMOTION_LEVEL.ORDER,
+    );
+
+    const allPromotionLevelItem = await this.promotionRepository.recommend(
+      undefined,
+      PROMOTION_LEVEL.ITEM,
+    );
+
+    for (let item of allPromotionLevelItem) {
+      for (let productQuantity of recommendInput.products) {
+        const itemPromotion =
+          await this.itemPromotionRepository.findOnePromotionItem(
+            item.id,
+            productQuantity.productId,
+            productQuantity.quantity,
+          );
+
+        if (itemPromotion) {
+          result.push(item);
+        }
+      }
+    }
+
+    return result;
   }
 }

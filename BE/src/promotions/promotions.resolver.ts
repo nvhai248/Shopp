@@ -5,6 +5,9 @@ import { CreatePromotionInput } from './dto/create-promotion.input';
 import { UpdatePromotionInput } from './dto/update-promotion.input';
 import { CreatePromotionItemInput } from './dto/create-item.input';
 import { PromotionItem } from './entities/item-promotion.entity';
+import { RecommendInput } from './dto/recommend.input';
+import { UseGuards } from '@nestjs/common';
+import { JwtAccessAuthGuard } from 'src/guard/jwt-auth.guard';
 
 @Resolver(() => Promotion)
 export class PromotionsResolver {
@@ -62,5 +65,13 @@ export class PromotionsResolver {
     @Args('productId') productId: string,
   ) {
     return this.promotionsService.deletePromotionItem(productId, promotionId);
+  }
+
+  @Query(() => [Promotion], { name: 'recommend' })
+  @UseGuards(JwtAccessAuthGuard)
+  getRecommendPromotions(
+    @Args('recommendInput') recommendInput: RecommendInput,
+  ) {
+    return this.promotionsService.getRecommendPromotions(recommendInput);
   }
 }

@@ -62,6 +62,24 @@ export class ItemPromotionRepository {
     }
   }
 
+  async findOnePromotionItem(
+    promotionId: string,
+    productId: string,
+    quantity: number,
+  ) {
+    try {
+      return this.databaseService.productPromotion.findFirst({
+        where: {
+          promotionId: promotionId,
+          productId: productId,
+          quantity: quantity,
+        },
+      });
+    } catch (error) {
+      throw new MyDBException(error.message);
+    }
+  }
+
   async updateQuantity(
     productId: string,
     promotionId: string,

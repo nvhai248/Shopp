@@ -18,6 +18,9 @@ export class UpdateUserInput {
   phoneNumber: string;
 
   @Field({ nullable: true })
+  avatar: string;
+
+  @Field({ nullable: true })
   @IsEnum(GENDER)
   gender: string;
 }

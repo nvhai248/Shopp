@@ -18,29 +18,39 @@ import {
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { Form } from "@/components/ui/form";
-import Avatar from "./components/avatar";
 import { useSession } from "next-auth/react";
 import RequireSignIn from "@/components/ui/require-signin";
 import Spinner from "@/components/ui/spinner";
 import { USER_GENDER } from "@/+core/enums";
+import { UploadFileService } from "@/+core/services";
+import { UpdateProfileService } from "@/+core/services/user/updateProfile";
+import { useToast } from "@/components/ui/use-toast";
+import { ToastAction } from "@/components/ui/toast";
+import Avatar from "./components/avatar";
 
 const profileSchema = z.object({
   firstName: z.string().nonempty({ message: "First Name is required" }),
   lastName: z.string().optional(),
-  email: z.string(),
-  status: z.string(),
+  email: z.string().email({ message: "Invalid email address" }),
+  phoneNumber: z
+    .string()
+    .min(10, { message: "Phone number must be at least 10 digits" })
+    .regex(/^\d+$/, { message: "Phone number must contain only digits" }),
   gender: z.enum([USER_GENDER.FEMALE, USER_GENDER.MALE, USER_GENDER.UNDEFINED]),
   dateOfBirth: z.object({
-    day: z.string(),
-    month: z.string(),
-    year: z.string(),
+    day: z
+      .string()
+      .regex(/^(0?[1-9]|[12][0-9]|3[01])$/, { message: "Invalid day" }),
+    month: z.string().regex(/^(0?[1-9]|1[012])$/, { message: "Invalid month" }),
+    year: z.string().regex(/^\d{4}$/, { message: "Invalid year" }),
   }),
 });
 
 export default function FormProfile() {
   const { data: session, status } = useSession();
-
   const [notification, setNotification] = useState<string>("");
+  const [file, setFile] = useState<File | undefined>(undefined);
+  const { toast } = useToast();
 
   const form = useForm<z.infer<typeof profileSchema>>({
     resolver: zodResolver(profileSchema),
@@ -48,9 +58,19 @@ export default function FormProfile() {
       firstName: session?.user?.firstName,
       lastName: session?.user?.lastName,
       email: session?.user?.email,
-      status: session?.user?.status,
-      gender: session?.user?.gender,
-      dateOfBirth: { day: "1", month: "January", year: "1990" },
+      phoneNumber: session?.user?.phoneNumber,
+      gender: session?.user?.gender || USER_GENDER.UNDEFINED,
+      dateOfBirth: {
+        day: new Date(session?.user?.birthDate as string)
+          .getUTCDate()
+          .toString(),
+        month: (
+          new Date(session?.user?.birthDate as string).getUTCMonth() + 1
+        ).toString(),
+        year: new Date(session?.user?.birthDate as string)
+          .getUTCFullYear()
+          .toString(),
+      },
     },
   });
 
@@ -70,15 +90,51 @@ export default function FormProfile() {
     return <RequireSignIn />;
   }
 
-  const onSubmit = async (values: z.infer<typeof profileSchema>) => {
-    // Simulate form submission
-    console.log("Form values:", values);
+  async function onSubmit(values: z.infer<typeof profileSchema>) {
+    try {
+      let avatarUrl = session?.user?.avatar;
+
+      if (file) {
+        const uploadedUrl = await UploadFileService(file);
+        avatarUrl = uploadedUrl;
+      }
+
+      const updatedProfile = await UpdateProfileService(
+        session?.accessToken as string,
+        {
+          firstName: values.firstName,
+          lastName: values.lastName,
+          phoneNumber: values.phoneNumber,
+          gender: values.gender,
+          birthDate: `${values.dateOfBirth.year}-${values.dateOfBirth.month}-${values.dateOfBirth.day}`,
+          avatar: avatarUrl,
+        }
+      );
+
+      if (session) session.user = updatedProfile.data.updateProfile;
+      toast({
+        title: "Update Profile Success!",
+        description: new Date().toDateString(),
+        action: <ToastAction altText="Close">Close</ToastAction>,
+      });
+    } catch (err: any) {
+      toast({
+        variant: "destructive",
+        title: "Cannot update Profile. Please try again!",
+        description: err.message,
+        action: <ToastAction altText="Close">Close</ToastAction>,
+      });
+    }
+  }
+
+  const handleFileUpload = (file: File) => {
+    setFile(file);
   };
 
   return (
     <div className="flex flex-row">
       <div className="p-12">
-        <Avatar />
+        <Avatar getFile={handleFileUpload} />
       </div>
 
       <div>
@@ -127,13 +183,12 @@ export default function FormProfile() {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700">
-                  Status
+                  Phone Number
                 </label>
                 <Input
-                  {...form.register("status")}
+                  {...form.register("phoneNumber")}
                   className="mt-1 block w-full border-gray-300 rounded-none shadow-sm"
-                  defaultValue={session.user?.status}
-                  disabled
+                  defaultValue={session.user?.phoneNumber}
                 />
               </div>
 
@@ -183,7 +238,12 @@ export default function FormProfile() {
                 </label>
                 <div className="flex space-x-4 mt-1 pr-10">
                   <div className="block w-1/3 border-gray-300 rounded-none shadow-sm">
-                    <Select {...form.register("dateOfBirth.day")}>
+                    <Select
+                      {...form.register("dateOfBirth.day")}
+                      defaultValue={new Date(session?.user?.birthDate as string)
+                        .getUTCDate()
+                        .toString()}
+                    >
                       <SelectTrigger className="w-[100px]">
                         <SelectValue placeholder="Day" />
                       </SelectTrigger>
@@ -201,26 +261,33 @@ export default function FormProfile() {
                   </div>
 
                   <div className="block w-1/3 border-gray-300 rounded-none shadow-sm">
-                    <Select {...form.register("dateOfBirth.month")}>
+                    <Select
+                      {...form.register("dateOfBirth.month")}
+                      defaultValue={(
+                        new Date(
+                          session?.user?.birthDate as string
+                        ).getUTCMonth() + 1
+                      ).toString()}
+                    >
                       <SelectTrigger className="w-[100px]">
                         <SelectValue placeholder="Month" />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectGroup>
-                          <SelectLabel>Days</SelectLabel>
+                          <SelectLabel>Months</SelectLabel>
                           {[
-                            "January",
-                            "February",
-                            "March",
-                            "April",
-                            "May",
-                            "June",
-                            "July",
-                            "August",
-                            "September",
-                            "October",
-                            "November",
-                            "December",
+                            "1",
+                            "2",
+                            "3",
+                            "4",
+                            "5",
+                            "6",
+                            "7",
+                            "8",
+                            "9",
+                            "10",
+                            "11",
+                            "12",
                           ].map((month) => (
                             <SelectItem key={month} value={month}>
                               {month}
@@ -232,13 +299,18 @@ export default function FormProfile() {
                   </div>
 
                   <div className="block w-1/3 border-gray-300 rounded-none shadow-sm">
-                    <Select {...form.register("dateOfBirth.year")}>
+                    <Select
+                      {...form.register("dateOfBirth.year")}
+                      defaultValue={new Date(session?.user?.birthDate as string)
+                        .getUTCFullYear()
+                        .toString()}
+                    >
                       <SelectTrigger className="w-[100px]">
                         <SelectValue placeholder="Year" />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectGroup>
-                          <SelectLabel>Days</SelectLabel>
+                          <SelectLabel>Years</SelectLabel>
                           {Array.from({ length: 100 }, (_, i) => 1920 + i).map(
                             (year) => (
                               <SelectItem key={year} value={year.toString()}>

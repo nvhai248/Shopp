@@ -149,6 +149,7 @@ type Query {
   getCart: [CartItem!]!
   promotions: [Promotion!]!
   promotion(id: String!): Promotion!
+  recommend(recommendInput: RecommendInput!): [Promotion!]!
   contacts: [Contact!]!
   contact(id: String!): Contact!
 }
@@ -160,6 +161,16 @@ input SearchConditionInput {
   categoryId: String
   publisherId: String
   isOnSale: Boolean
+}
+
+input RecommendInput {
+  products: [ProductQuantity!]! = []
+  totalValue: Float!
+}
+
+input ProductQuantity {
+  productId: String!
+  quantity: Float!
 }
 
 type Mutation {
@@ -262,6 +273,7 @@ input UpdateUserInput {
   lastName: String
   birthDate: String
   phoneNumber: String
+  avatar: String
   gender: String
 }
 

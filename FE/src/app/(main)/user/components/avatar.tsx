@@ -1,10 +1,13 @@
 "use client";
 
-import { Skeleton } from "@/components/ui/skeleton";
 import { useSession } from "next-auth/react";
 import { Fragment, useState } from "react";
 
-export default function Avatar() {
+interface avatarProps {
+  getFile(file: File): void;
+}
+
+export default function Avatar({ getFile }: avatarProps) {
   const { data: session } = useSession();
   const [image, setImage] = useState<string | ArrayBuffer | null>(
     session?.user?.avatar || null
@@ -17,6 +20,7 @@ export default function Avatar() {
       reader.onloadend = () => {
         setImage(reader.result);
       };
+      getFile(file);
       reader.readAsDataURL(file);
     }
   };

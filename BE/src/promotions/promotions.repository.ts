@@ -3,6 +3,7 @@ import { DatabaseService } from 'src/database/database.service';
 import { MyBadRequestException, MyDBException } from 'src/utils/error';
 import { CreatePromotionInput } from './dto/create-promotion.input';
 import { UpdatePromotionInput } from './dto/update-promotion.input';
+import { PROMOTION_LEVEL } from 'src/utils/const';
 
 @Injectable()
 export class PromotionRepository {
@@ -49,6 +50,13 @@ export class PromotionRepository {
   async findMany() {
     return await this.databaseService.promotion.findMany({
       where: { status: true },
+      orderBy: { updatedAt: 'desc' },
+    });
+  }
+
+  async recommend(totalValue: number, level: PROMOTION_LEVEL) {
+    return await this.databaseService.promotion.findMany({
+      where: { status: true, minValue: { lte: totalValue }, level: level },
       orderBy: { updatedAt: 'desc' },
     });
   }
