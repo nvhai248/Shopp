@@ -45,28 +45,28 @@ export default function NavBarUser({ onNavClick }: NavProps) {
       </div>
       <nav className="mt-6">
         <ul>
-          <li className="px-4 py-4 text-black hover:bg-gray-200 flex flex-row cursor-pointer">
-            <button
-              onClick={() => onNavClick("profile")}
-              className="flex items-center w-full text-left"
-            >
+          <li
+            onClick={() => onNavClick("profile")}
+            className="px-4 py-4 text-black hover:bg-gray-200 flex flex-row cursor-pointer"
+          >
+            <button className="flex items-center w-full text-left">
               <CgProfile className="mr-10 text-2xl" /> <span>Profile</span>
             </button>
           </li>
-          <li className="px-4 py-4 text-black hover:bg-gray-200 flex flex-row cursor-pointer">
-            <button
-              onClick={() => onNavClick("contacts")}
-              className="flex items-center w-full text-left"
-            >
+          <li
+            onClick={() => onNavClick("contacts")}
+            className="px-4 py-4 text-black hover:bg-gray-200 flex flex-row cursor-pointer"
+          >
+            <button className="flex items-center w-full text-left">
               <RiContactsBook3Fill className="mr-10 text-2xl" />{" "}
               <span>Contacts</span>
             </button>
           </li>
-          <li className="px-4 py-4 text-black hover:bg-gray-200 flex flex-row cursor-pointer">
-            <button
-              onClick={() => onNavClick("changePw")}
-              className="flex items-center w-full text-left"
-            >
+          <li
+            onClick={() => onNavClick("changePw")}
+            className="px-4 py-4 text-black hover:bg-gray-200 flex flex-row cursor-pointer"
+          >
+            <button className="flex items-center w-full text-left">
               <PiPasswordBold className="mr-10 text-2xl" />{" "}
               <span>Change Password</span>
             </button>

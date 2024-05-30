@@ -14,6 +14,7 @@ import { MdOutlinePayments } from "react-icons/md";
 import CheckoutProduct from "./checkoutProduct";
 import Spinner from "@/components/ui/spinner";
 import RequireSignIn from "@/components/ui/require-signin";
+import ShowContacts from "./components/showContact";
 
 const Checkout = () => {
   const { data: session } = useSession();
@@ -77,7 +78,7 @@ const Checkout = () => {
                 Minh
               </span>
             </div>
-            <button className="text-blue-500 underline mb-5">Thay Đổi</button>
+            <ShowContacts />
           </div>
         </div>
 
