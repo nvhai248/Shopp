@@ -16,6 +16,7 @@ import { CategoriesModule } from './categories/categories.module';
 import { FileUploadModule } from './upload/upload.module';
 import { PromotionsModule } from './promotions/promotions.module';
 import { ContactsModule } from './contacts/contacts.module';
+import { OrdersModule } from './orders/orders.module';
 
 @Module({
   imports: [
@@ -57,6 +58,7 @@ import { ContactsModule } from './contacts/contacts.module';
     FileUploadModule,
     PromotionsModule,
     ContactsModule,
+    OrdersModule,
   ],
   controllers: [AppController],
   providers: [],

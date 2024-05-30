@@ -7,7 +7,10 @@ import { PiPasswordBold } from "react-icons/pi";
 import { CiEdit } from "react-icons/ci";
 import { Skeleton } from "@/components/ui/skeleton";
 
-export default function NavBarUser() {
+interface NavProps {
+  onNavClick: (page: string) => void;
+}
+export default function NavBarUser({ onNavClick }: NavProps) {
   const { data: session, status } = useSession();
 
   if (status === "loading") {
@@ -25,34 +28,48 @@ export default function NavBarUser() {
       <div className="p-4">
         <div className="flex items-center space-x-3">
           <img
-            src={
-              session && session.user && session.user.avatar
-                ? session.user.avatar
-                : "https://via.placeholder.com/150"
-            }
+            src={session?.user?.avatar || "https://via.placeholder.com/150"}
             alt="Profile"
             className="w-16 h-16 rounded-full object-cover"
           />
           <div>
             <h2 className="font-semibold text-lg">{session?.user?.email}</h2>
-            <a href="#" className="text-blue-500 flex flex-row text-sm">
-              <CiEdit className="mt-1 mr-2" /> <span> Edit Profile</span>
-            </a>
+            <button
+              onClick={() => onNavClick("profile")}
+              className="text-blue-500 flex flex-row items-center"
+            >
+              <CiEdit className="mr-2" /> <span>Edit Profile</span>
+            </button>
           </div>
         </div>
       </div>
       <nav className="mt-6">
         <ul>
           <li className="px-4 py-4 text-black hover:bg-gray-200 flex flex-row cursor-pointer">
-            <CgProfile className=" mr-10 text-2xl" /> <span>Profile</span>
+            <button
+              onClick={() => onNavClick("profile")}
+              className="flex items-center w-full text-left"
+            >
+              <CgProfile className="mr-10 text-2xl" /> <span>Profile</span>
+            </button>
           </li>
           <li className="px-4 py-4 text-black hover:bg-gray-200 flex flex-row cursor-pointer">
-            <RiContactsBook3Fill className=" mr-10 text-2xl" />{" "}
-            <span>Contacts</span>
+            <button
+              onClick={() => onNavClick("contacts")}
+              className="flex items-center w-full text-left"
+            >
+              <RiContactsBook3Fill className="mr-10 text-2xl" />{" "}
+              <span>Contacts</span>
+            </button>
           </li>
           <li className="px-4 py-4 text-black hover:bg-gray-200 flex flex-row cursor-pointer">
-            <PiPasswordBold className=" mr-10 text-2xl" />{" "}
-            <span> Change Password</span>
+            <button
+              onClick={() => onNavClick("changePw")}
+              className="flex items-center w-full text-left"
+            >
+              <PiPasswordBold className="mr-10 text-2xl" />{" "}
+              <span>Change Password</span>
+            </button>
           </li>
         </ul>
       </nav>

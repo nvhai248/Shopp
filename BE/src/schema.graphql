@@ -135,6 +135,36 @@ type Contact {
   updatedAt: DateTime!
 }
 
+type OrderItem {
+  ownerId: String!
+  productId: String!
+  price: Float!
+  quantity: Int!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Order {
+  id: ID!
+  contactId: String!
+  promotionId: String!
+  isPaid: Boolean!
+  totalPrice: Float!
+  reducePrice: Float!
+  paymentMethod: String!
+  items: [OrderItem!]!
+  status: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type PagingOrderResponse {
+  page: Int
+  limit: Int
+  total: Int
+  data: [Order!]!
+}
+
 type Query {
   products(searchConditionInput: SearchConditionInput!): PagingProduct!
   product(id: String!): Product!
@@ -152,6 +182,8 @@ type Query {
   recommend(recommendInput: RecommendInput!): [Promotion!]!
   contacts: [Contact!]!
   contact(id: String!): Contact!
+  orders(pagingOrderInput: PagingOrderInput!): [PagingOrderResponse!]!
+  order(id: String!): Order!
 }
 
 input SearchConditionInput {
@@ -171,6 +203,12 @@ input RecommendInput {
 input ProductQuantity {
   productId: String!
   quantity: Float!
+}
+
+input PagingOrderInput {
+  page: Int
+  limit: Int
+  ownerId: String
 }
 
 type Mutation {
@@ -206,6 +244,7 @@ type Mutation {
   createContact(createContactInput: CreateContactInput!): Contact!
   updateContact(updateContactInput: UpdateContactInput!): Boolean!
   deleteContact(id: String!): Boolean!
+  createOrder(createOrderInput: CreateOrderInput!): Order!
 }
 
 input CreateProductInput {
@@ -365,4 +404,20 @@ input UpdateContactInput {
   phoneNumber: String
   wards: String
   detailAddress: String
+}
+
+input CreateOrderInput {
+  contactId: String!
+  promotionId: String!
+  isPaid: Boolean!
+  totalPrice: Float!
+  reducePrice: Float!
+  paymentMethod: String!
+  items: [OrderItemInput!]!
+}
+
+input OrderItemInput {
+  productId: String!
+  price: Float!
+  quantity: Int!
 }

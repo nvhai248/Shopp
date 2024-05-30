@@ -19,8 +19,6 @@ import {
 import { Label } from "@/components/ui/label";
 import { Form } from "@/components/ui/form";
 import { useSession } from "next-auth/react";
-import RequireSignIn from "@/components/ui/require-signin";
-import Spinner from "@/components/ui/spinner";
 import { USER_GENDER } from "@/+core/enums";
 import { UploadFileService } from "@/+core/services";
 import { UpdateProfileService } from "@/+core/services/user/updateProfile";
@@ -47,7 +45,7 @@ const profileSchema = z.object({
 });
 
 export default function FormProfile() {
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
   const [notification, setNotification] = useState<string>("");
   const [file, setFile] = useState<File | undefined>(undefined);
   const { toast } = useToast();
@@ -74,22 +72,6 @@ export default function FormProfile() {
     },
   });
 
-  if (status === "loading") {
-    return (
-      <div className="p-8 w-full min-h-screen">
-        <div className="flex items-center w-full space-x-4">
-          <div className="space-y-2 w-full">
-            <Spinner size={100} />
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (status === "unauthenticated" || !session) {
-    return <RequireSignIn />;
-  }
-
   async function onSubmit(values: z.infer<typeof profileSchema>) {
     try {
       let avatarUrl = session?.user?.avatar;
@@ -99,6 +81,8 @@ export default function FormProfile() {
         avatarUrl = uploadedUrl;
       }
 
+      console.log(avatarUrl, values);
+
       const updatedProfile = await UpdateProfileService(
         session?.accessToken as string,
         {
@@ -106,7 +90,7 @@ export default function FormProfile() {
           lastName: values.lastName,
           phoneNumber: values.phoneNumber,
           gender: values.gender,
-          birthDate: `${values.dateOfBirth.year}-${values.dateOfBirth.month}-${values.dateOfBirth.day}`,
+          birthDate: `${values.dateOfBirth.month}-${values.dateOfBirth.day}-${values.dateOfBirth.year}`,
           avatar: avatarUrl,
         }
       );
@@ -148,7 +132,7 @@ export default function FormProfile() {
                 <Input
                   {...form.register("firstName")}
                   className="mt-1 block w-full border-gray-300 rounded-none shadow-sm"
-                  defaultValue={session.user?.firstName}
+                  defaultValue={session?.user?.firstName}
                 />
                 {form.formState.errors.firstName && (
                   <p className="mt-1 text-sm text-red-600">
@@ -164,7 +148,7 @@ export default function FormProfile() {
                 <Input
                   {...form.register("lastName")}
                   className="mt-1 block w-full border-gray-300 rounded-none shadow-sm"
-                  defaultValue={session.user?.lastName}
+                  defaultValue={session?.user?.lastName}
                 />
               </div>
 
@@ -176,7 +160,7 @@ export default function FormProfile() {
                   {...form.register("email")}
                   className="mt-1 block w-full border-gray-300 rounded-none shadow-sm"
                   type="email"
-                  defaultValue={session.user?.email}
+                  defaultValue={session?.user?.email}
                   disabled
                 />
               </div>
@@ -188,7 +172,7 @@ export default function FormProfile() {
                 <Input
                   {...form.register("phoneNumber")}
                   className="mt-1 block w-full border-gray-300 rounded-none shadow-sm"
-                  defaultValue={session.user?.phoneNumber}
+                  defaultValue={session?.user?.phoneNumber}
                 />
               </div>
 
@@ -199,7 +183,7 @@ export default function FormProfile() {
                 <RadioGroup
                   {...form.register("gender")}
                   className="mt-4 flex space-x-4"
-                  defaultValue={session.user?.gender}
+                  defaultValue={session?.user?.gender}
                 >
                   <div className="flex items-center space-x-2">
                     <RadioGroupItem
