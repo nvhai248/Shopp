@@ -73,7 +73,7 @@ type User {
   firstName: String
   lastName: String
   email: String!
-  birthDate: String
+  birthDate: DateTime
   phoneNumber: String
   gender: String
   avatar: String
@@ -122,6 +122,19 @@ type PromotionItem {
   quantity: Float!
 }
 
+type Contact {
+  id: ID!
+  ownerId: String!
+  fullName: String!
+  district: String!
+  province: String!
+  phoneNumber: String!
+  wards: String!
+  detailAddress: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
 type Query {
   products(searchConditionInput: SearchConditionInput!): PagingProduct!
   product(id: String!): Product!
@@ -136,6 +149,8 @@ type Query {
   getCart: [CartItem!]!
   promotions: [Promotion!]!
   promotion(id: String!): Promotion!
+  contacts: [Contact!]!
+  contact(id: String!): Contact!
 }
 
 input SearchConditionInput {
@@ -177,6 +192,9 @@ type Mutation {
   updatePromotion(updatePromotionInput: UpdatePromotionInput!): Boolean!
   updateQuantityPromotionItem(updateQuantityPromotionItem: CreatePromotionItemInput!): Boolean!
   deletePromotionItem(promotionId: String!, productId: String!): Boolean!
+  createContact(createContactInput: CreateContactInput!): Contact!
+  updateContact(updateContactInput: UpdateContactInput!): Boolean!
+  deleteContact(id: String!): Boolean!
 }
 
 input CreateProductInput {
@@ -316,4 +334,23 @@ input UpdatePromotionInput {
   startDate: String
   endDate: String
   status: Boolean
+}
+
+input CreateContactInput {
+  fullName: String!
+  district: String!
+  province: String!
+  phoneNumber: String!
+  wards: String!
+  detailAddress: String!
+}
+
+input UpdateContactInput {
+  id: ID!
+  fullName: String
+  district: String
+  province: String
+  phoneNumber: String
+  wards: String
+  detailAddress: String
 }

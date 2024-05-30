@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { DatabaseService } from 'src/database/database.service';
-import { MyDBException } from 'src/utils/error';
+import { MyBadRequestException, MyDBException } from 'src/utils/error';
 
 @Injectable()
 export class UserRepository {
@@ -54,10 +54,19 @@ export class UserRepository {
   }
 
   async updateOne(id: string, updateInfo: any) {
+    const { birthDate } = updateInfo;
+
     try {
+      if (birthDate && isNaN(Date.parse(birthDate))) {
+        throw new MyBadRequestException('Invalid date format');
+      }
+
       return await this.databaseService.user.update({
         where: { id },
-        data: updateInfo,
+        data: {
+          ...updateInfo,
+          birthDate: birthDate ? new Date(birthDate).toISOString() : undefined,
+        },
       });
     } catch (error) {
       throw new MyDBException(error.message);

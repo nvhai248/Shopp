@@ -1,6 +1,6 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { DatabaseService } from 'src/database/database.service';
-import { MyDBException } from 'src/utils/error';
+import { MyBadRequestException, MyDBException } from 'src/utils/error';
 import { CreatePromotionInput } from './dto/create-promotion.input';
 import { UpdatePromotionInput } from './dto/update-promotion.input';
 
@@ -24,7 +24,7 @@ export class PromotionRepository {
       } = createPromotionInput;
 
       if (isNaN(Date.parse(startDate)) || isNaN(Date.parse(endDate))) {
-        throw new BadRequestException('Invalid date format');
+        throw new MyBadRequestException('Invalid date format');
       }
 
       return await this.databaseService.promotion.create({

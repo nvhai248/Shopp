@@ -22,7 +22,7 @@ export class User {
   @Field()
   email: string;
 
-  @Field({ nullable: true })
+  @Field(() => GraphQLISODateTime, { nullable: true })
   birthDate: string;
 
   @Field({ nullable: true })

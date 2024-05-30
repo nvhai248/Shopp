@@ -50,7 +50,7 @@ export class AuthService {
     return {
       accessToken: await this.generateJwtToken(
         payload,
-        JWT_CONST.ACCESS_EXPIRED(),
+        JWT_CONST.ACCESS_EXPIRED_GENERATION,
         JWT_CONST.ACCESS_SECRET,
       ),
       refreshToken: null,
@@ -125,7 +125,7 @@ export class AuthService {
     if (loginInput.isRememberMe) {
       refreshToken = await this.generateJwtToken(
         payload,
-        JWT_CONST.REFRESH_EXPIRED(),
+        JWT_CONST.REFRESH_EXPIRED_GENERATION,
         JWT_CONST.REFRESH_SECRET,
       );
 
@@ -138,7 +138,7 @@ export class AuthService {
     return {
       accessToken: await this.generateJwtToken(
         payload,
-        JWT_CONST.ACCESS_EXPIRED(),
+        JWT_CONST.ACCESS_EXPIRED_GENERATION,
         JWT_CONST.ACCESS_SECRET,
       ),
       refreshToken,
@@ -157,7 +157,7 @@ export class AuthService {
     const payload: JwtPayload = { userId, role };
     const accessToken = await this.generateJwtToken(
       payload,
-      JWT_CONST.ACCESS_EXPIRED(),
+      JWT_CONST.ACCESS_EXPIRED_GENERATION,
       JWT_CONST.ACCESS_SECRET,
     );
 
@@ -183,7 +183,7 @@ export class AuthService {
             userId: checkValidUser.id,
             role: ROLE.CUSTOMER,
           },
-          JWT_CONST.ACCESS_EXPIRED(),
+          JWT_CONST.ACCESS_EXPIRED_GENERATION,
           JWT_CONST.ACCESS_SECRET,
         );
 
@@ -192,7 +192,7 @@ export class AuthService {
             userId: checkValidUser.id,
             role: ROLE.CUSTOMER,
           },
-          JWT_CONST.REFRESH_EXPIRED(),
+          JWT_CONST.REFRESH_EXPIRED_GENERATION,
           JWT_CONST.ACCESS_SECRET,
         );
 
@@ -234,7 +234,7 @@ export class AuthService {
           userId: newUser.id,
           role: ROLE.CUSTOMER,
         },
-        JWT_CONST.ACCESS_EXPIRED(),
+        JWT_CONST.ACCESS_EXPIRED_GENERATION,
         JWT_CONST.ACCESS_SECRET,
       );
 
