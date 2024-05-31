@@ -18,7 +18,7 @@ async function confirmDeletePublisher(id) {
   mutation UpdatePublisher {
     updatePublisher(
         updatePublisherInput: {
-            id: "${id}"
+            id: "${id}"g
             status: false 
           }
       )

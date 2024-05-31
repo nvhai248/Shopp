@@ -290,6 +290,7 @@ type Mutation {
   createOrder(createOrderInput: CreateOrderInput!): Order!
   updateStatusOrder(updateInput: UpdateOrderInput!): Boolean!
   createReview(createReviewInput: CreateReviewInput!): Review!
+  updateStatusReview(updateStatusReviewInput: UpdateReviewInput!): Boolean!
   createAbout(createAboutInput: CreateAboutInput!): About!
   updateAbout(updateAboutInput: UpdateAboutInput!): About!
 }
@@ -477,6 +478,12 @@ input CreateReviewInput {
   content: String!
   rate: Float!
   images: [String!] = []
+}
+
+input UpdateReviewInput {
+  ownerId: String!
+  productId: String!
+  status: Boolean!
 }
 
 input CreateAboutInput {

@@ -8,15 +8,6 @@ export class UpdateReviewInput {
   @Field()
   productId: string;
 
-  @Field({ nullable: true })
-  content: string;
-
-  @Field({ nullable: true })
-  rate: number;
-
-  @Field({ nullable: true })
+  @Field()
   status: boolean;
-
-  @Field({ nullable: true })
-  images: string[] = [];
 }

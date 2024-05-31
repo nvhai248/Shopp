@@ -49,4 +49,16 @@ export class ReviewsResolver {
   ) {
     return this.reviewsService.findMany(pagingReviewInput, user.id);
   }
+
+  @Mutation(() => Boolean, { name: 'updateStatusReview' })
+  @UseGuards(JwtAdminAuthGuard)
+  updateStatusReview(
+    @Args('updateStatusReviewInput') updateStatusReviewInput: UpdateReviewInput,
+  ) {
+    return this.reviewsService.update(
+      updateStatusReviewInput.productId,
+      updateStatusReviewInput.ownerId,
+      updateStatusReviewInput,
+    );
+  }
 }
