@@ -137,10 +137,11 @@ type Contact {
 }
 
 type OrderItem {
-  ownerId: String!
+  orderId: String!
   productId: String!
   price: Float!
   quantity: Int!
+  product: Product!
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -149,6 +150,7 @@ type Order {
   id: ID!
   contactId: String!
   promotionId: String!
+  ownerId: String!
   isPaid: Boolean!
   totalPrice: Float!
   reducePrice: Float!
@@ -286,6 +288,7 @@ type Mutation {
   updateContact(updateContactInput: UpdateContactInput!): Boolean!
   deleteContact(id: String!): Boolean!
   createOrder(createOrderInput: CreateOrderInput!): Order!
+  updateStatusOrder(updateInput: UpdateOrderInput!): Boolean!
   createReview(createReviewInput: CreateReviewInput!): Review!
   createAbout(createAboutInput: CreateAboutInput!): About!
   updateAbout(updateAboutInput: UpdateAboutInput!): About!
@@ -462,6 +465,11 @@ input OrderItemInput {
   productId: String!
   price: Float!
   quantity: Int!
+}
+
+input UpdateOrderInput {
+  id: ID!
+  status: String!
 }
 
 input CreateReviewInput {

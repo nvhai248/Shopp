@@ -134,11 +134,13 @@ export class OrdersService {
     }
   }
 
-  findItems(orderId: string) {
+  async findItems(orderId: string) {
     try {
-      return this.databaseService.productOrder.findMany({
+      const result = await this.databaseService.productOrder.findMany({
         where: { orderId: orderId },
       });
+
+      return result;
     } catch (error) {
       throw new MyDBException(error.message);
     }

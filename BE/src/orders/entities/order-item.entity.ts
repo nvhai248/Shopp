@@ -5,11 +5,12 @@ import {
   Int,
   ObjectType,
 } from '@nestjs/graphql';
+import { Product } from 'src/products/entities/product.entity';
 
 @ObjectType()
 export class OrderItem {
   @Field()
-  ownerId: string;
+  orderId: string;
 
   @Field()
   productId: string;
@@ -19,6 +20,9 @@ export class OrderItem {
 
   @Field(() => Int)
   quantity: number;
+
+  @Field(() => Product, { name: 'product' })
+  product: Product;
 
   @Field(() => GraphQLISODateTime)
   createdAt: Date;

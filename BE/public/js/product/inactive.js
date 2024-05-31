@@ -25,7 +25,7 @@ async function confirmInactiveProduct(id) {
         }
       `;
 
-  const response = await fetch('http://localhost:8080/graphql', {
+  const response = await fetch(HOST, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

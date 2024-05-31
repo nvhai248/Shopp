@@ -20,10 +20,13 @@ import { CurrentUserInterface } from 'src/interfaces';
 import { PagingOrderInput } from './dto/paging-order.input';
 import { PagingOrderResponse } from './entities/paging-order.entity';
 import { OrderItem } from './entities/order-item.entity';
+import { UpdateOrderInput } from './dto/update-order.input';
 
 @Resolver(() => Order)
 export class OrdersResolver {
-  constructor(private readonly ordersService: OrdersService) {}
+  constructor(
+    private readonly ordersService: OrdersService,
+  ) {}
 
   @Mutation(() => Order)
   @UseGuards(JwtAccessAuthGuard)
@@ -57,5 +60,10 @@ export class OrdersResolver {
   @ResolveField((returns) => [OrderItem], { name: 'items' })
   findItems(@Parent() parent: Order) {
     return this.ordersService.findItems(parent.id);
+  }
+
+  @Mutation(() => Boolean)
+  updateStatusOrder(@Args('updateInput') updateInput: UpdateOrderInput) {
+    return this.ordersService.update(updateInput.id, updateInput);
   }
 }

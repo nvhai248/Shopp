@@ -21,6 +21,9 @@ export class Order {
   promotionId: string;
 
   @Field()
+  ownerId: string;
+
+  @Field()
   isPaid: boolean;
 
   @Field(() => Float)
