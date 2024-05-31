@@ -12,6 +12,7 @@ type Product {
   priceSale: Float
   isOnSale: Boolean
   avatar: String
+  rate: Float
   author: [String!]
   images: [String!]
   status: String
@@ -165,6 +166,33 @@ type PagingOrderResponse {
   data: [Order!]!
 }
 
+type Review {
+  id: ID!
+  productId: String!
+  content: String!
+  rate: Float!
+  images: [String!]
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type PagingReviewResponse {
+  page: Int
+  limit: Int
+  total: Int
+  data: [Review!]!
+}
+
+type About {
+  id: ID!
+  title: String!
+  description: String!
+  image: String!
+  status: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
 type Query {
   products(searchConditionInput: SearchConditionInput!): PagingProduct!
   product(id: String!): Product!
@@ -182,8 +210,13 @@ type Query {
   recommend(recommendInput: RecommendInput!): [Promotion!]!
   contacts: [Contact!]!
   contact(id: String!): Contact!
-  orders(pagingOrderInput: PagingOrderInput!): [PagingOrderResponse!]!
+  orders(pagingReviewInput: PagingReviewInput!): [PagingReviewResponse!]!
   order(id: String!): Order!
+  historiesOrder(pagingOrderInput: PagingOrderInput!): [PagingOrderResponse!]!
+  review(findReviewInput: FindReviewInput!): Review!
+  historiesReview(pagingReviewInput: PagingReviewInput!): [PagingReviewResponse!]!
+  abouts: [About!]!
+  about(id: String!): About!
 }
 
 input SearchConditionInput {
@@ -205,10 +238,19 @@ input ProductQuantity {
   quantity: Float!
 }
 
+input PagingReviewInput {
+  page: Int
+  limit: Int
+}
+
 input PagingOrderInput {
   page: Int
   limit: Int
-  ownerId: String
+}
+
+input FindReviewInput {
+  ownerId: String!
+  productId: String!
 }
 
 type Mutation {
@@ -245,6 +287,9 @@ type Mutation {
   updateContact(updateContactInput: UpdateContactInput!): Boolean!
   deleteContact(id: String!): Boolean!
   createOrder(createOrderInput: CreateOrderInput!): Order!
+  createReview(createReviewInput: CreateReviewInput!): Review!
+  createAbout(createAboutInput: CreateAboutInput!): About!
+  updateAbout(updateAboutInput: UpdateAboutInput!): About!
 }
 
 input CreateProductInput {
@@ -420,4 +465,25 @@ input OrderItemInput {
   productId: String!
   price: Float!
   quantity: Int!
+}
+
+input CreateReviewInput {
+  productId: String!
+  content: String!
+  rate: Float!
+  images: [String!] = []
+}
+
+input CreateAboutInput {
+  title: String!
+  description: String!
+  image: String!
+}
+
+input UpdateAboutInput {
+  id: ID!
+  title: String
+  description: String
+  image: String
+  status: Boolean
 }

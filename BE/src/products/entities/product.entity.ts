@@ -1,5 +1,5 @@
 import { ObjectType, Field, ID, GraphQLISODateTime } from '@nestjs/graphql';
-import { IsEnum } from 'class-validator';
+import { IsEnum, Max } from 'class-validator';
 import { STATUS_PRODUCT } from 'src/utils/const';
 
 @ObjectType()
@@ -30,6 +30,10 @@ export class Product {
 
   @Field({ nullable: true })
   avatar: string;
+
+  @Field({ nullable: true })
+  @Max(5)
+  rate: number;
 
   @Field(() => [String], { nullable: true })
   author: string[];

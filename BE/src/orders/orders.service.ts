@@ -53,7 +53,7 @@ export class OrdersService {
     }
   }
 
-  async findMany(conditions: PagingOrderInput) {
+  async findMany(conditions: PagingOrderInput, ownerId: string = undefined) {
     try {
       const offset =
         conditions.limit && conditions.page
@@ -61,8 +61,8 @@ export class OrdersService {
           : 0;
 
       let where = {};
-      if (conditions.ownerId) {
-        where = { ownerId: conditions.ownerId };
+      if (ownerId) {
+        where = { ownerId: ownerId };
       }
 
       const orders = await this.databaseService.order.findMany({

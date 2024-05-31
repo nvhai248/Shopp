@@ -143,6 +143,7 @@ model Product {
   avatar       String?
   status       StatusProduct      @default(ACTIVE)
   author       String[]
+  rate         Float?
   images       String[]
   createdBy    String
   admin        HShopAdmin         @relation(fields: [createdBy], references: [id])
@@ -251,18 +252,18 @@ model Order {
 }
 
 model Review {
-  int       String   @id @default(uuid())
   ownerId   String
   owner     User     @relation(fields: [ownerId], references: [id])
   productId String
   product   Product  @relation(fields: [productId], references: [id])
   content   String
   images    String[]
-  status    Int      @default(1)
+  status    Boolean  @default(true)
   rate      Float
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  @@id([ownerId, productId])
   @@index([ownerId], name: "owner_review_index")
   @@index([productId], name: "product_review_index")
 }
@@ -284,7 +285,7 @@ model About {
   title       String
   description String
   image       String?
-  status      Boolean   @default(false)
+  status      Boolean   @default(true)
   createdAt   DateTime  @default(now())
 
   updatedAt DateTime @updatedAt

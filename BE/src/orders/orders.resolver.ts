@@ -45,6 +45,15 @@ export class OrdersResolver {
     return this.ordersService.findOne(id);
   }
 
+  @Query(() => [PagingOrderResponse], { name: 'historiesOrder' })
+  @UseGuards(JwtAccessAuthGuard)
+  historyOrder(
+    @Args('pagingOrderInput') pagingOrderInput: PagingOrderInput,
+    @CurrentUser() user: CurrentUserInterface,
+  ) {
+    return this.ordersService.findMany(pagingOrderInput, user.id);
+  }
+
   @ResolveField((returns) => [OrderItem], { name: 'items' })
   findItems(@Parent() parent: Order) {
     return this.ordersService.findItems(parent.id);
