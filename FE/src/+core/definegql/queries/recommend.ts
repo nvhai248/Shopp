@@ -1,7 +1,8 @@
 import { gql } from "@apollo/client";
-export const PromotionsQuery = gql`
-  query Promotions {
-    promotions {
+
+export const RecommendQuery = gql`
+  query Recommend($recommendInput: RecommendInput!) {
+    recommend(recommendInput: $recommendInput) {
       id
       name
       description
@@ -13,6 +14,9 @@ export const PromotionsQuery = gql`
       minValue
       startDate
       endDate
+      status
+      createdAt
+      updatedAt
     }
   }
 `;

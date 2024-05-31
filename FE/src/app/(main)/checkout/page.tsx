@@ -7,7 +7,7 @@ import { BiSolidDiscount } from "react-icons/bi";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Button } from "@/components/ui/button";
 import { useQuery } from "@apollo/client";
-import { CartItem } from "@/+core/interfaces";
+import { CartItem, PromotionType } from "@/+core/interfaces";
 import { useSession } from "next-auth/react";
 import { GetCartQuery } from "@/+core/definegql";
 import { MdOutlinePayments } from "react-icons/md";
@@ -17,8 +17,12 @@ import RequireSignIn from "@/components/ui/require-signin";
 import ShowContacts from "./components/showContact";
 import { ContactInterface } from "@/+core/interfaces/contact";
 import { useState } from "react";
+import ShowVoucher from "./components/showVoucher";
+import formatter from "@/lib/formatDate";
+import { RecommendInput } from "@/+core/interfaces/recommend";
 
 const Checkout = () => {
+  const [voucher, setVoucher] = useState<PromotionType | undefined>(undefined);
   const { data: session } = useSession();
   const [selectedContact, setSelectedContact] = useState<
     ContactInterface | undefined
@@ -62,6 +66,14 @@ const Checkout = () => {
       </div>
     );
   }
+
+  const recommendInput: RecommendInput = {
+    totalValue: totalPrice,
+    products: cartItems.map((item) => ({
+      productId: item.productId,
+      quantity: item.quantity,
+    })),
+  };
 
   if (error) {
     return <RequireSignIn />;
@@ -109,17 +121,36 @@ const Checkout = () => {
             <span className="ml-4">Voucher</span>
           </h2>
           <div className="border-b pb-6 mb-6 text-start flex justify-between">
-            <div className="mb-4">
-              <span className="font-bold">Discount Name</span>
-              <span className="ml-5">Discount Type:, Value: .....</span>
-            </div>
-            <button className="text-blue-500 underline mb-5">
-              Select Voucher
-            </button>
+            {voucher ? (
+              <div className="mb-4">
+                <span className="font-bold">
+                  {voucher.name} {voucher.type}
+                </span>
+                <span className="ml-5">
+                  {voucher.discountValue}, {voucher.discountPercentage},{" "}
+                  {voucher.startDate
+                    ? formatter.format(new Date(voucher.startDate))
+                    : "N/A"}{" "}
+                  -{" "}
+                  {voucher.endDate
+                    ? formatter.format(new Date(voucher.endDate))
+                    : "N/A"}
+                </span>
+              </div>
+            ) : (
+              <div className="mb-4">
+                <span className="font-bold text-red-500">Not Selected</span>
+              </div>
+            )}
+
+            <ShowVoucher
+              onSelectVoucher={setVoucher}
+              recommendInput={recommendInput}
+            />
           </div>
         </div>
 
-        <div className="text-start flex justify-between border-b-2">
+        <div className="text-start flex justify-between border-b-2 border-dotted">
           <h2 className="text-2xl flex flex-row text-start font-bold mb-6 text-blue-600">
             <MdOutlinePayments className="mt-1" />
             <span className="ml-4">Payment Method</span>
