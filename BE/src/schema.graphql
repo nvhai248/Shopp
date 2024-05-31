@@ -13,6 +13,7 @@ type Product {
   isOnSale: Boolean
   avatar: String
   rate: Float
+  ratingCount: Float
   author: [String!]
   images: [String!]
   status: String
@@ -190,6 +191,7 @@ type About {
   description: String!
   image: String!
   status: String!
+  type: String!
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -490,6 +492,7 @@ input CreateAboutInput {
   title: String!
   description: String!
   image: String!
+  type: String!
 }
 
 input UpdateAboutInput {

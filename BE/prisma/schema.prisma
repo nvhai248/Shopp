@@ -144,6 +144,7 @@ model Product {
   status       StatusProduct      @default(ACTIVE)
   author       String[]
   rate         Float?
+  ratingCount  Int                @default(0)
   images       String[]
   createdBy    String
   admin        HShopAdmin         @relation(fields: [createdBy], references: [id])

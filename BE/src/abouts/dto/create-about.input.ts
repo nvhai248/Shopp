@@ -1,4 +1,6 @@
 import { InputType, Int, Field } from '@nestjs/graphql';
+import { IsEnum } from 'class-validator';
+import { ABOUT_TYPE } from 'src/utils/const';
 
 @InputType()
 export class CreateAboutInput {
@@ -10,4 +12,8 @@ export class CreateAboutInput {
 
   @Field()
   image: string;
+
+  @Field()
+  @IsEnum(ABOUT_TYPE)
+  type: ABOUT_TYPE;
 }

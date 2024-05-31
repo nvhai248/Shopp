@@ -35,6 +35,9 @@ export class Product {
   @Max(5)
   rate: number;
 
+  @Field({ nullable: true })
+  ratingCount: number;
+
   @Field(() => [String], { nullable: true })
   author: string[];
 

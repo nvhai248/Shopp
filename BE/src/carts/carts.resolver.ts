@@ -14,6 +14,7 @@ import { CurrentUser, JwtAccessAuthGuard } from 'src/guard/jwt-auth.guard';
 import { CurrentUserInterface } from 'src/interfaces';
 import { Product } from 'src/products/entities/product.entity';
 import { ProductsService } from 'src/products/products.service';
+import { RequireActiveGuard } from 'src/guard/require-active.guard';
 
 @Resolver(() => CartItem)
 export class CartsResolver {
@@ -23,7 +24,7 @@ export class CartsResolver {
   ) {}
 
   @Mutation(() => Boolean)
-  @UseGuards(JwtAccessAuthGuard)
+  @UseGuards(JwtAccessAuthGuard, RequireActiveGuard)
   async addProductToCart(
     @Args('addProductInput') addProductInput: AddProductInput,
     @CurrentUser() user: CurrentUserInterface,
@@ -36,7 +37,7 @@ export class CartsResolver {
   }
 
   @Query(() => [CartItem])
-  @UseGuards(JwtAccessAuthGuard)
+  @UseGuards(JwtAccessAuthGuard, RequireActiveGuard)
   async getCart(@CurrentUser() user: CurrentUserInterface): Promise<any> {
     return this.cartsService.getCart(user.id);
   }
@@ -47,7 +48,7 @@ export class CartsResolver {
   }
 
   @Mutation(() => Boolean)
-  @UseGuards(JwtAccessAuthGuard)
+  @UseGuards(JwtAccessAuthGuard, RequireActiveGuard)
   async updateProductQuantity(
     @Args('updateProductQuantityInput')
     updateProductQuantityInput: AddProductInput,
@@ -61,7 +62,7 @@ export class CartsResolver {
   }
 
   @Mutation(() => Boolean)
-  @UseGuards(JwtAccessAuthGuard)
+  @UseGuards(JwtAccessAuthGuard, RequireActiveGuard)
   async removeProductFromCart(
     @Args('productId') productId: string,
     @CurrentUser() user: CurrentUserInterface,
@@ -70,7 +71,7 @@ export class CartsResolver {
   }
 
   @Mutation(() => Boolean)
-  @UseGuards(JwtAccessAuthGuard)
+  @UseGuards(JwtAccessAuthGuard, RequireActiveGuard)
   async clearCart(@CurrentUser() user: CurrentUserInterface): Promise<boolean> {
     return await this.cartsService.clearCart(user.id);
   }

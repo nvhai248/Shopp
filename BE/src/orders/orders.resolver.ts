@@ -21,15 +21,14 @@ import { PagingOrderInput } from './dto/paging-order.input';
 import { PagingOrderResponse } from './entities/paging-order.entity';
 import { OrderItem } from './entities/order-item.entity';
 import { UpdateOrderInput } from './dto/update-order.input';
+import { RequireActiveGuard } from 'src/guard/require-active.guard';
 
 @Resolver(() => Order)
 export class OrdersResolver {
-  constructor(
-    private readonly ordersService: OrdersService,
-  ) {}
+  constructor(private readonly ordersService: OrdersService) {}
 
   @Mutation(() => Order)
-  @UseGuards(JwtAccessAuthGuard)
+  @UseGuards(JwtAccessAuthGuard, RequireActiveGuard)
   createOrder(
     @Args('createOrderInput') createOrderInput: CreateOrderInput,
     @CurrentUser() user: CurrentUserInterface,
@@ -49,7 +48,7 @@ export class OrdersResolver {
   }
 
   @Query(() => PagingOrderResponse, { name: 'historiesOrder' })
-  @UseGuards(JwtAccessAuthGuard)
+  @UseGuards(JwtAccessAuthGuard, RequireActiveGuard)
   historiesOrder(
     @Args('pagingOrderInput') pagingOrderInput: PagingOrderInput,
     @CurrentUser() user: CurrentUserInterface,

@@ -13,13 +13,14 @@ import { CurrentUserInterface } from 'src/interfaces';
 import { PagingReviewResponse } from './entities/paging-review.entity';
 import { PagingReviewInput } from './dto/paging-review.input';
 import { FindReviewInput } from './dto/find-review.input';
+import { RequireActiveGuard } from 'src/guard/require-active.guard';
 
 @Resolver(() => Review)
 export class ReviewsResolver {
   constructor(private readonly reviewsService: ReviewsService) {}
 
   @Mutation(() => Review)
-  @UseGuards(JwtAccessAuthGuard)
+  @UseGuards(JwtAccessAuthGuard, RequireActiveGuard)
   createReview(
     @Args('createReviewInput') createReviewInput: CreateReviewInput,
     @CurrentUser() user: CurrentUserInterface,
