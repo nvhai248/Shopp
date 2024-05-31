@@ -15,9 +15,14 @@ import CheckoutProduct from "./checkoutProduct";
 import Spinner from "@/components/ui/spinner";
 import RequireSignIn from "@/components/ui/require-signin";
 import ShowContacts from "./components/showContact";
+import { ContactInterface } from "@/+core/interfaces/contact";
+import { useState } from "react";
 
 const Checkout = () => {
   const { data: session } = useSession();
+  const [selectedContact, setSelectedContact] = useState<
+    ContactInterface | undefined
+  >(undefined);
   const { data, loading, error } = useQuery(GetCartQuery, {
     context: {
       headers: {
@@ -68,17 +73,25 @@ const Checkout = () => {
         <div className="text-start">
           <h2 className="text-2xl flex flex-row text-start font-bold mb-6 text-blue-600">
             <FaMapMarkerAlt className="mt-1" />
-            <span className="ml-4">Địa Chỉ Nhận Hàng</span>
+            <span className="ml-4">Delivery Address</span>
           </h2>
           <div className="border-b pb-6 mb-6 text-start flex justify-between">
             <div className="mb-4">
-              <span className="font-bold">Nguyễn Văn Hải (+84) 813042255</span>
-              <span className="ml-5">
-                333/7a, Đường Lê Văn Sỹ, Phường 1, Quận Tân Bình, TP. Hồ Chí
-                Minh
-              </span>
+              {selectedContact ? (
+                <div className="mb-4">
+                  <span className="font-bold">
+                    {selectedContact?.fullName} {selectedContact?.phoneNumber}
+                  </span>
+                  <span className="ml-5">
+                    {selectedContact?.detailAddress}, {selectedContact?.wards},{" "}
+                    {selectedContact?.district}, {selectedContact?.province}
+                  </span>
+                </div>
+              ) : (
+                <span className="font-bold text-red-500">Not Selected</span>
+              )}
             </div>
-            <ShowContacts />
+            <ShowContacts onSelectContact={setSelectedContact} />
           </div>
         </div>
 

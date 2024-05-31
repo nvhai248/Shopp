@@ -12,7 +12,7 @@ import RequireSignIn from "@/components/ui/require-signin";
 
 export default function CartPage() {
   const { data: session } = useSession();
-  const { data, loading, error } = useQuery(GetCartQuery, {
+  const { data, loading, error, refetch } = useQuery(GetCartQuery, {
     context: {
       headers: {
         Authorization: `Bearer ${session?.accessToken}`,
@@ -68,6 +68,7 @@ export default function CartPage() {
                       product={cartItem.product}
                       quantity={cartItem.quantity}
                       onRemove={handleRemoveFromCart}
+                      refetchCart={refetch}
                     />
                   ))
                 )}

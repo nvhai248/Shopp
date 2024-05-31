@@ -10,11 +10,13 @@ import { useState, ChangeEvent } from "react";
 interface QuantityProps {
   current: number;
   productId: string;
+  refetchCart: () => void;
 }
 
 export default function UpdateQuantity({
   current = 1,
   productId,
+  refetchCart,
 }: QuantityProps) {
   const { toast } = useToast();
   const { data: session } = useSession();
@@ -28,6 +30,7 @@ export default function UpdateQuantity({
       })
         .then(() => {
           setQuantity((prev) => Math.max(1, prev - 1));
+          refetchCart();
         })
         .catch((error) => {
           toast({
@@ -47,6 +50,7 @@ export default function UpdateQuantity({
     })
       .then(() => {
         setQuantity((prev) => prev + 1);
+        refetchCart();
       })
       .catch((error) => {
         toast({

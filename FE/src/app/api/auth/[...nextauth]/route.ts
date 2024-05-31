@@ -71,7 +71,7 @@ export const authOptions: NextAuthOptions = {
 
     async session({ session, token }) {
       try {
-        const { data } = await GetProfile(token.accessToken);
+        const { data } = await GetProfile(token.accessToken, false);
 
         session.user = data?.getProfile ?? null;
         session.accessToken = token.accessToken;

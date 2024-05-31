@@ -1,21 +1,26 @@
-import { GetProfileQuery } from "@/+core/definegql";
+import {
+  CreateContactMutation,
+  DeleteContactMutation,
+} from "@/+core/definegql";
 import { MyGraphqlResponse } from "@/+core/types/response";
 import { MyApolloClient } from "@/lib/apolloClient";
 import { GraphQLError } from "graphql";
 
-export async function GetProfile(
-  accessToken: string,
-  isCache: boolean = true
+export async function DeleteContactService(
+  id: string,
+  accessToken: string
 ): Promise<MyGraphqlResponse> {
   try {
-    const { data, errors } = await MyApolloClient.query({
-      query: GetProfileQuery,
+    const { data, errors } = await MyApolloClient.mutate({
+      mutation: DeleteContactMutation,
+      variables: {
+        id: id,
+      },
       context: {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
       },
-      ...(!isCache ? { fetchPolicy: "no-cache" } : {}),
     });
 
     if (errors) {
@@ -34,7 +39,7 @@ export async function GetProfile(
       data: null,
       errors: [
         new GraphQLError(
-          error.message || "An error occurred during getProfile."
+          error.message || "An error occurred during delete contact."
         ),
       ],
     };

@@ -28,6 +28,7 @@ import {
 } from "@/+core/services";
 import { useSession } from "next-auth/react";
 import { ContactInterface } from "@/+core/interfaces/contact";
+import { useState } from "react";
 
 const formSchema = z.object({
   fullName: z.string().min(5, {
@@ -53,9 +54,14 @@ const formSchema = z.object({
 
 interface ContactDialogProps {
   currentContact?: ContactInterface;
+  refetchContacts: () => void;
 }
 
-export default function ContactDialog({ currentContact }: ContactDialogProps) {
+export default function ContactDialog({
+  currentContact,
+  refetchContacts,
+}: ContactDialogProps) {
+  const [open, setOpen] = useState<boolean>(false);
   const { toast } = useToast();
   const { data: session } = useSession();
 
@@ -90,6 +96,10 @@ export default function ContactDialog({ currentContact }: ContactDialogProps) {
             <ToastAction altText="Goto schedule to undo">Undo</ToastAction>
           ),
         });
+
+        setOpen(false);
+
+        refetchContacts();
       } else {
         await CreateNewContactService(session?.accessToken as string, {
           province: values.province,
@@ -107,6 +117,10 @@ export default function ContactDialog({ currentContact }: ContactDialogProps) {
             <ToastAction altText="Goto schedule to undo">Undo</ToastAction>
           ),
         });
+
+        setOpen(false);
+
+        refetchContacts();
       }
     } catch (error: any) {
       return toast({
@@ -119,7 +133,7 @@ export default function ContactDialog({ currentContact }: ContactDialogProps) {
   }
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant="outline" className="rounded-none">
           {currentContact ? "Update Contact" : "New Contact"}

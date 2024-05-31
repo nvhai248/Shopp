@@ -5,10 +5,11 @@ import { useSession } from "next-auth/react";
 import Spinner from "@/components/ui/spinner";
 import { ContactInterface } from "@/+core/interfaces/contact";
 import ContactDialog from "../../../components/contact/dialog";
+import { ConfirmRemoveContactDialog } from "./components/confirmRemoveContact";
 
 export default function Contact() {
   const { data: session } = useSession();
-  const { data, loading } = useQuery(GetContactsQuery, {
+  const { data, loading, refetch } = useQuery(GetContactsQuery, {
     context: {
       headers: {
         Authorization: `Bearer ${session?.accessToken}`,
@@ -36,9 +37,9 @@ export default function Contact() {
   return (
     <div className="p-8 w-full">
       <div className="flex flex-row-reverse mb-5">
-        <ContactDialog />
+        <ContactDialog refetchContacts={refetch} />
       </div>
-      <div className="max-w-7xl max-h-[40rem] mx-auto bg-white p-6 rounded-none border shadow-md overflow-auto">
+      <div className="max-w-7xl max-h-[30rem] mx-auto bg-white p-6 rounded-none border shadow-md overflow-auto">
         {contacts.map((contact) => (
           <div className="border-b pb-6 mb-6 text-start flex justify-between">
             <div className="mb-4">
@@ -50,11 +51,12 @@ export default function Contact() {
                 {contact.province}
               </span>
             </div>
-            <div className="flex flex-row">
-              <ContactDialog currentContact={contact} />
-              <button className="text-red-500 hover:text-red-600 underline mb-5 ml-5">
-                Remove
-              </button>
+            <div className="flex flex-row gap-4">
+              <ContactDialog
+                refetchContacts={refetch}
+                currentContact={contact}
+              />
+              <ConfirmRemoveContactDialog id={contact.id} />
             </div>
           </div>
         ))}

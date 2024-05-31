@@ -9,9 +9,14 @@ import { ToastAction } from "@/components/ui/toast";
 interface DeleteBtnProps {
   productId: string;
   onRemove: (productId: string) => void;
+  refetchCart: () => void;
 }
 
-export default function DeleteButton({ productId, onRemove }: DeleteBtnProps) {
+export default function DeleteButton({
+  productId,
+  onRemove,
+  refetchCart,
+}: DeleteBtnProps) {
   const { toast } = useToast();
   const { data: session } = useSession();
 
@@ -19,6 +24,7 @@ export default function DeleteButton({ productId, onRemove }: DeleteBtnProps) {
     RemoveProductFromCartService(session?.accessToken as string, productId)
       .then(() => {
         onRemove(productId); // Call the onRemove handler
+        refetchCart();
       })
       .catch((error) => {
         toast({
