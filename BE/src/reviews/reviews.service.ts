@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateReviewInput } from './dto/create-review.input';
 import { UpdateReviewInput } from './dto/update-review.input';
 import { DatabaseService } from 'src/database/database.service';
-import { MyDBException } from 'src/utils/error';
+import { MyBadRequestException, MyDBException } from 'src/utils/error';
 import { PagingReviewInput } from './dto/paging-review.input';
 
 @Injectable()
@@ -12,6 +12,23 @@ export class ReviewsService {
   async create(createReviewInput: CreateReviewInput, ownerId: string) {
     try {
       const { productId, content, rate, images } = createReviewInput;
+
+      // Check if the review already exists
+      const existingReview = await this.databaseService.review.findUnique({
+        where: {
+          ownerId_productId: {
+            ownerId,
+            productId,
+          },
+        },
+      });
+
+      if (existingReview) {
+        // If a review already exists, throw a custom error
+        throw new MyBadRequestException('You are already review this product.');
+      }
+
+      // If no review exists, create a new one
       const review = await this.databaseService.review.create({
         data: {
           productId,
@@ -21,8 +38,10 @@ export class ReviewsService {
           ownerId,
         },
       });
+
       return review;
     } catch (error) {
+      // Handle and throw a custom exception
       return new MyDBException(error.message);
     }
   }

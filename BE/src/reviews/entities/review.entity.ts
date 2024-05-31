@@ -3,9 +3,6 @@ import { Max, Min } from 'class-validator';
 
 @ObjectType()
 export class Review {
-  @Field(() => ID)
-  id: string;
-
   @Field()
   productId: string;
 

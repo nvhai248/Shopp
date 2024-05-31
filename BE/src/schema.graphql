@@ -167,7 +167,6 @@ type PagingOrderResponse {
 }
 
 type Review {
-  id: ID!
   productId: String!
   content: String!
   rate: Float!
@@ -210,11 +209,11 @@ type Query {
   recommend(recommendInput: RecommendInput!): [Promotion!]!
   contacts: [Contact!]!
   contact(id: String!): Contact!
-  orders(pagingReviewInput: PagingReviewInput!): [PagingReviewResponse!]!
+  orders(pagingReviewInput: PagingReviewInput!): PagingReviewResponse!
   order(id: String!): Order!
-  historiesOrder(pagingOrderInput: PagingOrderInput!): [PagingOrderResponse!]!
+  historiesOrder(pagingOrderInput: PagingOrderInput!): PagingOrderResponse!
   review(findReviewInput: FindReviewInput!): Review!
-  historiesReview(pagingReviewInput: PagingReviewInput!): [PagingReviewResponse!]!
+  historiesReview(pagingReviewInput: PagingReviewInput!): PagingReviewResponse!
   abouts: [About!]!
   about(id: String!): About!
 }
@@ -455,8 +454,6 @@ input CreateOrderInput {
   contactId: String!
   promotionId: String!
   isPaid: Boolean!
-  totalPrice: Float!
-  reducePrice: Float!
   paymentMethod: String!
   items: [OrderItemInput!]!
 }

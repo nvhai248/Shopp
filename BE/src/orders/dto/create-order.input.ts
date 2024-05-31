@@ -14,12 +14,6 @@ export class CreateOrderInput {
   @Field()
   isPaid: boolean;
 
-  @Field(() => Float)
-  totalPrice: number;
-
-  @Field(() => Float)
-  reducePrice: number;
-
   @Field()
   @IsEnum(PAYMENT_METHOD)
   paymentMethod: PAYMENT_METHOD;

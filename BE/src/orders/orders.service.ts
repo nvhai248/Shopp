@@ -4,22 +4,45 @@ import { UpdateOrderInput } from './dto/update-order.input';
 import { DatabaseService } from 'src/database/database.service';
 import { MyDBException } from 'src/utils/error';
 import { PagingOrderInput } from './dto/paging-order.input';
+import { PromotionsService } from 'src/promotions/promotions.service';
+import { PROMOTION_TYPE } from 'src/utils/const';
+import { ProductsService } from 'src/products/products.service';
 
 @Injectable()
 export class OrdersService {
-  constructor(private readonly databaseService: DatabaseService) {}
+  constructor(
+    private readonly databaseService: DatabaseService,
+    private readonly promotionService: PromotionsService,
+    private readonly productService: ProductsService,
+  ) {}
 
   async create(createOrderInput: CreateOrderInput, ownerId: string) {
     try {
-      const {
-        contactId,
-        promotionId,
-        isPaid,
-        totalPrice,
-        reducePrice,
-        paymentMethod,
-        items,
-      } = createOrderInput;
+      const { contactId, promotionId, isPaid, paymentMethod, items } =
+        createOrderInput;
+
+      let totalPrice = 0;
+      let reducePrice = 0;
+
+      // Validate each product in the items array
+      for (let item of items) {
+        const product = await this.productService.findOne(item.productId);
+        if (!product) {
+          throw new Error(`Product with ID ${item.productId} does not exist.`);
+        }
+        totalPrice += item.price * item.quantity;
+      }
+
+      // Calculate reduce price
+      const promotion = await this.promotionService.findOne(promotionId);
+
+      if (promotion) {
+        if (promotion.type === PROMOTION_TYPE.VALUE)
+          reducePrice = promotion.discountValue;
+        else if (promotion.type === PROMOTION_TYPE.PERCENT) {
+          reducePrice = totalPrice * (promotion.discountPercentage / 100);
+        }
+      }
 
       return await this.databaseService.$transaction(async (transaction) => {
         const order = await transaction.order.create({

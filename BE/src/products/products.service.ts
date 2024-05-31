@@ -17,11 +17,12 @@ export class ProductsService {
   }
 
   async returnSearchProduct(conditions: SearchConditionInput) {
-    const total = await this.productRepository.count();
     const offset =
       conditions.limit && conditions.page
         ? (conditions.page - 1) * conditions.limit
         : 0;
+
+    const total = await this.productRepository.count(conditions);
     const products = await this.productRepository.findMany(
       offset,
       conditions.limit,

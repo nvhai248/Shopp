@@ -34,7 +34,7 @@ export class OrdersResolver {
     return this.ordersService.create(createOrderInput, user.id);
   }
 
-  @Query(() => [PagingOrderResponse], { name: 'orders' })
+  @Query(() => PagingOrderResponse, { name: 'orders' })
   @UseGuards(JwtAdminAuthGuard)
   findAll(@Args('pagingOrderInput') pagingOrderInput: PagingOrderInput) {
     return this.ordersService.findMany(pagingOrderInput);
@@ -45,9 +45,9 @@ export class OrdersResolver {
     return this.ordersService.findOne(id);
   }
 
-  @Query(() => [PagingOrderResponse], { name: 'historiesOrder' })
+  @Query(() => PagingOrderResponse, { name: 'historiesOrder' })
   @UseGuards(JwtAccessAuthGuard)
-  historyOrder(
+  historiesOrder(
     @Args('pagingOrderInput') pagingOrderInput: PagingOrderInput,
     @CurrentUser() user: CurrentUserInterface,
   ) {

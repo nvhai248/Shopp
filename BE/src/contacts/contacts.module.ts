@@ -5,5 +5,6 @@ import { ContactsRepository } from './contacts.repository';
 
 @Module({
   providers: [ContactsResolver, ContactsService, ContactsRepository],
+  exports: [ContactsService],
 })
 export class ContactsModule {}

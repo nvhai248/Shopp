@@ -27,7 +27,7 @@ export class ReviewsResolver {
     return this.reviewsService.create(createReviewInput, user.id);
   }
 
-  @Query(() => [PagingReviewResponse], { name: 'orders' })
+  @Query(() => PagingReviewResponse, { name: 'orders' })
   @UseGuards(JwtAdminAuthGuard)
   findAll(@Args('pagingReviewInput') pagingReviewInput: PagingReviewInput) {
     return this.reviewsService.findMany(pagingReviewInput);
@@ -41,9 +41,9 @@ export class ReviewsResolver {
     );
   }
 
-  @Query(() => [PagingReviewResponse], { name: 'historiesReview' })
+  @Query(() => PagingReviewResponse, { name: 'historiesReview' })
   @UseGuards(JwtAccessAuthGuard)
-  historyReview(
+  historiesReview(
     @Args('pagingReviewInput') pagingReviewInput: PagingReviewInput,
     @CurrentUser() user: CurrentUserInterface,
   ) {

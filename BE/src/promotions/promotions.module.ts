@@ -15,5 +15,6 @@ import { ProductsModule } from 'src/products/products.module';
   ],
   controllers: [PromotionController],
   imports: [ProductsModule],
+  exports: [PromotionsService],
 })
 export class PromotionsModule {}
