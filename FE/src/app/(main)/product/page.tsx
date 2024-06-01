@@ -17,6 +17,7 @@ import Spinner from "@/components/ui/spinner";
 import { ProductType } from "@/+core/interfaces";
 import { useSearchParams } from "next/navigation";
 import SomethingWhenWrong from "@/components/ui/sth-went-wrong";
+import CreateReview from "./create-review";
 
 export default function ProductPage() {
   const params = useSearchParams();
@@ -133,6 +134,13 @@ export default function ProductPage() {
               </div>
             </li>
           </ul>
+        </div>
+      </div>
+
+      <div className="flex flex-col lg:flex-row justify-between">
+        <div className="w-2/3">hehe</div>
+        <div className="w-1/3">
+          <CreateReview />
         </div>
       </div>
     </div>
