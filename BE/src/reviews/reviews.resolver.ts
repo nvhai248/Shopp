@@ -1,4 +1,12 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import {
+  Resolver,
+  Query,
+  Mutation,
+  Args,
+  Int,
+  ResolveField,
+  Parent,
+} from '@nestjs/graphql';
 import { ReviewsService } from './reviews.service';
 import { Review } from './entities/review.entity';
 import { CreateReviewInput } from './dto/create-review.input';
@@ -14,10 +22,15 @@ import { PagingReviewResponse } from './entities/paging-review.entity';
 import { PagingReviewInput } from './dto/paging-review.input';
 import { FindReviewInput } from './dto/find-review.input';
 import { RequireActiveGuard } from 'src/guard/require-active.guard';
+import { User } from 'src/users/entities/user.entity';
+import { UsersService } from 'src/users/users.service';
 
 @Resolver(() => Review)
 export class ReviewsResolver {
-  constructor(private readonly reviewsService: ReviewsService) {}
+  constructor(
+    private readonly reviewsService: ReviewsService,
+    private readonly usersService: UsersService,
+  ) {}
 
   @Mutation(() => Review)
   @UseGuards(JwtAccessAuthGuard, RequireActiveGuard)
@@ -28,10 +41,22 @@ export class ReviewsResolver {
     return this.reviewsService.create(createReviewInput, user.id);
   }
 
-  @Query(() => PagingReviewResponse, { name: 'orders' })
+  @Query(() => PagingReviewResponse, { name: 'reviews' })
   @UseGuards(JwtAdminAuthGuard)
   findAll(@Args('pagingReviewInput') pagingReviewInput: PagingReviewInput) {
     return this.reviewsService.findMany(pagingReviewInput);
+  }
+
+  @Query(() => PagingReviewResponse, { name: 'reviewsByProduct' })
+  findManyByProductId(
+    @Args('pagingReviewInput') pagingReviewInput: PagingReviewInput,
+    @Args('productId') productId: string,
+  ) {
+    return this.reviewsService.findMany(
+      pagingReviewInput,
+      undefined,
+      productId,
+    );
   }
 
   @Query(() => Review, { name: 'review' })
@@ -61,5 +86,10 @@ export class ReviewsResolver {
       updateStatusReviewInput.ownerId,
       updateStatusReviewInput,
     );
+  }
+
+  @ResolveField((returns) => User, { name: 'owner' })
+  getProduct(@Parent() review: Review) {
+    return this.usersService.findOne(review.ownerId);
   }
 }

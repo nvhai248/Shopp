@@ -144,7 +144,7 @@ export default function ProductPage() {
 
       <div className="flex flex-col mt-10 lg:flex-row gap-4 justify-between">
         <div className="lg:w-2/3">
-          <CustomerReviews />
+          <CustomerReviews rate={product.rate} productId={product.id} />
         </div>
         <div className="lg:w-1/3">
           <CreateReview productId={product.id} />

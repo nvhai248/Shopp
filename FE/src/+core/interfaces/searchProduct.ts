@@ -1,4 +1,4 @@
-import { PagingInput } from "./paging.input";
+import { PagingInput } from "./paging";
 
 // Define the TypeScript type for the login input
 export interface SearchProductInput extends PagingInput {

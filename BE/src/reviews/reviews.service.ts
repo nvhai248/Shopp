@@ -64,7 +64,11 @@ export class ReviewsService {
     }
   }
 
-  async findMany(conditions: PagingReviewInput, ownerId: string = undefined) {
+  async findMany(
+    conditions: PagingReviewInput,
+    ownerId: string = undefined,
+    productId?: string,
+  ) {
     try {
       const offset =
         conditions.limit && conditions.page
@@ -74,6 +78,10 @@ export class ReviewsService {
       let where = {};
       if (ownerId) {
         where = { ownerId: ownerId };
+      }
+
+      if (productId) {
+        where = { ...where, productId: productId };
       }
 
       if (conditions.rate) {
@@ -99,19 +107,19 @@ export class ReviewsService {
         total: count,
         data: orders,
         countOneStar: await this.databaseService.review.count({
-          where: { rate: 1 },
+          where: { rate: 1, productId: productId },
         }),
         countTwoStar: await this.databaseService.review.count({
-          where: { rate: 2 },
+          where: { rate: 2, productId: productId },
         }),
         countThreeStar: await this.databaseService.review.count({
-          where: { rate: 3 },
+          where: { rate: 3, productId: productId },
         }),
         countFourStar: await this.databaseService.review.count({
-          where: { rate: 4 },
+          where: { rate: 4, productId: productId },
         }),
         countFiveStar: await this.databaseService.review.count({
-          where: { rate: 5 },
+          where: { rate: 5, productId: productId },
         }),
       };
     } catch (error) {

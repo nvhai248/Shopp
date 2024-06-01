@@ -63,7 +63,7 @@ export default function UploadImagesReview({ getFile }: imagesProps) {
             d="M12 6v6m0 0v6m0-6h6m-6 0H6"
           />
         </svg>
-        <span className="text-gray-500">Add Thumbnail</span>
+        <span className="text-gray-500">Add Image</span>
       </div>
       <div className="grid grid-cols-3 gap-4 mt-4">
         {selectedImages.map((image, index) => (
