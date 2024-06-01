@@ -18,6 +18,8 @@ import { ProductType } from "@/+core/interfaces";
 import { useSearchParams } from "next/navigation";
 import SomethingWhenWrong from "@/components/ui/sth-went-wrong";
 import CreateReview from "./create-review";
+import CustomerReviews from "./reviews";
+import Rating from "@/components/ui/rating";
 
 export default function ProductPage() {
   const params = useSearchParams();
@@ -74,6 +76,9 @@ export default function ProductPage() {
                 <span className="text-black">{product.price}$</span>
               )}
             </h2>
+            <div className="flex m-t-10">
+              <Rating score={product.rate || 0} />
+            </div>
             <p className="mt-4 space-y-2 text-justify">{product.description}</p>
 
             <UpdateQuantity />
@@ -137,10 +142,12 @@ export default function ProductPage() {
         </div>
       </div>
 
-      <div className="flex flex-col lg:flex-row justify-between">
-        <div className="w-2/3">hehe</div>
-        <div className="w-1/3">
-          <CreateReview />
+      <div className="flex flex-col mt-10 lg:flex-row gap-4 justify-between">
+        <div className="lg:w-2/3">
+          <CustomerReviews />
+        </div>
+        <div className="lg:w-1/3">
+          <CreateReview productId={product.id} />
         </div>
       </div>
     </div>

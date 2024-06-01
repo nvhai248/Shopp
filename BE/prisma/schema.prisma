@@ -258,6 +258,7 @@ model Review {
   productId String
   product   Product  @relation(fields: [productId], references: [id])
   content   String
+  title     String   @default("title")
   images    String[]
   status    Boolean  @default(true)
   rate      Float

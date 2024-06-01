@@ -171,6 +171,7 @@ type PagingOrderResponse {
 
 type Review {
   productId: String!
+  title: String!
   content: String!
   rate: Float!
   images: [String!]
@@ -183,6 +184,11 @@ type PagingReviewResponse {
   limit: Int
   total: Int
   data: [Review!]!
+  countOneStar: Float!
+  countTwoStar: Float!
+  countThreeStar: Float!
+  countFourStar: Float!
+  countFiveStar: Float!
 }
 
 type About {
@@ -244,6 +250,8 @@ input ProductQuantity {
 input PagingReviewInput {
   page: Int
   limit: Int
+  rate: Float
+  sort: String
 }
 
 input PagingOrderInput {
@@ -477,6 +485,7 @@ input UpdateOrderInput {
 
 input CreateReviewInput {
   productId: String!
+  title: String!
   content: String!
   rate: Float!
   images: [String!] = []

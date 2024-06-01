@@ -4,10 +4,15 @@ import { UpdateReviewInput } from './dto/update-review.input';
 import { DatabaseService } from 'src/database/database.service';
 import { MyBadRequestException, MyDBException } from 'src/utils/error';
 import { PagingReviewInput } from './dto/paging-review.input';
+import { ProductsService } from 'src/products/products.service';
+import { REVIEW_SORT } from 'src/utils/const';
 
 @Injectable()
 export class ReviewsService {
-  constructor(private readonly databaseService: DatabaseService) {}
+  constructor(
+    private readonly databaseService: DatabaseService,
+    private readonly productsService: ProductsService,
+  ) {}
 
   async create(createReviewInput: CreateReviewInput, ownerId: string) {
     try {
@@ -27,6 +32,19 @@ export class ReviewsService {
         // If a review already exists, throw a custom error
         throw new MyBadRequestException('You are already review this product.');
       }
+
+      // find product
+      const product = await this.productsService.findOne(productId);
+
+      await this.productsService.update(
+        productId,
+        undefined,
+        product.rate
+          ? createReviewInput.rate
+          : (product.ratingCount * product.rate + createReviewInput.rate) /
+              (product.ratingCount + 1),
+        product.ratingCount + 1,
+      );
 
       // If no review exists, create a new one
       const review = await this.databaseService.review.create({
@@ -58,17 +76,20 @@ export class ReviewsService {
         where = { ownerId: ownerId };
       }
 
+      if (conditions.rate) {
+        where = { ...where, rate: conditions.rate };
+      }
+
       const orders = await this.databaseService.review.findMany({
         skip: offset,
         take: conditions.limit,
-        orderBy: { updatedAt: 'desc' },
+        orderBy: {
+          createdAt: conditions.sort === REVIEW_SORT.LATEST ? 'desc' : 'asc',
+        },
         where: where,
       });
 
       const count = await this.databaseService.review.count({
-        skip: offset,
-        take: conditions.limit,
-        orderBy: { updatedAt: 'desc' },
         where: where,
       });
 
@@ -77,6 +98,21 @@ export class ReviewsService {
         page: conditions.page,
         total: count,
         data: orders,
+        countOneStar: await this.databaseService.review.count({
+          where: { rate: 1 },
+        }),
+        countTwoStar: await this.databaseService.review.count({
+          where: { rate: 2 },
+        }),
+        countThreeStar: await this.databaseService.review.count({
+          where: { rate: 3 },
+        }),
+        countFourStar: await this.databaseService.review.count({
+          where: { rate: 4 },
+        }),
+        countFiveStar: await this.databaseService.review.count({
+          where: { rate: 5 },
+        }),
       };
     } catch (error) {
       throw new MyDBException(error.message);

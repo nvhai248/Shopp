@@ -7,6 +7,9 @@ export class CreateReviewInput {
   productId: string;
 
   @Field()
+  title: string;
+
+  @Field()
   content: string;
 
   @Field()

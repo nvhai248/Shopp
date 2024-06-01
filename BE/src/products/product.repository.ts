@@ -80,10 +80,15 @@ export class ProductRepository {
     });
   }
 
-  async update(id: string, updateProductInput: UpdateProductInput) {
+  async update(
+    id: string,
+    updateProductInput: UpdateProductInput,
+    rate?: number,
+    ratingCount?: number,
+  ) {
     const result = await this.databaseService.product.update({
       where: { id: id },
-      data: updateProductInput,
+      data: { ...updateProductInput, rate: rate, ratingCount: ratingCount },
     });
 
     return result ? true : false;

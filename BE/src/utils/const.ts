@@ -92,3 +92,8 @@ export const JWT_CONST = {
   ACCESS_EXPIRED_GENERATION: 60 * 60,
   REFRESH_EXPIRED_GENERATION: 60 * 60 * 24 * 30,
 };
+
+export enum REVIEW_SORT {
+  OLDEST = 'OLDEST',
+  LATEST = 'LATEST',
+}

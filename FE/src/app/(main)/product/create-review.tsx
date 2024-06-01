@@ -1,24 +1,21 @@
+"use client";
+
+import React, { useState } from "react";
+import Spinner from "@/components/ui/spinner";
+import RatingInput from "./components/ratingInput";
+import UploadImagesReview from "./components/uploadImages";
+
+import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { z } from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
-import Spinner from "@/components/ui/spinner";
 import { Textarea } from "@/components/ui/textarea";
-
-import * as React from "react";
-
-import RatingInput from "./components/ratingInput";
+import { Label } from "@radix-ui/react-label";
+import { useSession } from "next-auth/react";
+import { useToast } from "@/components/ui/use-toast";
+import { CreateReviewService, UploadFileService } from "@/+core/services";
+import { CreateReviewInput } from "@/+core/interfaces";
+import { ToastAction } from "@radix-ui/react-toast";
 
 const formSchema = z.object({
   title: z.string().min(1, {
@@ -29,78 +26,159 @@ const formSchema = z.object({
   }),
 });
 
-export default function CreateReview() {
-  const [rating, setRating] = useState(0);
-  const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState("");
-  const [notification, setNotification] = useState<string>("");
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+interface CreateReviewProps {
+  productId: string;
+}
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      title: "",
-      content: "",
-    },
+export default function CreateReview({ productId }: CreateReviewProps) {
+  const { data: session } = useSession();
+  const { toast } = useToast();
+
+  const [rating, setRating] = useState<number | undefined>(undefined);
+  const [notification, setNotification] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [files, setFiles] = useState<File[] | undefined>(undefined);
+  const [formData, setFormData] = useState({
+    title: "",
+    content: "",
   });
+
+  const handleFileUpload = (files: File[]) => {
+    setFiles(files);
+  };
+
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
   const handleRatingChange = (newRating: number) => {
     setRating(newRating);
   };
 
-  async function onSubmit(data: any) {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     try {
+      if (!session) {
+        return toast({
+          variant: "destructive",
+          title: "Please Sign in first!",
+          action: <ToastAction altText="Close">Close</ToastAction>,
+        });
+      }
+      const validationResult = formSchema.safeParse(formData);
+      if (!validationResult.success) {
+        setNotification(validationResult.error.errors[0].message);
+        return;
+      }
+
+      if (!rating) {
+        setNotification("Please rating");
+        return;
+      }
+
       setIsLoading(true);
-      console.log("Form data:", data);
-      // Submit form data to backend
-      // Assuming successful submission, reset form and show success notification
-      form.reset();
-      setNotification("Review submitted successfully!");
-    } catch (error) {
-      setNotification("Error submitting review. Please try again later.");
+      let images = [];
+
+      if (files) {
+        for (let file of files) {
+          images.push(await UploadFileService(file));
+        }
+      }
+
+      const createReviewInput: CreateReviewInput = {
+        productId: productId,
+        content: formData.content,
+        images: images,
+        rate: rating,
+        title: formData.title,
+      };
+
+      const { errors } = await CreateReviewService(
+        session?.accessToken as string,
+        createReviewInput
+      );
+
+      if (errors) {
+        return toast({
+          variant: "destructive",
+          title: "Somethings went wrong!",
+          description: errors[0].message,
+          action: <ToastAction altText="Close">Close</ToastAction>,
+        });
+      }
+
+      console.log("Form data:", formData);
+      setFormData({
+        title: "",
+        content: "",
+      });
+      setRating(0);
+      setFiles(undefined);
+      toast({
+        title: "Review Success!",
+        description: new Date().toDateString(),
+        action: <ToastAction altText="Close">Close</ToastAction>,
+      });
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: "Error submitting review. Please try again later!",
+        description: error?.message,
+        action: <ToastAction altText="Close">Close</ToastAction>,
+      });
     } finally {
       setIsLoading(false);
     }
-  }
+  };
 
   return (
-    <Card className="w-full h-auto ml-10 rounded-none text-start">
+    <Card className="w-full h-auto  rounded-none text-start">
       <CardHeader className="text-start">
         <CardTitle className="text-3xl">Write A Review</CardTitle>
       </CardHeader>
       <CardContent>
-        <Form {...form}>
-          <FormItem>
-            <FormLabel>Title</FormLabel>
-            <FormControl>
-              <Input
-                {...form.register("title")}
-                id="title"
-                className="rounded-none h-12"
-                placeholder="Enter title"
-              />
-            </FormControl>
-            <FormMessage>{form.formState.errors.title?.message}</FormMessage>
-          </FormItem>
+        <form onSubmit={handleSubmit}>
+          <div>
+            <Label>Title</Label>
+            <Input
+              name="title"
+              value={formData.title}
+              onChange={handleInputChange}
+              className="rounded-none h-12"
+              placeholder="Enter title"
+            />
+          </div>
 
-          <FormItem>
-            <FormLabel>Content</FormLabel>
-            <FormControl>
-              <Textarea
-                {...form.register("content")}
-                id="content"
-                className="rounded-none h-48"
-                placeholder="Enter your content"
-              />
-            </FormControl>
-            <FormMessage>{form.formState.errors.content?.message}</FormMessage>
-          </FormItem>
+          <div className="mt-4">
+            <Label>Content</Label>
+            <Textarea
+              name="content"
+              value={formData.content}
+              onChange={handleInputChange}
+              className="rounded-none h-48"
+              placeholder="Enter your content"
+            />
+          </div>
 
-          <FormItem>
-            <FormLabel>Rating</FormLabel>
-            <FormControl>
+          <div className="mt-4">
+            <Label>Rating</Label>
+            <div>
               <RatingInput onChange={handleRatingChange} />
-            </FormControl>
-          </FormItem>
+            </div>
+          </div>
+
+          <div className="mt-4">
+            <Label className="text-xl">Upload Images</Label>
+            <div>
+              <UploadImagesReview getFile={handleFileUpload} />
+            </div>
+          </div>
 
           <p className="mt-2 text-red-500 text-sm">{notification}</p>
 
@@ -114,7 +192,7 @@ export default function CreateReview() {
               Review
             </Button>
           )}
-        </Form>
+        </form>
       </CardContent>
     </Card>
   );

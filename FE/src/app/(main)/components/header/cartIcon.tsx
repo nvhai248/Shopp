@@ -23,7 +23,6 @@ export default function CartIcon() {
 
   let cartItems: CartItem[] = [];
   if (error) {
-    console.log(error.message);
   } else {
     cartItems = data?.getCart || []; // Provide a default empty array
   }

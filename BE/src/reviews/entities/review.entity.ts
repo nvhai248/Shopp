@@ -7,6 +7,9 @@ export class Review {
   productId: string;
 
   @Field()
+  title: string;
+
+  @Field()
   content: string;
 
   @Field()

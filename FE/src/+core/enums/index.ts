@@ -44,3 +44,8 @@ export enum CATEGORY_TYPE {
   CHILDREN = "CHILDREN",
   PARENT = "PARENT",
 }
+
+export enum REVIEW_SORT {
+  OLDEST = "OLDEST",
+  LATEST = "LATEST",
+}

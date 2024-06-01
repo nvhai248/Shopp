@@ -13,6 +13,8 @@ export const GetProductQuery = gql`
       priceSale
       isOnSale
       avatar
+      rate
+      ratingCount
       author
       images
       status

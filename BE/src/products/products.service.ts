@@ -40,7 +40,12 @@ export class ProductsService {
     return this.productRepository.findOne(id);
   }
 
-  update(id: string, updateProductInput: UpdateProductInput) {
-    return this.productRepository.update(id, updateProductInput);
+  update(
+    id: string,
+    updateProductInput: UpdateProductInput,
+    rate?: number,
+    ratingCount?: number,
+  ) {
+    return this.productRepository.update(id, updateProductInput, rate, ratingCount);
   }
 }
