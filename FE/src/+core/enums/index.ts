@@ -20,3 +20,27 @@ export enum PROMOTION_TYPE {
   PERCENT = "PERCENT",
   VALUE = "VALUE",
 }
+
+export enum ABOUT_TYPE {
+  Q_AND_A = "Q_AND_A",
+  MAIN = "MAIN",
+  CHILD = "CHILD",
+}
+
+export enum PAYMENT_METHOD {
+  COD = "COD",
+  CREDIT_CARD = "CREDIT_CARD",
+}
+
+export enum STATUS_ORDER {
+  PENDING = "PENDING",
+  ON_SHIPPING = "ON_SHIPPING",
+  CANCEL = "CANCEL",
+  DONE = "DONE",
+  RETURN = "RETURN",
+}
+
+export enum CATEGORY_TYPE {
+  CHILDREN = "CHILDREN",
+  PARENT = "PARENT",
+}

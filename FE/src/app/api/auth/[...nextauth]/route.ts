@@ -10,7 +10,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 
 async function refreshToken(token: JWT): Promise<JWT> {
   try {
-    const { data } = await RefreshAccessToken(token.refreshToken);
+    const { data } = await RefreshAccessToken(token.refreshToken, false);
 
     if (data?.refreshAccessToken) {
       return {

@@ -5,3 +5,4 @@ export * from "./promotion";
 export * from "./cart";
 export * from "./upload";
 export * from "./contact";
+export * from "./order";

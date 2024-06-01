@@ -9,6 +9,7 @@ import { GetCartQuery } from "@/+core/definegql";
 import { CartItem } from "@/+core/interfaces";
 import Spinner from "@/components/ui/spinner";
 import RequireSignIn from "@/components/ui/require-signin";
+import formatter from "@/lib/formatDate";
 
 export default function CartPage() {
   const { data: session } = useSession();
@@ -42,6 +43,10 @@ export default function CartPage() {
       totalPrice += item.product.price * item.quantity;
     }
   }
+
+  const today = new Date();
+  const dateInFuture = new Date(today);
+  dateInFuture.setDate(today.getDate() + 7);
 
   return (
     <section className="h-full bg-gradient-to-r w-full text-start">
@@ -80,7 +85,12 @@ export default function CartPage() {
             <div className="mb-4 bg-white shadow-md rounded-none">
               <div className="p-4">
                 <p>Expected shipping delivery</p>
-                <p className="mb-0">12.10.2020 - 14.10.2020</p>
+                <p className="mb-0">
+                  {formatter.format(
+                    new Date(today.setDate(today.getDate() + 3))
+                  )}{" "}
+                  - {formatter.format(new Date(dateInFuture))}
+                </p>
               </div>
             </div>
 

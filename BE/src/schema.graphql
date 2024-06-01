@@ -249,6 +249,7 @@ input PagingReviewInput {
 input PagingOrderInput {
   page: Int
   limit: Int
+  isAvailable: Boolean
 }
 
 input FindReviewInput {
@@ -458,7 +459,7 @@ input UpdateContactInput {
 
 input CreateOrderInput {
   contactId: String!
-  promotionId: String!
+  promotionId: String
   isPaid: Boolean!
   paymentMethod: String!
   items: [OrderItemInput!]!

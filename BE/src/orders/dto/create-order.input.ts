@@ -8,7 +8,7 @@ export class CreateOrderInput {
   @Field()
   contactId: string;
 
-  @Field()
+  @Field({ nullable: true })
   promotionId: string;
 
   @Field()

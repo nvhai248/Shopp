@@ -1,20 +1,18 @@
-import { RefreshATMutation } from "@/+core/definegql";
+import { ClearCartMutation } from "@/+core/definegql";
 import { MyGraphqlResponse } from "@/+core/types/response";
 import { MyApolloClient } from "@/lib/apolloClient";
 import { GraphQLError } from "graphql";
 
-export async function RefreshAccessToken(
-  refreshToken: string,
-  isCache: boolean = true
+export async function ClearCartService(
+  accessToken: string
 ): Promise<MyGraphqlResponse> {
   try {
     const { data, errors } = await MyApolloClient.mutate({
-      mutation: RefreshATMutation,
+      mutation: ClearCartMutation,
       context: {
         headers: {
-          Authorization: `Bearer ${refreshToken}`,
+          Authorization: `Bearer ${accessToken}`,
         },
-        ...(!isCache ? { fetchPolicy: "no-cache" } : {}),
       },
     });
 
@@ -34,7 +32,7 @@ export async function RefreshAccessToken(
       data: null,
       errors: [
         new GraphQLError(
-          error.message || "An error occurred during refreshTk."
+          error.message || "An error occurred during clear cart."
         ),
       ],
     };

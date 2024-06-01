@@ -88,6 +88,10 @@ export class OrdersService {
         where = { ownerId: ownerId };
       }
 
+      if (conditions.isAvailable) {
+        where = { endDate: { gt: new Date() } };
+      }
+
       const orders = await this.databaseService.order.findMany({
         skip: offset,
         take: conditions.limit,
@@ -96,9 +100,6 @@ export class OrdersService {
       });
 
       const count = await this.databaseService.order.count({
-        skip: offset,
-        take: conditions.limit,
-        orderBy: { updatedAt: 'desc' },
         where: where,
       });
 

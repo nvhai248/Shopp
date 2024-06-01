@@ -3,14 +3,13 @@
 import { FaMapMarkerAlt } from "react-icons/fa";
 import { IoCart } from "react-icons/io5";
 import { BiSolidDiscount } from "react-icons/bi";
-
+import { MdOutlinePayments } from "react-icons/md";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Button } from "@/components/ui/button";
 import { useQuery } from "@apollo/client";
-import { CartItem, PromotionType } from "@/+core/interfaces";
+import { CartItem, CreateOrderInput, PromotionType } from "@/+core/interfaces";
 import { useSession } from "next-auth/react";
 import { GetCartQuery } from "@/+core/definegql";
-import { MdOutlinePayments } from "react-icons/md";
 import CheckoutProduct from "./checkoutProduct";
 import Spinner from "@/components/ui/spinner";
 import RequireSignIn from "@/components/ui/require-signin";
@@ -20,10 +19,20 @@ import { useState } from "react";
 import ShowVoucher from "./components/showVoucher";
 import formatter from "@/lib/formatDate";
 import { RecommendInput } from "@/+core/interfaces/recommend";
+import { PAYMENT_METHOD, PROMOTION_TYPE } from "@/+core/enums";
+import { ClearCartService, PlaceAnOrderService } from "@/+core/services";
+import { useToast } from "@/components/ui/use-toast";
+import { ToastAction } from "@radix-ui/react-toast";
+import SuccessOrder from "./components/successOrder";
 
 const Checkout = () => {
+  const [orderId, setOrderId] = useState<string | null>(null);
   const [voucher, setVoucher] = useState<PromotionType | undefined>(undefined);
   const { data: session } = useSession();
+  const { toast } = useToast();
+  const [paymentMethod, setPaymentMethod] = useState<PAYMENT_METHOD>(
+    PAYMENT_METHOD.COD
+  );
   const [selectedContact, setSelectedContact] = useState<
     ContactInterface | undefined
   >(undefined);
@@ -39,7 +48,7 @@ const Checkout = () => {
   if (error) {
     console.log(error);
   } else {
-    cartItems = data?.getCart || []; // Provide a default empty array
+    cartItems = data?.getCart || [];
   }
 
   let totalPrice = 0;
@@ -53,7 +62,7 @@ const Checkout = () => {
     }
   }
 
-  let paymentTotal = totalPrice + discountTotal;
+  let paymentTotal = totalPrice - discountTotal;
 
   if (loading) {
     return (
@@ -77,6 +86,63 @@ const Checkout = () => {
 
   if (error) {
     return <RequireSignIn />;
+  }
+
+  let createOrderInput: CreateOrderInput = {
+    contactId: selectedContact?.id as string,
+    promotionId: voucher?.id,
+    isPaid: paymentMethod === PAYMENT_METHOD.CREDIT_CARD ? true : false,
+    paymentMethod: paymentMethod,
+    items: cartItems.map((item) => ({
+      productId: item.productId,
+      quantity: item.quantity,
+      price: item.product.isOnSale
+        ? item.product.priceSale
+        : item.product.price,
+    })),
+  };
+
+  const handleValueChange = (value: string) => {
+    if (value in PAYMENT_METHOD) {
+      setPaymentMethod(value as PAYMENT_METHOD);
+    } else {
+      console.warn("Invalid payment method:", value);
+    }
+  };
+
+  async function placeAnOrder() {
+    if (!createOrderInput.contactId) {
+      return toast({
+        variant: "destructive",
+        title: "Please select contact first!",
+        description: new Date().toDateString(),
+        action: <ToastAction altText="Goto schedule to undo">Undo</ToastAction>,
+      });
+    }
+
+    const { data, errors } = await PlaceAnOrderService(
+      session?.accessToken as string,
+      createOrderInput
+    );
+
+    if (errors) {
+      return toast({
+        variant: "destructive",
+        title: "Something went wrong",
+        description: new Date().toDateString(),
+        action: <ToastAction altText="Goto schedule to undo">Undo</ToastAction>,
+      });
+    }
+
+    await ClearCartService(session?.accessToken as string);
+
+    const orderId = data.createOrder.id;
+
+    setOrderId(orderId);
+  }
+
+  if (orderId) {
+    return <SuccessOrder id={orderId} />;
   }
 
   return (
@@ -122,21 +188,17 @@ const Checkout = () => {
           </h2>
           <div className="border-b pb-6 mb-6 text-start flex justify-between">
             {voucher ? (
-              <div className="mb-4">
-                <span className="font-bold">
-                  {voucher.name} {voucher.type}
-                </span>
-                <span className="ml-5">
-                  {voucher.discountValue}, {voucher.discountPercentage},{" "}
-                  {voucher.startDate
-                    ? formatter.format(new Date(voucher.startDate))
-                    : "N/A"}{" "}
-                  -{" "}
-                  {voucher.endDate
-                    ? formatter.format(new Date(voucher.endDate))
-                    : "N/A"}
-                </span>
-              </div>
+              <span className="ml-5">
+                {voucher.type === PROMOTION_TYPE.PERCENT
+                  ? voucher.discountValue + " $"
+                  : voucher.discountPercentage + "%"}{" "}
+                off
+                {", min spend: "} ${voucher.minValue}
+                {", expired: "}
+                {voucher.endDate
+                  ? formatter.format(new Date(voucher.endDate))
+                  : "N/A"}
+              </span>
             ) : (
               <div className="mb-4">
                 <span className="font-bold text-red-500">Not Selected</span>
@@ -156,19 +218,31 @@ const Checkout = () => {
             <span className="ml-4">Payment Method</span>
           </h2>
           <div>
-            <ToggleGroup type="single">
-              <ToggleGroupItem value="COD" aria-label="COD">
+            <ToggleGroup
+              type="single"
+              defaultValue={PAYMENT_METHOD.COD}
+              onValueChange={handleValueChange}
+            >
+              <ToggleGroupItem
+                value={PAYMENT_METHOD.COD}
+                aria-label={PAYMENT_METHOD.COD}
+                defaultChecked
+              >
                 Payment on delivery
               </ToggleGroupItem>
-              <ToggleGroupItem value="CREDIT_CARD" aria-label="CREDIT_CARD">
-                Payment on credit card
+              <ToggleGroupItem
+                value={PAYMENT_METHOD.CREDIT_CARD}
+                aria-label={PAYMENT_METHOD.CREDIT_CARD}
+              >
+                Payment with credit card
               </ToggleGroupItem>
             </ToggleGroup>
           </div>
         </div>
 
-        <div className="pb-4 border-b-2 border-dotted">
-          <div className="mt-4 w-[30rem] ml-[46rem]">
+        <div className="pb-4 border-b-2 border-dotted flex justify-between">
+          <div></div>
+          <div className="mt-4 w-[30rem]">
             <div className="flex justify-between mb-2">
               <span className="text-start">Merchandise Subtotal:</span>
               <span className="font-bold">$ {totalPrice}</span>
@@ -197,7 +271,10 @@ const Checkout = () => {
               HShopp Terms
             </span>
           </p>
-          <Button className="py-3 px-6 bg-blue-600 text-white rounded-none shadow-md hover:bg-blue-700 transition duration-300">
+          <Button
+            onClick={placeAnOrder}
+            className="py-3 px-6 bg-blue-600 text-white rounded-none shadow-md hover:bg-blue-700 transition duration-300"
+          >
             Place an Order
           </Button>
         </div>

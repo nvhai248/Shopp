@@ -18,6 +18,7 @@ import formatter from "@/lib/formatDate";
 import { BiSolidDiscount } from "react-icons/bi";
 import { Button } from "@/components/ui/button";
 import { RecommendInput } from "@/+core/interfaces/recommend";
+import { PROMOTION_TYPE } from "@/+core/enums";
 
 interface ShowVoucherInterface {
   onSelectVoucher: (voucher: PromotionType) => void;
@@ -64,15 +65,14 @@ export default function ShowVoucher({
           {vouchers.map((voucher) => (
             <div className="border-b shadow-md p-4 pb-6 mb-3 border text-start flex justify-between">
               <div className="mb-4">
-                <span className="font-bold">
-                  {voucher.name} {voucher.type}
-                </span>
+                <span className="font-bold">{voucher.name}</span>
                 <span className="ml-5">
-                  {voucher.discountValue}, {voucher.discountPercentage},{" "}
-                  {voucher.startDate
-                    ? formatter.format(new Date(voucher.startDate))
-                    : "N/A"}{" "}
-                  -{" "}
+                  {voucher.type === PROMOTION_TYPE.PERCENT
+                    ? voucher.discountValue + " $"
+                    : voucher.discountPercentage + "%"}{" "}
+                  off
+                  {", min spend: "} ${voucher.minValue}
+                  {", expired: "}
                   {voucher.endDate
                     ? formatter.format(new Date(voucher.endDate))
                     : "N/A"}
