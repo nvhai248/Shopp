@@ -11,6 +11,6 @@ export interface ProductType {
   author: string;
   images: string[];
   status: string;
-  score: number; // Assuming this is part of the product object
+  rate: number; // Assuming this is part of the product object
   address: string; // Assuming this is part of the product object
 }

@@ -18,8 +18,8 @@ export class PromotionsService {
     return this.promotionRepository.create(createPromotionInput);
   }
 
-  findAll() {
-    return this.promotionRepository.findMany();
+  findAll(isAvailablePromotions?: boolean | undefined) {
+    return this.promotionRepository.findMany(isAvailablePromotions);
   }
 
   findOne(id: string) {

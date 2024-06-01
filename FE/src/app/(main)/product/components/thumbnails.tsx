@@ -3,33 +3,29 @@ import {
   Carousel,
   CarouselContent,
   CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
 } from "@/components/ui/carousel";
 
-export default function Thumbnails() {
+interface ThumbnailsProps {
+  images?: string[];
+}
+
+export default function Thumbnails({ images }: ThumbnailsProps) {
   return (
     <Carousel
       opts={{
         align: "start",
       }}
-      className="w-full max-w-sm"
+      className="w-full max-w-sm h-[150px]"
     >
       <CarouselContent>
-        {Array.from({ length: 5 }).map((_, index) => (
-          <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
-            <div className="p-[2px]">
-              <img
-                className="h-auto"
-                src="https://via.placeholder.com/100"
-                alt="Image 1"
-              />
-            </div>
-          </CarouselItem>
+        {images?.map((image) => (
+          <img
+            className="w-[100px] h-[150px] object-cover mr-5"
+            src={image}
+            alt="thumbnails"
+          />
         ))}
       </CarouselContent>
-      <CarouselPrevious className="ml-[15px]" />
-      <CarouselNext className="mr-[15px]" />
     </Carousel>
   );
 }

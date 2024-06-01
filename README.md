@@ -9,9 +9,9 @@ HShopp is a comprehensive e-commerce platform designed to provide users with a s
 ## Author
 
 - **Nguyen Van Hai**
-  - Email: example@email.com
+  - Email: nvhai2408@gmail.com
   - LinkedIn: [Nguyen Van Hai](https://www.linkedin.com/in/nvhai248/)
-  - GitHub: [nguyenvanhai](https://github.com/nvhai248)
+  - GitHub: [nvhai248](https://github.com/nvhai248)
 
 ## Features
 

@@ -208,7 +208,7 @@ type Query {
   getProfile: User!
   adminGetProfile: User!
   getCart: [CartItem!]!
-  promotions: [Promotion!]!
+  promotions(isAvailablePromotions: Boolean): [Promotion!]!
   promotion(id: String!): Promotion!
   recommend(recommendInput: RecommendInput!): [Promotion!]!
   contacts: [Contact!]!
@@ -249,7 +249,6 @@ input PagingReviewInput {
 input PagingOrderInput {
   page: Int
   limit: Int
-  isAvailable: Boolean
 }
 
 input FindReviewInput {

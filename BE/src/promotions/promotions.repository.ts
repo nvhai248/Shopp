@@ -47,16 +47,31 @@ export class PromotionRepository {
     }
   }
 
-  async findMany() {
+  async findMany(isAvailablePromotions: boolean | undefined) {
+    let where = {};
+    where = { status: true };
+
+    if (isAvailablePromotions) {
+      where = {
+        ...where,
+        endDate: { gt: new Date() },
+      };
+    }
+
     return await this.databaseService.promotion.findMany({
-      where: { status: true },
+      where: where,
       orderBy: { updatedAt: 'desc' },
     });
   }
 
   async recommend(totalValue: number, level: PROMOTION_LEVEL) {
     return await this.databaseService.promotion.findMany({
-      where: { status: true, minValue: { lte: totalValue }, level: level },
+      where: {
+        status: true,
+        endDate: { gt: new Date() },
+        minValue: { lte: totalValue },
+        level: level,
+      },
       orderBy: { updatedAt: 'desc' },
     });
   }

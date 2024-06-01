@@ -56,7 +56,7 @@ export default function OnSaleProduct() {
                   id={product.id}
                   avatar={product.avatar}
                   name={product.name}
-                  score={5}
+                  rate={product.rate || 0}
                   price={product.price}
                   description={product.description}
                   address={product.address}

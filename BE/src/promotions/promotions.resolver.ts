@@ -29,8 +29,11 @@ export class PromotionsResolver {
   }
 
   @Query(() => [Promotion], { name: 'promotions' })
-  findAll() {
-    return this.promotionsService.findAll();
+  findAll(
+    @Args('isAvailablePromotions', { nullable: true })
+    isAvailablePromotions: boolean,
+  ) {
+    return this.promotionsService.findAll(isAvailablePromotions);
   }
 
   @Query(() => Promotion, { name: 'promotion' })

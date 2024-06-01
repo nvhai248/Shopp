@@ -24,7 +24,11 @@ export default function LandingCarouse() {
     Autoplay({ delay: 2000, stopOnInteraction: true })
   );
 
-  const { data, loading, error } = useQuery(PromotionsQuery);
+  const { data, loading, error } = useQuery(PromotionsQuery, {
+    variables: {
+      isAvailablePromotions: true,
+    },
+  });
 
   if (error) {
     console.log("Error: ", error.message);

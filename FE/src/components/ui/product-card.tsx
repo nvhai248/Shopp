@@ -21,7 +21,7 @@ function ProductDetail({
   id,
   avatar,
   name,
-  score,
+  rate,
   priceSale,
   price,
   description,
@@ -105,9 +105,11 @@ function ProductDetail({
           <FaCartPlus />
         </Button>
 
-        <Button className="rounded-full aspect-square w-12 h-12 flex items-center justify-center absolute right-4 bottom-0 border-2 bg-slate-50 text-black hover:bg-gray-800 hover:text-white transition duration-300 ease-in-out">
-          <FaEye />
-        </Button>
+        <Link href={`/product?id=${id}`}>
+          <Button className="rounded-full aspect-square w-12 h-12 flex items-center justify-center absolute right-4 bottom-0 border-2 bg-slate-50 text-black hover:bg-gray-800 hover:text-white transition duration-300 ease-in-out">
+            <FaEye />
+          </Button>
+        </Link>
       </div>
     </div>
   );
@@ -118,7 +120,7 @@ export default function ProductCard({
   avatar,
   name,
   priceSale,
-  score,
+  rate,
   price,
   description,
   address,
@@ -146,7 +148,7 @@ export default function ProductCard({
             id={id}
             author={avatar}
             name={name}
-            score={score}
+            rate={rate}
             price={price}
             description={description}
             address={address}
@@ -168,7 +170,7 @@ export default function ProductCard({
               {name}
             </CardTitle>
             <CardDescription className="flex text-left mt-1">
-              <Rating score={score} />
+              <Rating score={rate} />
             </CardDescription>
           </>
         )}
