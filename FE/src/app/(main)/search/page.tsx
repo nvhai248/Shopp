@@ -7,14 +7,18 @@ import { useQuery } from "@apollo/client";
 import { SearchProductQuery } from "@/+core/definegql";
 import Spinner from "@/components/ui/spinner";
 import { useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import SomethingWhenWrong from "@/components/ui/sth-went-wrong";
 
 export default function Search() {
   const params = useSearchParams();
   const [keyword, setKeyword] = useState<string>(params.get("keyword") || "");
 
-  const { data, loading, error } = useQuery(SearchProductQuery, {
+  useEffect(() => {
+    setKeyword(params.get("keyword") || "");
+  }, [params]);
+
+  const { data, loading, error, refetch } = useQuery(SearchProductQuery, {
     variables: {
       searchConditionInput: {
         page: 1,
@@ -22,7 +26,18 @@ export default function Search() {
         keyword: keyword,
       },
     },
+    fetchPolicy: "no-cache",
   });
+
+  useEffect(() => {
+    refetch({
+      searchConditionInput: {
+        page: 1,
+        limit: 10,
+        keyword: keyword,
+      },
+    });
+  }, [keyword, refetch]);
 
   let products: ProductType[] = [];
 

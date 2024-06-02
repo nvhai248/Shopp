@@ -1,52 +1,46 @@
 version: '3.7'
 
 services:
-  elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.9.3
-    container_name: elasticsearch
+  postgres:
+    image: postgres
+    restart: always
     environment:
-      - discovery.type=single-node
-      - ELASTIC_PASSWORD=aA@12345678
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: aA@01010001
+      POSTGRES_DB: hshopp
+      POSTGRES_HOST_AUTH_METHOD: trust
     ports:
-      - '9200:9200'
-      - '9300:9300'
-    networks:
-      - shopp
-
-  kibana:
-    image: docker.elastic.co/kibana/kibana:7.9.3
-    container_name: kibana
-    environment:
-      - ELASTICSEARCH_URL=http://elasticsearch:9200
-      - ELASTICSEARCH_USERNAME=elastic
-      - ELASTICSEARCH_PASSWORD=shopp@123456789
-    depends_on:
-      - elasticsearch
-    ports:
-      - '5601:5601'
-    networks:
-      - shopp
-
-  rabbitmq:
-    image: rabbitmq:3-management
-    container_name: rabbitmq
-    environment:
-      - RABBITMQ_DEFAULT_USER=guest
-      - RABBITMQ_DEFAULT_PASS=guest
-    ports:
-      - '5672:5672'
-      - '15672:15672'
-    networks:
-      - shopp
+      - '5432:5432'
 
   redis:
     image: redis
-    container_name: redis
     ports:
       - '6379:6379'
-    networks:
-      - shopp
 
-networks:
-  shopp:
-    driver: bridge
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '8080:8080'
+    environment:
+      NODE_ENV: local
+      DATABASE_URL: postgresql://postgres:aA@01010001@postgres:5432/hshopp
+      SECRET_ACCESS_TOKEN_KEY: 'secret_access_token_shopp'
+      SECRET_ACCESS_REFRESH_KEY: 'secret_refresh_token_shopp'
+      MAILER_USER: 'hshopp.mailer@gmail.com'
+      MAILER_PASSWORD: 'anzt jiqo rlxd razr'
+      CLIENT_SITE_DOMAIN: 'http://localhost:3000'
+      SITE_PORT: 8080
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      GOOGLE_CLIENT_ID: ''
+      GOOGLE_CLIENT_SECRET: ''
+      AWS_ACCESS_KEY_ID: ''
+      AWS_SECRET_ACCESS_KEY: ''
+      AWS_BUCKET_NAME: 'mystoreimg'
+      AWS_REGION: 'ap-southeast-1'
+      CRYPTO_SECRET: 'mysecretcrypto'
+    depends_on:
+      - postgres
+      - redis

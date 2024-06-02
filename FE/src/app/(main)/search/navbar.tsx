@@ -1,10 +1,11 @@
 import Rating from "@/components/ui/rating";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { useSession } from "next-auth/react";
 import { useQuery } from "@apollo/client";
+import { useRouter } from "next/navigation";
 import { GetCategoryQuery, GetPublisherQuery } from "@/+core/definegql";
 import { Category } from "@/+core/interfaces";
 import { Publisher } from "@/+core/interfaces/publisher";
@@ -16,24 +17,92 @@ interface ExpandedCategories {
 export function NavFilter() {
   const [expandedCategories, setExpandedCategories] =
     useState<ExpandedCategories>({});
-
   const [rating, setRating] = useState<string>("");
-  const [publisher, setPublisher] = useState<string>("");
+  const [publishers, setPublishers] = useState<string[]>([]);
+  const [categories, setCategories] = useState<string[]>([]);
   const [onSale, setOnSale] = useState<boolean>(false);
-  const [showMore, setShowMore] = useState<boolean>(false);
+  const [minPrice, setMinPrice] = useState<string>("");
+  const [maxPrice, setMaxPrice] = useState<string>("");
   const { data: session } = useSession();
+  const router = useRouter();
 
   const cData = useQuery(GetCategoryQuery);
   const pData = useQuery(GetPublisherQuery);
 
-  const categories: Category[] = cData?.data?.categories || [];
-  const publishers: Publisher[] = pData?.data?.publishers || [];
+  const categoryList: Category[] = cData?.data?.categories || [];
+  const publisherList: Publisher[] = pData?.data?.publishers || [];
 
-  const toggleCategory = (categoryId: string) => {
+  /* useEffect(() => {
+    const params = new URLSearchParams();
+
+    if (onSale) {
+      params.append("isOnSale", "true");
+    }
+
+    if (rating) {
+      params.append("rate", rating);
+    }
+
+    if (minPrice) {
+      params.append("minPrice", minPrice);
+    }
+
+    if (maxPrice) {
+      params.append("maxPrice", maxPrice);
+    }
+
+    if (publishers.length > 0) {
+      params.append("publisherIds", publishers.join(","));
+    }
+
+    if (categories.length > 0) {
+      params.append("categoryIds", categories.join(","));
+    }
+
+    router.replace(`?${params.toString()}`);
+  }, [onSale, rating, minPrice, maxPrice, publishers, categories, router]); */
+
+  const toggleChildCategory = (childId: string) => {
+    setCategories((prevCategories) => {
+      if (prevCategories.includes(childId)) {
+        return prevCategories.filter((id) => id !== childId);
+      } else {
+        return [...prevCategories, childId];
+      }
+    });
+  };
+
+  const toggleParentCategory = (categoryId: string) => {
     setExpandedCategories((prevExpandedCategories) => ({
       ...prevExpandedCategories,
       [categoryId]: !prevExpandedCategories[categoryId],
     }));
+  };
+
+  const handlePublisherChange = (pubId: string) => {
+    setPublishers((prevPublishers) => {
+      if (prevPublishers.includes(pubId)) {
+        return prevPublishers.filter((id) => id !== pubId);
+      } else {
+        return [...prevPublishers, pubId];
+      }
+    });
+  };
+
+  const handleRatingChange = (newRating: string) => {
+    setRating(newRating);
+  };
+
+  const handleOnSaleChange = () => {
+    setOnSale((prevOnSale) => !prevOnSale);
+  };
+
+  const handleMinPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setMinPrice(e.target.value);
+  };
+
+  const handleMaxPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setMaxPrice(e.target.value);
   };
 
   return (
@@ -44,10 +113,10 @@ export function NavFilter() {
         </h2>
 
         <ul className="mb-8">
-          {categories.map((category) => (
+          {categoryList.map((category) => (
             <li key={category.id} className="mb-2 text-left px-4 py-1">
               <div
-                onClick={() => toggleCategory(category.id)}
+                onClick={() => toggleParentCategory(category.id)}
                 className={`flex justify-between items-center cursor-pointer ${
                   expandedCategories[category.id] ? "font-bold" : ""
                 }`}
@@ -62,7 +131,11 @@ export function NavFilter() {
                   {category.childs.map((child) => (
                     <li key={child.id} className="mt-4">
                       <div className="flex items-center space-x-2">
-                        <Checkbox id={child.id} />
+                        <Checkbox
+                          id={child.id}
+                          checked={categories.includes(child.id)}
+                          onCheckedChange={() => toggleChildCategory(child.id)}
+                        />
                         <label htmlFor={child.id} className="leading-none">
                           {child.name}
                         </label>
@@ -81,7 +154,11 @@ export function NavFilter() {
           SHOP BY
         </h2>
         <div className="flex items-center space-x-2 mt-2 ml-4">
-          <Checkbox id="isFilterOnSale" />
+          <Checkbox
+            id="isFilterOnSale"
+            checked={onSale}
+            onCheckedChange={handleOnSaleChange}
+          />
           <label
             htmlFor="isFilterOnSale"
             className="text-sm font-medium leading-none"
@@ -97,11 +174,15 @@ export function NavFilter() {
               type="number"
               placeholder="From"
               className="w-full p-2 border border-gray-300 rounded-none"
+              value={minPrice}
+              onChange={handleMinPriceChange}
             />
             <Input
               type="number"
               placeholder="To"
               className="w-full p-2 border mt-4 border-gray-300 rounded-none"
+              value={maxPrice}
+              onChange={handleMaxPriceChange}
             />
           </div>
         </div>
@@ -112,7 +193,11 @@ export function NavFilter() {
           RATING
         </h2>
 
-        <RadioGroup defaultValue="5" className="ml-4 mb-4">
+        <RadioGroup
+          defaultValue="5"
+          className="ml-4 mb-4"
+          onValueChange={handleRatingChange}
+        >
           {[5, 4, 3, 2, 1].map((score) => (
             <div key={score} className="flex items-center space-x-2">
               <RadioGroupItem value={String(score)} id={`r${score}`} />
@@ -128,10 +213,14 @@ export function NavFilter() {
         </h2>
 
         <ul className="mb-8">
-          {publishers.map((publisher) => (
+          {publisherList.map((publisher) => (
             <li className="pl-4 mb-4" key={publisher.id}>
               <div className="flex items-center space-x-2">
-                <Checkbox id={publisher.id} />
+                <Checkbox
+                  id={publisher.id}
+                  checked={publishers.includes(publisher.id)}
+                  onCheckedChange={() => handlePublisherChange(publisher.id)}
+                />
                 <label htmlFor={publisher.id} className="leading-none">
                   {publisher.name}
                 </label>

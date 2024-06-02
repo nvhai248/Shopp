@@ -3,17 +3,17 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { SearchIcon } from "lucide-react";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
-import SearchDropdown from "./search-dropdown";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const SearchInput = () => {
   const router = useRouter();
-  const [searchKeyword, setSearchKeyword] = useState<string>("");
+  const params = useSearchParams();
+  const [searchKeyword, setSearchKeyword] = useState<string>(
+    params.get("keyword") as string
+  );
 
   const handleSearch = () => {
-    if (searchKeyword.trim() !== "") {
-      router.push(`/search?keyword=${searchKeyword}`);
-    }
+    router.push(`/search?keyword=${searchKeyword}`);
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {

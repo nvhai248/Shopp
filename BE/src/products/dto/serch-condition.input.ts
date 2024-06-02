@@ -4,14 +4,23 @@ import { PagingRequest } from 'src/interfaces';
 @InputType()
 export class SearchConditionInput extends PagingRequest {
   @Field({ nullable: true })
-  keyword?: string | null;
+  keyword?: string;
+
+  @Field(() => [String], { nullable: true })
+  categoryIds?: string[];
+
+  @Field(() => [String], { nullable: true })
+  publisherIds?: string[];
 
   @Field({ nullable: true })
-  categoryId?: string | null;
+  isOnSale?: boolean;
 
   @Field({ nullable: true })
-  publisherId?: string | null;
+  minPrice?: number;
 
   @Field({ nullable: true })
-  isOnSale?: boolean | null;
+  maxPrice?: number;
+
+  @Field({ nullable: true })
+  rate?: number;
 }

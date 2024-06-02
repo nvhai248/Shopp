@@ -16,7 +16,7 @@ export class ReviewsService {
 
   async create(createReviewInput: CreateReviewInput, ownerId: string) {
     try {
-      const { productId, content, rate, images } = createReviewInput;
+      const { productId, content, rate, images, title } = createReviewInput;
 
       // Check if the review already exists
       const existingReview = await this.databaseService.review.findUnique({
@@ -54,6 +54,7 @@ export class ReviewsService {
           rate,
           images,
           ownerId,
+          title,
         },
       });
 

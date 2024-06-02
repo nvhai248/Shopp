@@ -35,8 +35,6 @@ export class ProductController {
       page: 0,
       limit: 10,
       keyword: null,
-      categoryId: null,
-      publisherId: null,
       isOnSale: undefined,
     });
 
@@ -89,8 +87,6 @@ export class ProductController {
       page: 1,
       limit: 10,
       keyword: null,
-      categoryId: null,
-      publisherId: null,
     });
 
     return {

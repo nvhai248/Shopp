@@ -6,7 +6,6 @@ import Rating from "@/components/ui/rating";
 import {
   Pagination,
   PaginationContent,
-  PaginationEllipsis,
   PaginationItem,
   PaginationLink,
   PaginationNext,

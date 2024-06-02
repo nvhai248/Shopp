@@ -41,26 +41,13 @@ export class ProductRepository {
     }
   }
 
-  async count(searchConditions: SearchConditionInput = null) {
-    const where: any = {};
-    if (searchConditions) {
-      where.isOnSale = searchConditions.isOnSale;
-    }
+  async count(where: any = null) {
     return await this.databaseService.product.count({
       where: where,
     });
   }
 
-  async findMany(
-    offset: number,
-    limit: number,
-    searchConditions: SearchConditionInput = null,
-  ) {
-    const where: any = {};
-    if (searchConditions) {
-      where.isOnSale = searchConditions.isOnSale;
-    }
-
+  async findMany(offset: number, limit: number, where: any = null) {
     return await this.databaseService.product.findMany({
       skip: offset,
       take: limit,

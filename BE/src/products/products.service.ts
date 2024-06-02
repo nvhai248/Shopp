@@ -22,11 +22,67 @@ export class ProductsService {
         ? (conditions.page - 1) * conditions.limit
         : 0;
 
-    const total = await this.productRepository.count(conditions);
+    let where = {};
+
+    if (conditions.isOnSale) {
+      where = { ...where, isOnSale: conditions.isOnSale };
+    }
+
+    if (conditions.keyword) {
+      // Edit here for full-text search using case-insensitive search
+      where = {
+        ...where,
+        name: {
+          contains: conditions.keyword,
+          mode: 'insensitive',
+        },
+      };
+
+    }
+
+    if (conditions.categoryIds) {
+      where = { ...where, categoryId: { in: conditions.categoryIds } };
+    }
+
+    if (conditions.publisherIds) {
+      where = { ...where, publisherId: { in: conditions.publisherIds } };
+    }
+
+    if (conditions.minPrice) {
+      where = {
+        ...where,
+        OR: [
+          { price: { gte: conditions.minPrice } },
+          { priceSale: { gte: conditions.minPrice } },
+        ],
+      };
+    }
+
+    if (conditions.maxPrice) {
+      where = {
+        ...where,
+        OR: [
+          { price: { lte: conditions.maxPrice } },
+          { priceSale: { lte: conditions.maxPrice } },
+        ],
+      };
+    }
+
+    if (conditions.rate) {
+      where = {
+        ...where,
+        rate: {
+          gte: conditions.rate,
+          lte: conditions.rate + 1,
+        },
+      };
+    }
+
+    const total = await this.productRepository.count(where);
     const products = await this.productRepository.findMany(
       offset,
       conditions.limit,
-      conditions,
+      where,
     );
     return {
       total: total,
@@ -46,6 +102,11 @@ export class ProductsService {
     rate?: number,
     ratingCount?: number,
   ) {
-    return this.productRepository.update(id, updateProductInput, rate, ratingCount);
+    return this.productRepository.update(
+      id,
+      updateProductInput,
+      rate,
+      ratingCount,
+    );
   }
 }
