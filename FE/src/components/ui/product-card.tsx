@@ -11,11 +11,10 @@ import Rating from "./rating";
 import { FaCartPlus, FaEye } from "react-icons/fa";
 import Link from "next/link";
 import { ProductType } from "@/+core/interfaces";
-import { useMutation } from "@apollo/client";
-import { AddToCartMutation } from "@/+core/definegql";
 import { useSession } from "next-auth/react";
 import { useToast } from "./use-toast";
 import { ToastAction } from "./toast";
+import { AddToCartService } from "@/+core/services/cart/add";
 
 function ProductDetail({
   id,
@@ -31,45 +30,26 @@ function ProductDetail({
   const { data: session } = useSession();
   const { toast } = useToast();
 
-  // Define useMutation outside of the component
-  const [addToCartMutation] = useMutation(AddToCartMutation);
+  const addToCart = async () => {
+    const { errors } = await AddToCartService(
+      session?.accessToken as string,
+      id,
+      1
+    );
 
-  const addToCart = () => {
-    addToCartMutation({
-      variables: {
-        addProductInput: {
-          productId: id,
-          quantity: 1,
-        },
-      },
-      context: {
-        headers: {
-          Authorization: `Bearer ${session?.accessToken}`,
-        },
-      },
-    })
-      .then(() => {
-        // if successful
-
-        console.log("Successfully!");
-
-        toast({
-          variant: "default",
-          title: "Successfully added to cart",
-          description: new Date().toDateString(),
-          action: <ToastAction altText="Close">Close</ToastAction>,
-        });
-      })
-      .catch((error) => {
-        // if not successful
-        console.log("Not Successfully!");
-        toast({
-          variant: "destructive",
-          title: "Cannot add to cart. Please sign in first!",
-          description: new Date().toDateString(),
-          action: <ToastAction altText="Close">Close</ToastAction>,
-        });
+    if (errors)
+      return toast({
+        variant: "destructive",
+        title: "Cannot add to cart. Please sign in or verify account first!",
+        description: new Date().toDateString(),
+        action: <ToastAction altText="Close">Close</ToastAction>,
       });
+    toast({
+      variant: "default",
+      title: "Successfully added to cart",
+      description: new Date().toDateString(),
+      action: <ToastAction altText="Close">Close</ToastAction>,
+    });
   };
 
   return (

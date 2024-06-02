@@ -20,10 +20,17 @@ import SomethingWhenWrong from "@/components/ui/sth-went-wrong";
 import CreateReview from "./create-review";
 import CustomerReviews from "./reviews";
 import Rating from "@/components/ui/rating";
+import { useSession } from "next-auth/react";
+import { useToast } from "@/components/ui/use-toast";
+import { AddToCartService } from "@/+core/services/cart/add";
+import { ToastAction } from "@radix-ui/react-toast";
 
 export default function ProductPage() {
   const params = useSearchParams();
   const [refreshReviews, setRefreshReviews] = useState<boolean>(false);
+  const [quantity, setQuantity] = useState<number>(1);
+  const { data: session } = useSession();
+  const { toast } = useToast();
 
   const handleReviewCreated = () => {
     setRefreshReviews(true); // Trigger refresh of reviews
@@ -52,6 +59,40 @@ export default function ProductPage() {
   }
 
   let product: ProductType = data.product;
+
+  const addToCart = async () => {
+    const productId = params.get("id") as string;
+
+    try {
+      const { errors } = await AddToCartService(
+        session?.accessToken as string,
+        productId,
+        quantity
+      );
+
+      if (errors) {
+        throw new Error(errors[0].message);
+      }
+
+      toast({
+        variant: "default",
+        title: "Successfully added to cart",
+        description: new Date().toDateString(),
+        action: <ToastAction altText="Close">Close</ToastAction>,
+      });
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: error.message,
+        description: new Date().toDateString(),
+        action: <ToastAction altText="Close">Close</ToastAction>,
+      });
+    }
+  };
+
+  const handleQuantity = (value: number) => {
+    setQuantity(value);
+  };
 
   return (
     <div className="bg-white rounded-lg py-10 w-full">
@@ -86,10 +127,13 @@ export default function ProductPage() {
             </div>
             <p className="mt-4 space-y-2 text-justify">{product.description}</p>
 
-            <UpdateQuantity />
+            <UpdateQuantity getQuantity={handleQuantity} />
 
             <div className="mt-6">
-              <Button className="w-1/2 py-3 bg-blue-600 text-white rounded-none">
+              <Button
+                onClick={addToCart}
+                className="w-1/2 py-3 bg-blue-600 text-white rounded-none"
+              >
                 ADD TO CART
               </Button>
             </div>
