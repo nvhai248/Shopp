@@ -33,7 +33,12 @@ export class OrdersResolver {
     @Args('createOrderInput') createOrderInput: CreateOrderInput,
     @CurrentUser() user: CurrentUserInterface,
   ) {
-    return this.ordersService.create(createOrderInput, user.id);
+    return this.ordersService.create(
+      createOrderInput,
+      user.id,
+      user.email,
+      user.firstName,
+    );
   }
 
   @Query(() => PagingOrderResponse, { name: 'orders' })

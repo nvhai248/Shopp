@@ -42,6 +42,7 @@ const Checkout = () => {
         Authorization: `Bearer ${session?.accessToken}`,
       },
     },
+    fetchPolicy: "no-cache",
   });
 
   let cartItems: CartItem[] = [];

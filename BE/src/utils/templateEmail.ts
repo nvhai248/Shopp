@@ -84,3 +84,26 @@ export function NewNotificationDetectChangePasswordEmailOption(
     `,
   };
 }
+
+export function ThankYouForOrderMail(
+  to: string,
+  name: string,
+  orderId: string,
+): ISendMailOptions {
+  return {
+    to: to,
+    subject: 'HShopp - Thank you for your order!',
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <div style="text-align: center; padding: 20px 0;">
+          <h1 style="color: #333;">Hello, ${name}!</h1>
+          <h2 style="color: #333;">Thank you for your order with HShopp!</h2>
+          <p style="font-size: 16px; color: #333;">Your order (${orderId}) has been successfully placed.</p>
+          <p style="font-size: 16px; color: #333;">We will process your order shortly.</p>
+          <p style="font-size: 16px; color: #333;">If you have any questions or concerns, feel free to <a href="${CLIENT_SITE_DOMAIN}/contact">contact us</a>.</p>
+          <p style="font-size: 16px; color: #333;">Thank you for choosing HShopp!</p>
+        </div>
+      </div>
+    `,
+  };
+}

@@ -8,6 +8,7 @@ import { SearchProductQuery } from "@/+core/definegql";
 import Spinner from "@/components/ui/spinner";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
+import SomethingWhenWrong from "@/components/ui/sth-went-wrong";
 
 export default function Search() {
   const params = useSearchParams();
@@ -25,8 +26,20 @@ export default function Search() {
 
   let products: ProductType[] = [];
 
+  if (loading) {
+    return (
+      <div className="p-8 w-full min-h-screen">
+        <div className="flex items-center w-full space-x-4">
+          <div className="space-y-2 w-full">
+            <Spinner size={100} />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   if (error) {
-    console.log(error.message);
+    return <SomethingWhenWrong />;
   } else if (data && data.products && data.products.data) {
     products = data.products.data;
   }
@@ -41,33 +54,25 @@ export default function Search() {
         <div className="mx-auto w-32 border-b border-gray-500 mb-5"></div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-x-[5rem] gap-y-10">
-          {loading ? (
-            <div className="flex flex-auto w-full justify-center items-center">
-              <Spinner size={80} />
-            </div>
-          ) : error ? (
-            <p>Error: {error.message}</p>
-          ) : (
-            products.map((product) => (
-              <ProductCard
-                key={product.id}
-                id={product.id}
-                avatar={product.avatar}
-                name={product.name}
-                rate={product.rate || 0}
-                price={product.price}
-                description={product.description}
-                address={product.address}
-                isOnSale={product.isOnSale}
-                priceSale={product.priceSale}
-                categoryId={""}
-                publisherId={""}
-                author={""}
-                images={[]}
-                status={""}
-              />
-            ))
-          )}
+          {products.map((product) => (
+            <ProductCard
+              key={product.id}
+              id={product.id}
+              avatar={product.avatar}
+              name={product.name}
+              rate={product.rate || 0}
+              price={product.price}
+              description={product.description}
+              address={product.address}
+              isOnSale={product.isOnSale}
+              priceSale={product.priceSale}
+              categoryId={""}
+              publisherId={""}
+              author={""}
+              images={[]}
+              status={""}
+            />
+          ))}
         </div>
       </div>
     </div>

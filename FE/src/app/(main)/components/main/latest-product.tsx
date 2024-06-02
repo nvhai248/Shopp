@@ -5,6 +5,8 @@ import { ProductType } from "@/+core/interfaces";
 import ProductCard from "@/components/ui/product-card";
 import Spinner from "@/components/ui/spinner";
 import { useQuery } from "@apollo/client";
+import Link from "next/link";
+import { GrLinkNext } from "react-icons/gr";
 
 export default function LatestProduct() {
   const { data, loading, error } = useQuery(SearchProductQuery, {
@@ -28,6 +30,11 @@ export default function LatestProduct() {
     <div className="mb-10">
       <div className="flex p-4 bg-gradient-to-l my-5 justify-between start-0 border">
         <h1 className="bolder font-bold text-3xl">LATEST BOOK</h1>
+        <Link href={"/search"}>
+          <p className="cursor-pointer hover:text-blue-500 flex flex-row mt-2">
+            <span>View all</span> <GrLinkNext className="font-2xl mt-1 ml-2" />
+          </p>
+        </Link>
       </div>
 
       <div>

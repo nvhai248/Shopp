@@ -19,6 +19,7 @@ export default function CartPage() {
         Authorization: `Bearer ${session?.accessToken}`,
       },
     },
+    fetchPolicy: "no-cache",
   });
 
   const [cartItems, setCartItems] = useState<CartItem[]>([]);

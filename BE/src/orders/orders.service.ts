@@ -7,6 +7,8 @@ import { PagingOrderInput } from './dto/paging-order.input';
 import { PromotionsService } from 'src/promotions/promotions.service';
 import { PROMOTION_TYPE } from 'src/utils/const';
 import { ProductsService } from 'src/products/products.service';
+import { MailerService } from '@nestjs-modules/mailer';
+import { ThankYouForOrderMail } from 'src/utils/templateEmail';
 
 @Injectable()
 export class OrdersService {
@@ -14,9 +16,15 @@ export class OrdersService {
     private readonly databaseService: DatabaseService,
     private readonly promotionService: PromotionsService,
     private readonly productService: ProductsService,
+    private readonly mailerService: MailerService,
   ) {}
 
-  async create(createOrderInput: CreateOrderInput, ownerId: string) {
+  async create(
+    createOrderInput: CreateOrderInput,
+    ownerId: string,
+    email?: any,
+    firstName?: string,
+  ) {
     try {
       const { contactId, promotionId, isPaid, paymentMethod, items } =
         createOrderInput;
@@ -68,6 +76,10 @@ export class OrdersService {
             },
           });
         }
+
+        this.mailerService
+          .sendMail(ThankYouForOrderMail(email, firstName, order.id))
+          .catch((err) => console.log(err));
 
         return order;
       });

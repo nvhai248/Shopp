@@ -119,7 +119,7 @@ export default function ProductCard({
           src="https://cdn-icons-png.flaticon.com/512/1374/1374072.png"
           alt={name || description}
           className="w-10 rotate-45 object-cover absolute"
-        />
+      />
       )}
 
       <CardContent className="mt-5">
