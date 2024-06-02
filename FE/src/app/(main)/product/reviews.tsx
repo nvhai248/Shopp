@@ -227,7 +227,7 @@ export default function CustomerReviews({
               </div>
             </div>
           </div>
-          <div className="space-y-6">
+          <div className="space-y-6  max-h-screen overflow-y-auto">
             {reviewPagingData ? (
               reviewPagingData.data?.map((review) => (
                 <div

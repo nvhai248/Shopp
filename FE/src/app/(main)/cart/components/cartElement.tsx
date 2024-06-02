@@ -1,6 +1,7 @@
 import { ProductInCart } from "@/+core/interfaces";
 import UpdateQuantity from "./changeQuantity";
 import DeleteButton from "./deleteBtn";
+import Link from "next/link";
 
 interface CartElementProps {
   product: ProductInCart;
@@ -27,7 +28,12 @@ const CartElement: React.FC<CartElementProps> = ({
         </div>
       </div>
       <div className="lg:w-1/2 w-full mb-4 lg:mb-0">
-        <p className="ml-4">{product.name}</p>
+        <Link
+          href={`/product?id=${product.id}`}
+          className="hover:text-blue-500"
+        >
+          <p className="ml-4">{product.name}</p>
+        </Link>
         <div className="flex space-x-2">
           <DeleteButton
             refetchCart={refetchCart}
