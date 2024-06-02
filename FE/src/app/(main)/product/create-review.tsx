@@ -28,9 +28,13 @@ const formSchema = z.object({
 
 interface CreateReviewProps {
   productId: string;
+  onReviewCreated: () => void;
 }
 
-export default function CreateReview({ productId }: CreateReviewProps) {
+export default function CreateReview({
+  productId,
+  onReviewCreated,
+}: CreateReviewProps) {
   const { data: session } = useSession();
   const { toast } = useToast();
 
@@ -125,6 +129,8 @@ export default function CreateReview({ productId }: CreateReviewProps) {
         description: new Date().toDateString(),
         action: <ToastAction altText="Close">Close</ToastAction>,
       });
+
+      onReviewCreated();
     } catch (error: any) {
       toast({
         variant: "destructive",

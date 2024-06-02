@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import {
   FaGift,
   FaShieldAlt,
@@ -23,6 +23,11 @@ import Rating from "@/components/ui/rating";
 
 export default function ProductPage() {
   const params = useSearchParams();
+  const [refreshReviews, setRefreshReviews] = useState<boolean>(false);
+
+  const handleReviewCreated = () => {
+    setRefreshReviews(true); // Trigger refresh of reviews
+  };
 
   const { data, loading, error } = useQuery(GetProductQuery, {
     variables: {
@@ -144,10 +149,10 @@ export default function ProductPage() {
 
       <div className="flex flex-col mt-10 lg:flex-row gap-4 justify-between">
         <div className="lg:w-2/3">
-          <CustomerReviews rate={product.rate} productId={product.id} />
+          <CustomerReviews rate={product.rate} productId={product.id} refreshReviews={refreshReviews} />
         </div>
         <div className="lg:w-1/3">
-          <CreateReview productId={product.id} />
+          <CreateReview productId={product.id} onReviewCreated={handleReviewCreated} />
         </div>
       </div>
     </div>

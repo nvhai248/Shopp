@@ -6,4 +6,5 @@ export interface CurrentUserInterface {
   avatar: string;
   secretOtp: string;
   email: string;
+  token: string;
 }
