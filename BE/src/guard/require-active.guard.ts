@@ -11,8 +11,10 @@ export class RequireActiveGuard implements CanActivate {
   ): boolean | Promise<boolean> | Observable<boolean> {
     const ctx = GqlExecutionContext.create(context);
 
-    if (ctx.getContext().req.user.status !== USER_STATUS.ACTIVE) {
+    if (ctx.getContext().req.user.status === USER_STATUS.UNVERIFIED) {
       throw new MyForbiddenException('Please verify that account');
+    } else if (ctx.getContext().req.user.status === USER_STATUS.BANNED) {
+      throw new MyForbiddenException('This account has been banned');
     }
 
     return true;

@@ -244,6 +244,7 @@ model Order {
   paymentMethod PaymentMethod  @default(COD)
   totalPrice    Float
   reducePrice   Float          @default(0)
+  priceToPay    Float          @default(0)
   status        StatusOrder    @default(PENDING)
   reason        String?
   createdAt     DateTime       @default(now())

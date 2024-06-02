@@ -44,7 +44,7 @@ export class OrdersService {
       // Calculate reduce price
       const promotion = await this.promotionService.findOne(promotionId);
 
-      if (promotion) {
+      if (promotionId && promotion) {
         if (promotion.type === PROMOTION_TYPE.VALUE)
           reducePrice = promotion.discountValue;
         else if (promotion.type === PROMOTION_TYPE.PERCENT) {
@@ -62,6 +62,7 @@ export class OrdersService {
             reducePrice,
             ownerId: ownerId,
             paymentMethod,
+            priceToPay: totalPrice - reducePrice,
           },
         });
 

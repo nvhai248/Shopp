@@ -17,8 +17,8 @@ export class Order {
   @Field()
   contactId: string;
 
-  @Field()
-  promotionId: string;
+  @Field({ nullable: true })
+  promotionId?: string;
 
   @Field()
   ownerId: string;
@@ -30,6 +30,9 @@ export class Order {
   totalPrice: number;
 
   @Field(() => Float)
+  priceToPay: number;
+
+  @Field(() => Float, { defaultValue: 0 })
   reducePrice: number;
 
   @Field()

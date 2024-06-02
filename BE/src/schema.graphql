@@ -150,10 +150,11 @@ type OrderItem {
 type Order {
   id: ID!
   contactId: String!
-  promotionId: String!
+  promotionId: String
   ownerId: String!
   isPaid: Boolean!
   totalPrice: Float!
+  priceToPay: Float!
   reducePrice: Float!
   paymentMethod: String!
   items: [OrderItem!]!
