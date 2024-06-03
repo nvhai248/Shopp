@@ -1,5 +1,6 @@
 import { Controller, Get, Render } from '@nestjs/common';
 import { AboutsService } from './abouts.service';
+import { SITE_DOMAIN } from 'src/utils/const';
 
 @Controller('/')
 export class AboutsController {
@@ -11,6 +12,7 @@ export class AboutsController {
     const abouts = await this.aboutService.findAll();
 
     return {
+      backend_base_url: SITE_DOMAIN,
       abouts: abouts,
     };
   }

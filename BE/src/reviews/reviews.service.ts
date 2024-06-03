@@ -69,6 +69,7 @@ export class ReviewsService {
     conditions: PagingReviewInput,
     ownerId: string = undefined,
     productId?: string,
+    isActive: boolean = false,
   ) {
     try {
       const offset =
@@ -87,6 +88,10 @@ export class ReviewsService {
 
       if (conditions.rate) {
         where = { ...where, rate: conditions.rate };
+      }
+
+      if (isActive) {
+        where = { ...where, status: true };
       }
 
       const orders = await this.databaseService.review.findMany({

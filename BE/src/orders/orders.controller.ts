@@ -1,6 +1,7 @@
 import { Controller, Get, Render } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { ContactsService } from 'src/contacts/contacts.service';
+import { SITE_DOMAIN } from 'src/utils/const';
 
 @Controller('/')
 export class OrdersController {
@@ -33,6 +34,7 @@ export class OrdersController {
     }
 
     return {
+      backend_base_url: SITE_DOMAIN,
       orders: orders,
     };
   }

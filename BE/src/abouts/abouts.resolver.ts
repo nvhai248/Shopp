@@ -27,7 +27,7 @@ export class AboutsResolver {
     return this.aboutsService.findOne(id);
   }
 
-  @Mutation(() => About)
+  @Mutation(() => Boolean)
   @UseGuards(JwtAdminAuthGuard)
   updateAbout(@Args('updateAboutInput') updateAboutInput: UpdateAboutInput) {
     return this.aboutsService.update(updateAboutInput.id, updateAboutInput);

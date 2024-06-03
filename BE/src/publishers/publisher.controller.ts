@@ -1,5 +1,6 @@
 import { Controller, Get, Render } from '@nestjs/common';
 import { PublishersService } from './publishers.service';
+import { SITE_DOMAIN } from 'src/utils/const';
 
 @Controller('/publisher')
 export class PublisherController {
@@ -10,6 +11,9 @@ export class PublisherController {
   async publishers() {
     const publisher = await this.publisherService.findMany();
 
-    return { publisher: publisher };
+    return {
+      backend_base_url: SITE_DOMAIN,
+      publisher: publisher,
+    };
   }
 }

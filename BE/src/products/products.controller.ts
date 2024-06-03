@@ -1,7 +1,7 @@
 import { Controller, Get, Query, Render } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CategoriesService } from 'src/categories/categories.service';
-import { CATEGORY_TYPE } from 'src/utils/const';
+import { CATEGORY_TYPE, SITE_DOMAIN } from 'src/utils/const';
 import { PublishersService } from 'src/publishers/publishers.service';
 
 @Controller('/')
@@ -39,6 +39,7 @@ export class ProductController {
     });
 
     return {
+      backend_base_url: SITE_DOMAIN,
       categories: result,
       products: products.data,
     };
@@ -55,6 +56,7 @@ export class ProductController {
     const publishers = await this.publisherService.findMany();
 
     return {
+      backend_base_url: SITE_DOMAIN,
       categories: categories,
       publishers: publishers,
     };
@@ -73,6 +75,7 @@ export class ProductController {
     const product = await this.productService.findOne(id);
 
     return {
+      backend_base_url: SITE_DOMAIN,
       categories: categories,
       publishers: publishers,
       product: product,
@@ -90,6 +93,7 @@ export class ProductController {
     });
 
     return {
+      backend_base_url: SITE_DOMAIN,
       products: products.data,
     };
   }

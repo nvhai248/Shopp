@@ -7,6 +7,10 @@
   <div class='w-full'>
     <div class='flex flex-row justify-between'>
       <h3 class='text-2xl font-medium text-gray-700'>About</h3>
+      <a
+        onclick='createAbout()'
+        class='px-6 py-3 font-medium tracking-wide text-white bg-blue-600 rounded-md hover:bg-blue-500 focus:outline-none hover:cursor-pointer'
+      >New About</a>
     </div>
 
     <div class='flex flex-col mt-8 h-full w-full'>
@@ -54,7 +58,7 @@
                   >
                     <div class='flex items-center'>
                       <div class='flex-shrink-0 w-[7rem] h-auto'>
-                        <img src='{{image}}' alt='order-image-link' />
+                        <img src='{{image}}' alt='about-image-link' />
                       </div>
 
                       <div class='ml-4'>
@@ -99,10 +103,13 @@
                   >
                     <div class='flex flex-col'>
                       <a
+                        onclick="editAbout('{{id}}', '{{title}}', '{{description}}', '{{type}}', '{{image}}')"
+                        class='text-blue-600 hover:text-blue-900 hover:cursor-pointer ml-4'
+                      >Edit</a>
+                      <a
                         onclick="deleteAbout('{{id}}')"
                         class='text-red-600 hover:text-red-900 hover:cursor-pointer ml-4'
                       >Delete</a>
-
                     </div>
 
                   </td>
@@ -115,3 +122,8 @@
     </div>
   </div>
 </div>
+
+<script src='/js/upload.js'></script>
+<script src='/js/about/create.js'></script>
+<script src='/js/about/update.js'></script>
+<script src='/js/about/delete.js'></script>

@@ -1,6 +1,7 @@
 import { Controller, Get, Query, Render } from '@nestjs/common';
 import { PromotionsService } from './promotions.service';
 import { ProductsService } from 'src/products/products.service';
+import { SITE_DOMAIN } from 'src/utils/const';
 
 @Controller('/')
 export class PromotionController {
@@ -15,13 +16,18 @@ export class PromotionController {
     const promotions = await this.promotionService.findAll();
 
     return {
+      backend_base_url: SITE_DOMAIN,
       promotions: promotions,
     };
   }
 
   @Get('/create-promotion')
   @Render('pages/promotion/create-promotion')
-  createPromotion() {}
+  createPromotion() {
+    return {
+      backend_base_url: SITE_DOMAIN,
+    };
+  }
 
   @Get('/update-promotion')
   @Render('pages/promotion/update-promotion')
@@ -37,6 +43,7 @@ export class PromotionController {
       ...promotion,
       startDate: formattedStartDate,
       endDate: formattedEndDate,
+      backend_base_url: SITE_DOMAIN,
     };
   }
 
@@ -53,6 +60,7 @@ export class PromotionController {
     }
 
     return {
+      backend_base_url: SITE_DOMAIN,
       id: id,
       products: products,
     };

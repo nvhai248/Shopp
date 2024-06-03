@@ -56,6 +56,7 @@ export class ReviewsResolver {
       pagingReviewInput,
       undefined,
       productId,
+      true,
     );
   }
 

@@ -93,6 +93,8 @@ export const JWT_CONST = {
   REFRESH_EXPIRED_GENERATION: 60 * 60 * 24 * 30,
 };
 
+export const SITE_DOMAIN = process.env.SITE_DOMAIN;
+
 export enum REVIEW_SORT {
   OLDEST = 'OLDEST',
   LATEST = 'LATEST',

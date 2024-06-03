@@ -5,9 +5,16 @@
     <script src='https://cdn.tailwindcss.com'></script>
     <title>Admin HShopp</title>
   </head>
-  <body>
 
-    <script src="js/const.js"></script>
+  <script>
+      const BE_BASE_URL = "{{backend_base_url}}"
+      const HOST = `${BE_BASE_URL}/graphql`;
+      const HOST_UPLOAD = `${BE_BASE_URL}/upload`;
+
+      console.log(BE_BASE_URL)
+  </script>
+
+  <body>
 
     {{>notification}}
     <div class='flex h-screen bg-gray-200 font-roboto'>

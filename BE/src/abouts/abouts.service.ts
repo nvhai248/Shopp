@@ -18,7 +18,7 @@ export class AboutsService {
 
   findAll() {
     try {
-      return this.databaseService.about.findMany();
+      return this.databaseService.about.findMany({ where: { status: true } });
     } catch (error) {
       return new MyDBException(error.message);
     }

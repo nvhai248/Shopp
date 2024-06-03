@@ -310,7 +310,7 @@ type Mutation {
   createReview(createReviewInput: CreateReviewInput!): Review!
   updateStatusReview(updateStatusReviewInput: UpdateReviewInput!): Boolean!
   createAbout(createAboutInput: CreateAboutInput!): About!
-  updateAbout(updateAboutInput: UpdateAboutInput!): About!
+  updateAbout(updateAboutInput: UpdateAboutInput!): Boolean!
 }
 
 input CreateProductInput {
@@ -508,7 +508,7 @@ input UpdateReviewInput {
 input CreateAboutInput {
   title: String!
   description: String!
-  image: String!
+  image: String
   type: String!
 }
 

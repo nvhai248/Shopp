@@ -10,7 +10,6 @@ import { FormatError } from './utils/handleException';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MailerModule } from '@nestjs-modules/mailer';
-import { AppController } from './app.controller';
 import { PublishersModule } from './publishers/publishers.module';
 import { CategoriesModule } from './categories/categories.module';
 import { FileUploadModule } from './upload/upload.module';
@@ -64,7 +63,6 @@ import { AboutsModule } from './abouts/abouts.module';
     ReviewsModule,
     AboutsModule,
   ],
-  controllers: [AppController],
   providers: [],
 })
 export class AppModule {}

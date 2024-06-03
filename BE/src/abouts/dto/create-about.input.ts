@@ -10,7 +10,7 @@ export class CreateAboutInput {
   @Field()
   description: string;
 
-  @Field()
+  @Field({ nullable: true })
   image: string;
 
   @Field()
