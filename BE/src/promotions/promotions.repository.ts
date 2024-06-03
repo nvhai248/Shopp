@@ -47,7 +47,15 @@ export class PromotionRepository {
     }
   }
 
-  async findMany(isAvailablePromotions: boolean | undefined) {
+  count() {
+    return this.databaseService.user.count();
+  }
+
+  async findMany(
+    isAvailablePromotions: boolean | undefined,
+    limit?: number,
+    offset?: number,
+  ) {
     let where = {};
     where = { status: true };
 
@@ -59,6 +67,8 @@ export class PromotionRepository {
     }
 
     return await this.databaseService.promotion.findMany({
+      take: limit,
+      skip: offset,
       where: where,
       orderBy: { updatedAt: 'desc' },
     });

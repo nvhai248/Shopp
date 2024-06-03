@@ -11,8 +11,13 @@ export class PublishersService {
     return this.publisherRepository.create(createdBy, createPublisherInput);
   }
 
-  findMany() {
-    return this.publisherRepository.findMany();
+  count() {
+    return this.publisherRepository.count();
+  }
+
+  findMany(limit?: number, page?: number) {
+    const offset = limit && page ? (page - 1) * limit : 0;
+    return this.publisherRepository.findMany(limit, offset);
   }
 
   findOne(id: string) {

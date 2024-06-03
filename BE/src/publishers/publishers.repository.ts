@@ -17,8 +17,14 @@ export class PublishersRepository {
     });
   }
 
-  findMany() {
+  count() {
+    return this.databaseService.user.count();
+  }
+
+  findMany(limit?: number, offset?: number) {
     return this.databaseService.publisher.findMany({
+      take: limit,
+      skip: offset,
       where: { status: true },
     });
   }

@@ -1,4 +1,11 @@
-import { Controller, Get, Query, Render } from '@nestjs/common';
+import {
+  Controller,
+  DefaultValuePipe,
+  Get,
+  ParseIntPipe,
+  Query,
+  Render,
+} from '@nestjs/common';
 import { PromotionsService } from './promotions.service';
 import { ProductsService } from 'src/products/products.service';
 import { SITE_DOMAIN } from 'src/utils/const';
@@ -12,12 +19,24 @@ export class PromotionController {
 
   @Get('/promotion')
   @Render('pages/promotion/promotion')
-  async promotion() {
-    const promotions = await this.promotionService.findAll();
+  async promotion(
+    @Query('limit', new DefaultValuePipe(5), ParseIntPipe) limit: number,
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
+  ) {
+    const promotions = await this.promotionService.findAll(
+      undefined,
+      limit,
+      page,
+    );
+
+    const total = await this.promotionService.count();
 
     return {
       backend_base_url: SITE_DOMAIN,
       promotions: promotions,
+      total: total,
+      limit: limit,
+      page: page,
     };
   }
 

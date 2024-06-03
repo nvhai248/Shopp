@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { number } from 'joi';
 import { DatabaseService } from 'src/database/database.service';
 import { MyBadRequestException, MyDBException } from 'src/utils/error';
 
@@ -6,8 +7,14 @@ import { MyBadRequestException, MyDBException } from 'src/utils/error';
 export class UserRepository {
   constructor(private readonly databaseService: DatabaseService) {}
 
-  async find() {
+  count() {
+    return this.databaseService.user.count();
+  }
+
+  async find(limit?: number, offset?: number) {
     return await this.databaseService.user.findMany({
+      take: limit,
+      skip: offset,
       orderBy: { updatedAt: 'desc' },
     });
   }

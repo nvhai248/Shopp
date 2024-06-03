@@ -1,4 +1,11 @@
-import { Controller, Get, Render } from '@nestjs/common';
+import {
+  Controller,
+  DefaultValuePipe,
+  Get,
+  ParseIntPipe,
+  Query,
+  Render,
+} from '@nestjs/common';
 import { ReviewsService } from './reviews.service';
 import { ProductsService } from 'src/products/products.service';
 import { SITE_DOMAIN } from 'src/utils/const';
@@ -12,12 +19,15 @@ export class ReviewsController {
 
   @Get('/review')
   @Render('pages/review/review')
-  async order() {
+  async order(
+    @Query('limit', new DefaultValuePipe(5), ParseIntPipe) limit: number,
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
+  ) {
     let reviews = [];
 
     const temp = await this.reviewsService.findMany({
-      limit: undefined,
-      page: undefined,
+      limit: limit,
+      page: page,
     });
 
     for (let item of temp.data) {
@@ -32,6 +42,9 @@ export class ReviewsController {
     return {
       backend_base_url: SITE_DOMAIN,
       reviews: reviews,
+      total: temp.total,
+      limit: limit,
+      page: page,
     };
   }
 }

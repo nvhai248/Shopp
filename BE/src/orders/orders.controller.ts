@@ -1,4 +1,11 @@
-import { Controller, Get, Render } from '@nestjs/common';
+import {
+  Controller,
+  DefaultValuePipe,
+  Get,
+  ParseIntPipe,
+  Query,
+  Render,
+} from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { ContactsService } from 'src/contacts/contacts.service';
 import { SITE_DOMAIN } from 'src/utils/const';
@@ -12,12 +19,15 @@ export class OrdersController {
 
   @Get('/order')
   @Render('pages/order/order')
-  async order() {
+  async order(
+    @Query('limit', new DefaultValuePipe(5), ParseIntPipe) limit: number,
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
+  ) {
     let orders = [];
 
     const temp = await this.ordersService.findMany({
-      limit: undefined,
-      page: undefined,
+      limit: limit,
+      page: page,
     });
 
     for (let item of temp.data) {
@@ -36,6 +46,9 @@ export class OrdersController {
     return {
       backend_base_url: SITE_DOMAIN,
       orders: orders,
+      total: temp.total,
+      limit: limit,
+      page: page,
     };
   }
 }

@@ -1,4 +1,11 @@
-import { Controller, Get, Query, Render } from '@nestjs/common';
+import {
+  Controller,
+  DefaultValuePipe,
+  Get,
+  ParseIntPipe,
+  Query,
+  Render,
+} from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CategoriesService } from 'src/categories/categories.service';
 import { CATEGORY_TYPE, SITE_DOMAIN } from 'src/utils/const';
@@ -14,7 +21,10 @@ export class ProductController {
 
   @Get('/category-product')
   @Render('pages/product/category-product')
-  async categoryProduct() {
+  async categoryProduct(
+    @Query('limit', new DefaultValuePipe(5), ParseIntPipe) limit: number,
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
+  ) {
     const parents = await this.categoryService.findMany(
       CATEGORY_TYPE.PARENT,
       null,
@@ -31,9 +41,10 @@ export class ProductController {
         childs: childs,
       });
     }
+
     const products = await this.productService.returnSearchProduct({
-      page: 0,
-      limit: 10,
+      page: page,
+      limit: limit,
       keyword: null,
       isOnSale: undefined,
     });
@@ -42,6 +53,9 @@ export class ProductController {
       backend_base_url: SITE_DOMAIN,
       categories: result,
       products: products.data,
+      total: products.total,
+      page: page,
+      limit: limit,
     };
   }
 
@@ -84,17 +98,23 @@ export class ProductController {
 
   @Get('/on-sale')
   @Render('pages/product/on-sale')
-  async onSale() {
+  async onSale(
+    @Query('limit', new DefaultValuePipe(5), ParseIntPipe) limit: number,
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
+  ) {
     const products = await this.productService.returnSearchProduct({
       isOnSale: true,
-      page: 1,
-      limit: 10,
+      page: page,
+      limit: limit,
       keyword: null,
     });
 
     return {
       backend_base_url: SITE_DOMAIN,
       products: products.data,
+      total: products.total,
+      page: page,
+      limit: limit,
     };
   }
 }

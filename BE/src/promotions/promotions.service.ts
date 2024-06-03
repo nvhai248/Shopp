@@ -18,8 +18,21 @@ export class PromotionsService {
     return this.promotionRepository.create(createPromotionInput);
   }
 
-  findAll(isAvailablePromotions?: boolean | undefined) {
-    return this.promotionRepository.findMany(isAvailablePromotions);
+  count() {
+    return this.promotionRepository.count();
+  }
+
+  findAll(
+    isAvailablePromotions?: boolean | undefined,
+    limit?: number,
+    page?: number,
+  ) {
+    const offset = limit && page ? (page - 1) * limit : 0;
+    return this.promotionRepository.findMany(
+      isAvailablePromotions,
+      limit,
+      offset,
+    );
   }
 
   findOne(id: string) {

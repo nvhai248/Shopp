@@ -2,45 +2,62 @@ version: '3.7'
 
 services:
   postgres:
+    container_name: hshopp_postgres
     image: postgres
     restart: always
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: aA@01010001
-      POSTGRES_DB: hshopp
-      POSTGRES_HOST_AUTH_METHOD: trust
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    networks:
+      - backend_hshopp
     ports:
-      - '5432:5432'
+      - 5432:5432
 
   redis:
+    container_name: hshopp_redis
     image: redis
+    networks:
+      - backend_hshopp
     ports:
-      - '6379:6379'
+      - 6379:6379
 
   backend:
+    container_name: hshopp_backend
     build:
       context: .
       dockerfile: Dockerfile
     ports:
-      - '8080:8080'
+      - 8080:8080
     environment:
-      NODE_ENV: local
-      DATABASE_URL: postgresql://postgres:aA@01010001@postgres:5432/hshopp
-      SECRET_ACCESS_TOKEN_KEY: 'secret_access_token_shopp'
-      SECRET_ACCESS_REFRESH_KEY: 'secret_refresh_token_shopp'
-      MAILER_USER: 'hshopp.mailer@gmail.com'
-      MAILER_PASSWORD: 'anzt jiqo rlxd razr'
-      CLIENT_SITE_DOMAIN: 'http://localhost:3000'
-      SITE_PORT: 8080
-      REDIS_HOST: redis
-      REDIS_PORT: 6379
-      GOOGLE_CLIENT_ID: ''
-      GOOGLE_CLIENT_SECRET: ''
-      AWS_ACCESS_KEY_ID: ''
-      AWS_SECRET_ACCESS_KEY: ''
-      AWS_BUCKET_NAME: 'mystoreimg'
-      AWS_REGION: 'ap-southeast-1'
-      CRYPTO_SECRET: 'mysecretcrypto'
+      DATABASE_URL: ${DATABASE_URL}
+      SECRET_ACCESS_TOKEN_KEY: ${SECRET_ACCESS_TOKEN_KEY}
+      SECRET_ACCESS_REFRESH_KEY: ${SECRET_ACCESS_REFRESH_KEY}
+      MAILER_USER: ${MAILER_USER}
+      MAILER_PASSWORD: ${MAILER_PASSWORD}
+      CLIENT_SITE_DOMAIN: ${CLIENT_SITE_DOMAIN}
+      SITE_DOMAIN: ${SITE_DOMAIN}
+      SITE_PORT: ${SITE_PORT}
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_PORT: ${REDIS_PORT}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      AWS_BUCKET_NAME: ${AWS_BUCKET_NAME}
+      AWS_REGION: ${AWS_REGION}
+      CRYPTO_SECRET: ${CRYPTO_SECRET}
+    networks:
+      - backend_hshopp
     depends_on:
       - postgres
       - redis
+    entrypoint: >
+      /usr/local/bin/wait-for-it.sh
+      postgres:5432
+      --
+      sh -c "npx prisma db push && npx prisma generate && npm run start:prod"
+
+networks:
+  backend_hshopp:
+    driver: bridge

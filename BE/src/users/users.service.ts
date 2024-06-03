@@ -28,8 +28,14 @@ export class UsersService {
     private readonly cacheService: CacheService,
   ) {}
 
-  findAll() {
-    return this.userRepository.find();
+  count() {
+    return this.userRepository.count();
+  }
+
+  findAll(limit?: number, page?: number) {
+    const offset = limit && page ? (page - 1) * limit : 0;
+
+    return this.userRepository.find(limit, offset);
   }
 
   async findOne(id: string) {

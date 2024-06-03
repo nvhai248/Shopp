@@ -7,6 +7,8 @@
   </head>
 
   <script>
+      const totalItems = Number({{total}}); 
+
       const BE_BASE_URL = "{{backend_base_url}}"
       const HOST = `${BE_BASE_URL}/graphql`;
       const HOST_UPLOAD = `${BE_BASE_URL}/upload`;
@@ -34,5 +36,6 @@
     {{>modal}}
 
      <script src="js/route.js"></script>
+     <script src="js/paging.js"></script>
   </body>
 </html>

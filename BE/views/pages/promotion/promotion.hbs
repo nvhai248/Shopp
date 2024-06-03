@@ -143,6 +143,28 @@
 
             </tbody>
           </table>
+
+          <div class='flex justify-between items-center mt-5 mb-4 px-5'>
+            <div>
+              <label for='limit' class='mr-2'>Items per page:</label>
+              <select id='limit' class='border rounded p-2'>
+                <option value='5'>5</option>
+                <option value='10'>10</option>
+                <option value='20'>20</option>
+              </select>
+            </div>
+            <div>
+              <button
+                id='prevPage'
+                class='bg-blue-500 text-white px-4 py-2 rounded mr-2'
+              >Previous</button>
+              <span id='pageInfo' class='mr-2'></span>
+              <button
+                id='nextPage'
+                class='bg-blue-500 text-white px-4 py-2 rounded'
+              >Next</button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
