@@ -49,9 +49,11 @@ const DynamicLoginBtn = () => {
           </div>
           <DropdownMenuSeparator />
           <div>
-            <Button className="w-full h-full rounded-none border-none text-black bg-white hover:text-white">
-              Purchase Order
-            </Button>
+            <Link href="/order">
+              <Button className="w-full h-full rounded-none border-none text-black bg-white hover:text-white">
+                Purchase Order
+              </Button>
+            </Link>
           </div>
           <DropdownMenuSeparator />
           <div>

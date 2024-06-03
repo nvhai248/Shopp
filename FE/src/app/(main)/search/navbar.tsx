@@ -3,7 +3,6 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import React, { useState, useEffect } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
-import { useSession } from "next-auth/react";
 import { useQuery } from "@apollo/client";
 import { useRouter } from "next/navigation";
 import { GetCategoryQuery, GetPublisherQuery } from "@/+core/definegql";
@@ -17,59 +16,69 @@ interface ExpandedCategories {
 export function NavFilter() {
   const [expandedCategories, setExpandedCategories] =
     useState<ExpandedCategories>({});
-  const [rating, setRating] = useState<string>("");
-  const [publishers, setPublishers] = useState<string[]>([]);
-  const [categories, setCategories] = useState<string[]>([]);
-  const [onSale, setOnSale] = useState<boolean>(false);
-  const [minPrice, setMinPrice] = useState<string>("");
-  const [maxPrice, setMaxPrice] = useState<string>("");
-  const { data: session } = useSession();
+  const [rating, setRating] = useState<string | undefined>(undefined);
+  const [publishers, setPublishers] = useState<string[] | undefined>(undefined);
+  const [categories, setCategories] = useState<string[] | undefined>(undefined);
+  const [onSale, setOnSale] = useState<boolean | undefined>(undefined);
+  const [minPrice, setMinPrice] = useState<string | undefined>(undefined);
+  const [maxPrice, setMaxPrice] = useState<string | undefined>(undefined);
   const router = useRouter();
 
-  const cData = useQuery(GetCategoryQuery);
-  const pData = useQuery(GetPublisherQuery);
+  const { data: cData } = useQuery(GetCategoryQuery);
+  const { data: pData } = useQuery(GetPublisherQuery);
 
-  const categoryList: Category[] = cData?.data?.categories || [];
-  const publisherList: Publisher[] = pData?.data?.publishers || [];
+  const categoryList: Category[] = cData?.categories || [];
+  const publisherList: Publisher[] = pData?.publishers || [];
+
+  const queryParams = () => {
+    return {
+      isOnSale: onSale,
+      rating,
+      minPrice,
+      maxPrice,
+      publisherIds: publishers && publishers.join(","),
+      categoryIds: categories && categories.join(","),
+    };
+  };
+
+  const convertParamsToQueryString = (params: any) => {
+    return Object.keys(params)
+      .filter(
+        (key) =>
+          params[key] !== null &&
+          params[key] !== undefined &&
+          params[key] !== ""
+      )
+      .map(
+        (key) => encodeURIComponent(key) + "=" + encodeURIComponent(params[key])
+      )
+      .join("&");
+  };
+
+  const updateQueryString = () => {
+    const queryString = convertParamsToQueryString(queryParams());
+    //console.log(queryString);
+    router.push(`/search?${queryString}`);
+  };
 
   /* useEffect(() => {
-    const params = new URLSearchParams();
-
-    if (onSale) {
-      params.append("isOnSale", "true");
-    }
-
-    if (rating) {
-      params.append("rate", rating);
-    }
-
-    if (minPrice) {
-      params.append("minPrice", minPrice);
-    }
-
-    if (maxPrice) {
-      params.append("maxPrice", maxPrice);
-    }
-
-    if (publishers.length > 0) {
-      params.append("publisherIds", publishers.join(","));
-    }
-
-    if (categories.length > 0) {
-      params.append("categoryIds", categories.join(","));
-    }
-
-    router.replace(`?${params.toString()}`);
-  }, [onSale, rating, minPrice, maxPrice, publishers, categories, router]); */
+    updateQueryString();
+  }, [queryParams, router]); */
 
   const toggleChildCategory = (childId: string) => {
     setCategories((prevCategories) => {
-      if (prevCategories.includes(childId)) {
-        return prevCategories.filter((id) => id !== childId);
+      if (prevCategories) {
+        if (prevCategories.includes(childId)) {
+          return prevCategories.filter((id) => id !== childId);
+        } else {
+          return [...prevCategories, childId];
+        }
       } else {
-        return [...prevCategories, childId];
+        return [childId];
       }
     });
+
+    updateQueryString();
   };
 
   const toggleParentCategory = (categoryId: string) => {
@@ -81,28 +90,42 @@ export function NavFilter() {
 
   const handlePublisherChange = (pubId: string) => {
     setPublishers((prevPublishers) => {
-      if (prevPublishers.includes(pubId)) {
-        return prevPublishers.filter((id) => id !== pubId);
+      if (prevPublishers) {
+        if (prevPublishers.includes(pubId)) {
+          return prevPublishers.filter((id) => id !== pubId);
+        } else {
+          return [...prevPublishers, pubId];
+        }
       } else {
-        return [...prevPublishers, pubId];
+        return [pubId];
       }
     });
+
+    updateQueryString();
   };
 
   const handleRatingChange = (newRating: string) => {
     setRating(newRating);
+
+    updateQueryString();
   };
 
   const handleOnSaleChange = () => {
     setOnSale((prevOnSale) => !prevOnSale);
+
+    updateQueryString();
   };
 
   const handleMinPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setMinPrice(e.target.value);
+
+    updateQueryString();
   };
 
   const handleMaxPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setMaxPrice(e.target.value);
+
+    updateQueryString();
   };
 
   return (
@@ -133,7 +156,7 @@ export function NavFilter() {
                       <div className="flex items-center space-x-2">
                         <Checkbox
                           id={child.id}
-                          checked={categories.includes(child.id)}
+                          checked={categories?.includes(child.id)}
                           onCheckedChange={() => toggleChildCategory(child.id)}
                         />
                         <label htmlFor={child.id} className="leading-none">
@@ -218,7 +241,7 @@ export function NavFilter() {
               <div className="flex items-center space-x-2">
                 <Checkbox
                   id={publisher.id}
-                  checked={publishers.includes(publisher.id)}
+                  checked={publishers?.includes(publisher.id)}
                   onCheckedChange={() => handlePublisherChange(publisher.id)}
                 />
                 <label htmlFor={publisher.id} className="leading-none">

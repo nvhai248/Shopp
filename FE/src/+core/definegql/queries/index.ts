@@ -7,3 +7,4 @@ export * from "./product";
 export * from "./review";
 export * from "./publisher";
 export * from "./category";
+export * from "./order";

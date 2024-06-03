@@ -1,43 +1,82 @@
 "use client";
 
-import ProductCard from "@/components/ui/product-card";
-import { NavFilter } from "./navbar";
-import { ProductType } from "@/+core/interfaces";
 import { useQuery } from "@apollo/client";
 import { SearchProductQuery } from "@/+core/definegql";
-import Spinner from "@/components/ui/spinner";
 import { useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
+import ProductCard from "@/components/ui/product-card";
+import Spinner from "@/components/ui/spinner";
 import SomethingWhenWrong from "@/components/ui/sth-went-wrong";
+import { ProductType, SearchConditionInput } from "@/+core/interfaces";
+import { NavFilter } from "./navbar";
 
-export default function Search() {
+function useSearchFiltersFromURL() {
   const params = useSearchParams();
-  const [keyword, setKeyword] = useState<string>(params.get("keyword") || "");
+  const [filters, setFilters] = useState({
+    keyword: params.get("keyword") || undefined,
+    page: parseInt(params.get("page") || "1"),
+    categoryIds: params.get("categoryIds")?.split(",") || undefined,
+    limit: parseInt(params.get("limit") || "10"),
+    isOnSale: params.get("isOnSale") === "true" || undefined,
+    maxPrice: params.get("maxPrice")
+      ? parseFloat(params.get("maxPrice")!)
+      : undefined,
+    minPrice: params.get("minPrice")
+      ? parseFloat(params.get("minPrice")!)
+      : undefined,
+    publishersIds: params.get("publisherIds")?.split(",") || undefined,
+    rate: params.get("rate") ? parseFloat(params.get("rate")!) : undefined,
+  });
 
   useEffect(() => {
-    setKeyword(params.get("keyword") || "");
+    const temp = {
+      keyword: params.get("keyword") || undefined,
+      page: parseInt(params.get("page") || "1"),
+      categoryIds: params.get("categoryIds")?.split(",") || undefined,
+      limit: parseInt(params.get("limit") || "10"),
+      isOnSale: params.get("isOnSale") === "true" || undefined,
+      maxPrice: params.get("maxPrice")
+        ? parseFloat(params.get("maxPrice")!)
+        : undefined,
+      minPrice: params.get("minPrice")
+        ? parseFloat(params.get("minPrice")!)
+        : undefined,
+      publishersIds: params.get("publisherIds")?.split(",") || undefined,
+      rate: params.get("rate") ? parseFloat(params.get("rate")!) : undefined,
+    };
+    console.log(temp);
+
+    setFilters(temp);
   }, [params]);
 
+  return filters;
+}
+
+function createSearchConditions(filters: any) {
+  return {
+    page: filters.page,
+    limit: filters.limit,
+    keyword: filters.keyword,
+    categoryIds: filters.categoryIds,
+    isOnSale: filters.isOnSale,
+    maxPrice: filters.maxPrice,
+    minPrice: filters.minPrice,
+    publisherIds: filters.publishersIds,
+    rate: filters.rate,
+  };
+}
+
+export default function Search() {
+  const filters = useSearchFiltersFromURL();
+
   const { data, loading, error, refetch } = useQuery(SearchProductQuery, {
-    variables: {
-      searchConditionInput: {
-        page: 1,
-        limit: 10,
-        keyword: keyword,
-      },
-    },
+    variables: { searchConditionInput: createSearchConditions(filters) },
     fetchPolicy: "no-cache",
   });
 
   useEffect(() => {
-    refetch({
-      searchConditionInput: {
-        page: 1,
-        limit: 10,
-        keyword: keyword,
-      },
-    });
-  }, [keyword, refetch]);
+    refetch({ searchConditionInput: createSearchConditions(filters) });
+  }, [filters, refetch]);
 
   let products: ProductType[] = [];
 
@@ -64,7 +103,7 @@ export default function Search() {
       <NavFilter />
       <div className="w-3/4 p-5 flex flex-col items-center">
         <h1 className="text-center text-3xl mb-5 w-full">
-          Your search for "{keyword}" revealed the following:
+          Your search for "{filters.keyword}" revealed the following:
         </h1>
         <div className="mx-auto w-32 border-b border-gray-500 mb-5"></div>
 

@@ -8,8 +8,8 @@ import { useRouter, useSearchParams } from "next/navigation";
 const SearchInput = () => {
   const router = useRouter();
   const params = useSearchParams();
-  const [searchKeyword, setSearchKeyword] = useState<string>(
-    params.get("keyword") as string
+  const [searchKeyword, setSearchKeyword] = useState<string | undefined>(
+    params.get("keyword") as string | undefined
   );
 
   const handleSearch = () => {

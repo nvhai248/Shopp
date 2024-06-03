@@ -1,7 +1,7 @@
 import { PagingInput } from "./paging";
 
 // Define the TypeScript type for the login input
-export interface SearchProductInput extends PagingInput {
+export interface SearchConditionInput extends PagingInput {
   keyword?: string;
   categoryIds?: string[];
   publisherIds?: string[];
