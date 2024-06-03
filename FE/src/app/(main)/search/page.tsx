@@ -76,7 +76,7 @@ export default function Search() {
 
   useEffect(() => {
     refetch({ searchConditionInput: createSearchConditions(filters) });
-  }, [filters, refetch]);
+  }, [filters]);
 
   let products: ProductType[] = [];
 

@@ -30,7 +30,7 @@ export function NavFilter() {
   const categoryList: Category[] = cData?.categories || [];
   const publisherList: Publisher[] = pData?.publishers || [];
 
-  const queryParams = () => {
+  const queryParams = (newFilter?: any) => {
     return {
       isOnSale: onSale,
       rating,
@@ -38,6 +38,7 @@ export function NavFilter() {
       maxPrice,
       publisherIds: publishers && publishers.join(","),
       categoryIds: categories && categories.join(","),
+      ...newFilter,
     };
   };
 
@@ -55,15 +56,11 @@ export function NavFilter() {
       .join("&");
   };
 
-  const updateQueryString = () => {
-    const queryString = convertParamsToQueryString(queryParams());
-    //console.log(queryString);
+  const updateQueryString = (filter?: any) => {
+    const queryString = convertParamsToQueryString(queryParams(filter));
+    console.log(queryString);
     router.push(`/search?${queryString}`);
   };
-
-  /* useEffect(() => {
-    updateQueryString();
-  }, [queryParams, router]); */
 
   const toggleChildCategory = (childId: string) => {
     setCategories((prevCategories) => {
@@ -106,26 +103,26 @@ export function NavFilter() {
 
   const handleRatingChange = (newRating: string) => {
     setRating(newRating);
-
-    updateQueryString();
+    updateQueryString({ rating: newRating });
   };
 
   const handleOnSaleChange = () => {
     setOnSale((prevOnSale) => !prevOnSale);
-
-    updateQueryString();
+    updateQueryString({ isOnSale: !onSale });
   };
 
   const handleMinPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setMinPrice(e.target.value);
+    const minPrice = e.target.value;
+    setMinPrice(minPrice);
 
-    updateQueryString();
+    updateQueryString(minPrice);
   };
 
   const handleMaxPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setMaxPrice(e.target.value);
+    const maxPrice = e.target.value;
+    setMaxPrice(maxPrice);
 
-    updateQueryString();
+    updateQueryString(maxPrice);
   };
 
   return (

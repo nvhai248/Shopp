@@ -35,7 +35,7 @@ export interface Order {
   reducePrice: number;
   paymentMethod: string;
   status: string;
-  items?: OrderItem[];
+  items?: OrderDetailItem[];
   createdAt: string;
   updatedAt: string;
 }
