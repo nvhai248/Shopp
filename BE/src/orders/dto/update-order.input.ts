@@ -10,4 +10,7 @@ export class UpdateOrderInput {
   @Field()
   @IsEnum(STATUS_ORDER)
   status: STATUS_ORDER;
+
+  @Field({ nullable: true })
+  reason: string;
 }

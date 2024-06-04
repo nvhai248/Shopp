@@ -18,7 +18,7 @@ export default function SuccessOrder({ id }: successOrderProps) {
           </Button>
         </Link>
 
-        <Link href={`/order`}>
+        <Link href={`/order/${id}`}>
           <Button className="py-2 ml-4 bg-black text-white rounded-none hover:bg-gray-700 transition duration-300">
             View Detail
           </Button>

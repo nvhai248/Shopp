@@ -50,3 +50,9 @@ export interface PagingOrder {
   total: number;
   data: Order[];
 }
+
+export interface UpdateOrderInput {
+  id: string;
+  status: STATUS_ORDER;
+  reason: string;
+}

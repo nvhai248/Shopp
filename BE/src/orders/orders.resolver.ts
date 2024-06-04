@@ -75,7 +75,7 @@ export class OrdersResolver {
   }
 
   @Mutation(() => Boolean)
-  updateStatusOrder(@Args('updateInput') updateInput: UpdateOrderInput) {
+  updateStatusOrder(@Args('updateOrderInput') updateInput: UpdateOrderInput) {
     return this.ordersService.update(updateInput.id, updateInput);
   }
 
@@ -84,8 +84,9 @@ export class OrdersResolver {
     return this.contactsService.findOne(parent.contactId, parent.ownerId);
   }
 
-  @ResolveField((returns) => Promotion, { name: 'promotion' })
-  findPromotion(@Parent() parent: Order) {
+  @ResolveField(() => Promotion, { nullable: true, name: 'promotion' })
+  async findPromotion(@Parent() parent: Order) {
+    if (!parent.promotionId) return null;
     return this.promotionService.findOne(parent.promotionId);
   }
 }

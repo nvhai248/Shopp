@@ -22,7 +22,10 @@ export class Order {
   @Field(() => Contact)
   contact: Contact;
 
-  @Field(() => Promotion)
+  @Field(() => Promotion, {
+    nullable: true,
+    name: 'promotion',
+  })
   promotion?: Promotion;
 
   @Field({ nullable: true })

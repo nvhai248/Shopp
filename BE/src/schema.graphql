@@ -151,7 +151,7 @@ type Order {
   id: ID!
   contactId: String!
   contact: Contact!
-  promotion: Promotion!
+  promotion: Promotion
   promotionId: String
   ownerId: String!
   isPaid: Boolean!
@@ -308,7 +308,7 @@ type Mutation {
   updateContact(updateContactInput: UpdateContactInput!): Boolean!
   deleteContact(id: String!): Boolean!
   createOrder(createOrderInput: CreateOrderInput!): Order!
-  updateStatusOrder(updateInput: UpdateOrderInput!): Boolean!
+  updateStatusOrder(updateOrderInput: UpdateOrderInput!): Boolean!
   createReview(createReviewInput: CreateReviewInput!): Review!
   updateStatusReview(updateStatusReviewInput: UpdateReviewInput!): Boolean!
   createAbout(createAboutInput: CreateAboutInput!): About!
@@ -491,6 +491,7 @@ input OrderItemInput {
 input UpdateOrderInput {
   id: ID!
   status: String!
+  reason: String
 }
 
 input CreateReviewInput {

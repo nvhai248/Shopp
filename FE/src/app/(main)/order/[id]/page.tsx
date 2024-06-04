@@ -14,6 +14,8 @@ import formatter from "@/lib/formatDate";
 import { MdOutlinePayments } from "react-icons/md";
 import { Badge } from "@/components/ui/badge";
 import Stepper from "../components/stepper";
+import { Button } from "@/components/ui/button";
+import SelectReason from "../components/reason";
 
 export default function OrderDetailPage({
   params,
@@ -22,7 +24,7 @@ export default function OrderDetailPage({
 }) {
   const id = params.id;
 
-  const { data, loading, error } = useQuery(DetailOrderQuery, {
+  const { data, loading, error, refetch } = useQuery(DetailOrderQuery, {
     variables: { id: id },
   });
 
@@ -48,7 +50,7 @@ export default function OrderDetailPage({
   return (
     <div className="p-8 w-full min-h-screen">
       <div className="max-w-7xl mx-auto bg-white p-6 rounded-none border shadow-md">
-        <div className="py-4">
+        <div className="pb-10">
           <Stepper status={orderDetail.status} />
         </div>
 
@@ -89,17 +91,21 @@ export default function OrderDetailPage({
             <span className="ml-4">Voucher</span>
           </h2>
           <div className="border-b pb-6 mb-6 text-start flex justify-between">
-            <span className="ml-5">
-              {orderDetail?.promotion?.type === PROMOTION_TYPE.PERCENT
-                ? orderDetail?.promotion?.discountValue + " $"
-                : orderDetail?.promotion?.discountPercentage + "%"}{" "}
-              off
-              {", min spend: "} ${orderDetail?.promotion?.minValue}
-              {", expired: "}
-              {orderDetail?.promotion?.endDate
-                ? formatter.format(new Date(orderDetail?.promotion?.endDate))
-                : "N/A"}
-            </span>
+            {orderDetail?.promotion ? (
+              <span className="ml-5">
+                {orderDetail?.promotion?.type === PROMOTION_TYPE.PERCENT
+                  ? orderDetail?.promotion?.discountValue + " $"
+                  : orderDetail?.promotion?.discountPercentage + "%"}{" "}
+                off
+                {", min spend: "} ${orderDetail?.promotion?.minValue}
+                {", expired: "}
+                {orderDetail?.promotion?.endDate
+                  ? formatter.format(new Date(orderDetail?.promotion?.endDate))
+                  : "N/A"}
+              </span>
+            ) : (
+              <span className="ml-5 text-red-500">No voucher selected</span>
+            )}
           </div>
         </div>
 
@@ -149,6 +155,16 @@ export default function OrderDetailPage({
               </span>
             </div>
           </div>
+        </div>
+
+        <div className="flex justify-between mt-6">
+          <p className="text-sm text-gray-600">
+            Clicking "Return Order" means you agree to abide by the{" "}
+            <span className="text-blue-500 hover:text-blue-700">
+              HShopp Terms
+            </span>
+          </p>
+          <SelectReason id={orderDetail.id} refetch={refetch} />
         </div>
       </div>
     </div>

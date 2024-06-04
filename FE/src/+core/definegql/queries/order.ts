@@ -41,6 +41,7 @@ export const DetailOrderQuery = gql`
       priceToPay
       reducePrice
       paymentMethod
+      status
       contact {
         fullName
         district
