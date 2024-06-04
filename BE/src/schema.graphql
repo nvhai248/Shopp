@@ -150,6 +150,8 @@ type OrderItem {
 type Order {
   id: ID!
   contactId: String!
+  contact: Contact!
+  promotion: Promotion!
   promotionId: String
   ownerId: String!
   isPaid: Boolean!

@@ -31,3 +31,44 @@ export const HistoriesOrderQuery = gql`
     }
   }
 `;
+
+export const DetailOrderQuery = gql`
+  query DetailOrder($id: String!) {
+    order(id: $id) {
+      id
+      totalPrice
+      isPaid
+      priceToPay
+      reducePrice
+      paymentMethod
+      contact {
+        fullName
+        district
+        province
+        phoneNumber
+        detailAddress
+        wards
+      }
+      promotion {
+        name
+        level
+        description
+        type
+        discountPercentage
+        discountValue
+        minValue
+        endDate
+        startDate
+      }
+      items {
+        price
+        quantity
+        product {
+          name
+          avatar
+          rate
+        }
+      }
+    }
+  }
+`;

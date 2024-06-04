@@ -8,6 +8,8 @@ import {
 import { PAYMENT_METHOD, STATUS_ORDER } from 'src/utils/const';
 import { IsEnum } from 'class-validator';
 import { OrderItem } from './order-item.entity';
+import { Contact } from 'src/contacts/entities/contact.entity';
+import { Promotion } from 'src/promotions/entities/promotion.entity';
 
 @ObjectType()
 export class Order {
@@ -16,6 +18,12 @@ export class Order {
 
   @Field()
   contactId: string;
+
+  @Field(() => Contact)
+  contact: Contact;
+
+  @Field(() => Promotion)
+  promotion?: Promotion;
 
   @Field({ nullable: true })
   promotionId?: string;

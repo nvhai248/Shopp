@@ -1,4 +1,6 @@
-import { PAYMENT_METHOD } from "../enums";
+import { PAYMENT_METHOD, STATUS_ORDER } from "../enums";
+import { ContactInterface } from "./contact";
+import { PromotionType } from "./promotion";
 
 // graphql/interfaces.js
 export interface OrderItem {
@@ -33,8 +35,10 @@ export interface Order {
   totalPrice: number;
   priceToPay: number;
   reducePrice: number;
-  paymentMethod: string;
-  status: string;
+  paymentMethod: PAYMENT_METHOD;
+  contact?: ContactInterface;
+  promotion?: PromotionType;
+  status: STATUS_ORDER;
   items?: OrderDetailItem[];
   createdAt: string;
   updatedAt: string;

@@ -22,10 +22,18 @@ import { PagingOrderResponse } from './entities/paging-order.entity';
 import { OrderItem } from './entities/order-item.entity';
 import { UpdateOrderInput } from './dto/update-order.input';
 import { RequireActiveGuard } from 'src/guard/require-active.guard';
+import { Contact } from 'src/contacts/entities/contact.entity';
+import { Promotion } from 'src/promotions/entities/promotion.entity';
+import { ContactsService } from 'src/contacts/contacts.service';
+import { PromotionsService } from 'src/promotions/promotions.service';
 
 @Resolver(() => Order)
 export class OrdersResolver {
-  constructor(private readonly ordersService: OrdersService) {}
+  constructor(
+    private readonly ordersService: OrdersService,
+    private readonly promotionService: PromotionsService,
+    private readonly contactsService: ContactsService,
+  ) {}
 
   @Mutation(() => Order)
   @UseGuards(JwtAccessAuthGuard, RequireActiveGuard)
@@ -69,5 +77,15 @@ export class OrdersResolver {
   @Mutation(() => Boolean)
   updateStatusOrder(@Args('updateInput') updateInput: UpdateOrderInput) {
     return this.ordersService.update(updateInput.id, updateInput);
+  }
+
+  @ResolveField((returns) => Contact, { name: 'contact' })
+  findContact(@Parent() parent: Order) {
+    return this.contactsService.findOne(parent.contactId, parent.ownerId);
+  }
+
+  @ResolveField((returns) => Promotion, { name: 'promotion' })
+  findPromotion(@Parent() parent: Order) {
+    return this.promotionService.findOne(parent.promotionId);
   }
 }

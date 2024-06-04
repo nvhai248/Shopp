@@ -26,7 +26,7 @@ const SearchInput = () => {
       <Input
         className="rounded-none !h-12"
         type="text"
-        value={searchKeyword}
+        value={searchKeyword || undefined}
         onChange={handleChange}
         placeholder="Search..."
       />
