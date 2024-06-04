@@ -1,8 +1,11 @@
+"use client";
+
 import Rating from "@/components/ui/rating";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import React, { useState, useEffect } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
+import { useSession } from "next-auth/react";
 import { useQuery } from "@apollo/client";
 import { useRouter } from "next/navigation";
 import { GetCategoryQuery, GetPublisherQuery } from "@/+core/definegql";
@@ -16,66 +19,63 @@ interface ExpandedCategories {
 export function NavFilter() {
   const [expandedCategories, setExpandedCategories] =
     useState<ExpandedCategories>({});
-  const [rating, setRating] = useState<string | undefined>(undefined);
-  const [publishers, setPublishers] = useState<string[] | undefined>(undefined);
-  const [categories, setCategories] = useState<string[] | undefined>(undefined);
-  const [onSale, setOnSale] = useState<boolean | undefined>(undefined);
-  const [minPrice, setMinPrice] = useState<string | undefined>(undefined);
-  const [maxPrice, setMaxPrice] = useState<string | undefined>(undefined);
+  const [rating, setRating] = useState<string>("");
+  const [publishers, setPublishers] = useState<string[]>([]);
+  const [categories, setCategories] = useState<string[]>([]);
+  const [onSale, setOnSale] = useState<boolean>(false);
+  const [minPrice, setMinPrice] = useState<string>("");
+  const [maxPrice, setMaxPrice] = useState<string>("");
+  const { data: session } = useSession();
   const router = useRouter();
 
-  const { data: cData } = useQuery(GetCategoryQuery);
-  const { data: pData } = useQuery(GetPublisherQuery);
+  const cData = useQuery(GetCategoryQuery);
+  const pData = useQuery(GetPublisherQuery);
 
-  const categoryList: Category[] = cData?.categories || [];
-  const publisherList: Publisher[] = pData?.publishers || [];
+  const categoryList: Category[] = cData?.data?.categories || [];
+  const publisherList: Publisher[] = pData?.data?.publishers || [];
 
-  const queryParams = (newFilter?: any) => {
-    return {
-      isOnSale: onSale,
-      rating,
-      minPrice,
-      maxPrice,
-      publisherIds: publishers && publishers.join(","),
-      categoryIds: categories && categories.join(","),
-      ...newFilter,
-    };
-  };
+  useEffect(() => {
+    const params = new URLSearchParams();
 
-  const convertParamsToQueryString = (params: any) => {
-    return Object.keys(params)
-      .filter(
-        (key) =>
-          params[key] !== null &&
-          params[key] !== undefined &&
-          params[key] !== ""
-      )
-      .map(
-        (key) => encodeURIComponent(key) + "=" + encodeURIComponent(params[key])
-      )
-      .join("&");
-  };
+    if (onSale) {
+      params.append("isOnSale", "true");
+    }
 
-  const updateQueryString = (filter?: any) => {
-    const queryString = convertParamsToQueryString(queryParams(filter));
-    console.log(queryString);
-    router.push(`/search?${queryString}`);
-  };
+    if (rating) {
+      params.append("rate", rating);
+    }
+
+    if (minPrice) {
+      params.append("minPrice", minPrice);
+    }
+
+    if (maxPrice) {
+      params.append("maxPrice", maxPrice);
+    }
+
+    if (publishers.length > 0) {
+      for (let publisherId of publishers) {
+        params.append("publisherIds", publisherId);
+      }
+    }
+
+    if (categories.length > 0) {
+      for (let categoryId of categories) {
+        params.append("categoryIds", categoryId);
+      }
+    }
+
+    router.replace(`?${params.toString()}`);
+  }, [onSale, rating, minPrice, maxPrice, publishers, categories, router]);
 
   const toggleChildCategory = (childId: string) => {
     setCategories((prevCategories) => {
-      if (prevCategories) {
-        if (prevCategories.includes(childId)) {
-          return prevCategories.filter((id) => id !== childId);
-        } else {
-          return [...prevCategories, childId];
-        }
+      if (prevCategories.includes(childId)) {
+        return prevCategories.filter((id) => id !== childId);
       } else {
-        return [childId];
+        return [...prevCategories, childId];
       }
     });
-
-    updateQueryString();
   };
 
   const toggleParentCategory = (categoryId: string) => {
@@ -87,42 +87,28 @@ export function NavFilter() {
 
   const handlePublisherChange = (pubId: string) => {
     setPublishers((prevPublishers) => {
-      if (prevPublishers) {
-        if (prevPublishers.includes(pubId)) {
-          return prevPublishers.filter((id) => id !== pubId);
-        } else {
-          return [...prevPublishers, pubId];
-        }
+      if (prevPublishers.includes(pubId)) {
+        return prevPublishers.filter((id) => id !== pubId);
       } else {
-        return [pubId];
+        return [...prevPublishers, pubId];
       }
     });
-
-    updateQueryString();
   };
 
   const handleRatingChange = (newRating: string) => {
     setRating(newRating);
-    updateQueryString({ rating: newRating });
   };
 
   const handleOnSaleChange = () => {
     setOnSale((prevOnSale) => !prevOnSale);
-    updateQueryString({ isOnSale: !onSale });
   };
 
   const handleMinPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const minPrice = e.target.value;
-    setMinPrice(minPrice);
-
-    updateQueryString(minPrice);
+    setMinPrice(e.target.value);
   };
 
   const handleMaxPriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const maxPrice = e.target.value;
-    setMaxPrice(maxPrice);
-
-    updateQueryString(maxPrice);
+    setMaxPrice(e.target.value);
   };
 
   return (
@@ -153,7 +139,7 @@ export function NavFilter() {
                       <div className="flex items-center space-x-2">
                         <Checkbox
                           id={child.id}
-                          checked={categories?.includes(child.id)}
+                          checked={categories.includes(child.id)}
                           onCheckedChange={() => toggleChildCategory(child.id)}
                         />
                         <label htmlFor={child.id} className="leading-none">
@@ -238,7 +224,7 @@ export function NavFilter() {
               <div className="flex items-center space-x-2">
                 <Checkbox
                   id={publisher.id}
-                  checked={publishers?.includes(publisher.id)}
+                  checked={publishers.includes(publisher.id)}
                   onCheckedChange={() => handlePublisherChange(publisher.id)}
                 />
                 <label htmlFor={publisher.id} className="leading-none">

@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import { Button } from "./button";
 import {
@@ -80,7 +82,7 @@ function ProductDetail({
       <div className="flex justify-between m-1 flex-1 relative">
         <Button
           onClick={addToCart}
-          className="rounded-full aspect-square w-12 h-12 flex items-center  absolute left-4 bottom-0 justify-center border-2 bg-slate-50 text-black hover:bg-gray-800 hover:text-white transition duration-300 ease-in-out"
+          className="rounded-full aspect-square w-12 h-12 flex items-center absolute left-4 bottom-0 justify-center border-2 bg-slate-50 text-black hover:bg-gray-800 hover:text-white transition duration-300 ease-in-out"
         >
           <FaCartPlus />
         </Button>
@@ -119,23 +121,23 @@ export default function ProductCard({
           src="https://cdn-icons-png.flaticon.com/512/1374/1374072.png"
           alt={name || description}
           className="w-10 rotate-45 object-cover absolute"
-      />
+        />
       )}
 
       <CardContent className="mt-5">
         {isHovered ? (
           <ProductDetail
             id={id}
-            author={avatar}
+            avatar={avatar}
             name={name}
             rate={rate}
             price={price}
             description={description}
             address={address}
-            isOnSale={false}
+            isOnSale={isOnSale}
             categoryId={""}
             publisherId={""}
-            avatar={""}
+            author={""}
             images={[]}
             status={""}
           />
