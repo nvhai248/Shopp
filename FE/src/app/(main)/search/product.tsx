@@ -12,7 +12,6 @@ export default async function ProductResponse({
   const { data, errors } = await SearchProductService(searchParams);
 
   let products: ProductType[] = [];
-
   if (data && data.products && data.products.data) {
     products = data.products.data;
   }
@@ -24,8 +23,7 @@ export default async function ProductResponse({
           searchParams.keyword ? searchParams.keyword : ""
         }" revealed the following:`}
       </h1>
-      <div className="mx-auto w-32 border-b border-gray-500 mb-5"></div>
-
+      <div className="mx-auto w-32 border-b mb-4 border-gray-500"></div>
       <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-x-[5rem] gap-y-10">
         {products.map((product) => (
           <ProductCard

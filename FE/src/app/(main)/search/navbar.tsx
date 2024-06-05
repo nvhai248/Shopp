@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 import { GetCategoryQuery, GetPublisherQuery } from "@/+core/definegql";
 import { Category } from "@/+core/interfaces";
 import { Publisher } from "@/+core/interfaces/publisher";
+import PaginationProduct from "./paging";
 
 interface ExpandedCategories {
   [key: string]: boolean;
@@ -235,6 +236,8 @@ export function NavFilter() {
           ))}
         </ul>
       </div>
+
+      <PaginationProduct />
     </div>
   );
 }
