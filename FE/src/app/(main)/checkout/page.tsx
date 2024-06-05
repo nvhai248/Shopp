@@ -15,7 +15,7 @@ import Spinner from "@/components/ui/spinner";
 import RequireSignIn from "@/components/ui/require-signin";
 import ShowContacts from "./components/showContact";
 import { ContactInterface } from "@/+core/interfaces/contact";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ShowVoucher from "./components/showVoucher";
 import formatter from "@/lib/formatDate";
 import { RecommendInput } from "@/+core/interfaces/recommend";
@@ -30,6 +30,8 @@ const Checkout = () => {
   const [voucher, setVoucher] = useState<PromotionType | undefined>(undefined);
   const { data: session } = useSession();
   const { toast } = useToast();
+  const [paymentTotal, setPaymentTotal] = useState<number>();
+  const [discountTotal, setDiscountTotal] = useState<number>();
   const [paymentMethod, setPaymentMethod] = useState<PAYMENT_METHOD>(
     PAYMENT_METHOD.COD
   );
@@ -53,7 +55,6 @@ const Checkout = () => {
   }
 
   let totalPrice = 0;
-  let discountTotal = 0;
 
   for (let item of cartItems) {
     if (item.product.isOnSale) {
@@ -63,7 +64,15 @@ const Checkout = () => {
     }
   }
 
-  let paymentTotal = totalPrice - discountTotal;
+  useEffect(() => {
+    const temp: number =
+      voucher?.type === PROMOTION_TYPE.PERCENT
+        ? ((voucher.discountPercentage as number) * totalPrice) / 100
+        : voucher?.discountValue ?? 0;
+
+    setDiscountTotal(temp);
+    setPaymentTotal(totalPrice - temp);
+  }, [voucher, totalPrice]);
 
   if (loading) {
     return (

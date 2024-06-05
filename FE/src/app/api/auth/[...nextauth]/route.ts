@@ -55,6 +55,30 @@ export const authOptions: NextAuthOptions = {
         return null;
       },
     }),
+
+    /* CredentialsProvider({
+      name: "OAuthGoogleCustomCredentials",
+      credentials: {
+        accessToken: { label: "accessToken", type: "text" },
+        expired_accessToken: { label: "expired_accessToken", type: "text" },
+        refreshToken: { label: "refreshToken", type: "text" },
+        expired_refreshToken: { label: "expired_refreshToken", type: "text" },
+      },
+      async authorize(credentials, req) {
+        if (!credentials?.accessToken || !credentials?.refreshToken)
+          return null;
+
+        const result = {
+          id: 'unique-id',
+          accessToken: credentials.accessToken,
+          expired_accessToken: credentials.expired_accessToken,
+          refreshToken: credentials.refreshToken,
+          expired_refreshToken: credentials.expired_refreshToken,
+        };
+
+        return result;
+      },
+    }), */
   ],
 
   callbacks: {

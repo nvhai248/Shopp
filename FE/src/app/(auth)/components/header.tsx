@@ -14,7 +14,7 @@ const AuthHeader = () => {
             </span>
             <p className="text-blue-700">Shopp</p>
           </Link>
-          <h1 className="text-white text-4xl ml-5">Sign In</h1>
+          <h1 className="text-white text-4xl ml-5">Authentication</h1>
         </div>
 
         <a

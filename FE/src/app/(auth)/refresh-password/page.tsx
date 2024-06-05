@@ -1,32 +1,37 @@
 "use client";
 
-import { useState } from "react";
-import { ChangePasswordInput } from "@/+core/interfaces";
-import { ChangePasswordService } from "@/+core/services";
+import { RefreshPasswordInput } from "@/+core/interfaces";
+import { RefreshPasswordService } from "@/+core/services";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { ToastAction } from "@/components/ui/toast";
-import { useToast } from "@/components/ui/use-toast";
-import { useSession } from "next-auth/react";
 import Spinner from "@/components/ui/spinner";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { useToast } from "@/components/ui/use-toast";
+import { Label } from "@radix-ui/react-label";
+import { ToastAction } from "@radix-ui/react-toast";
+import { useSearchParams } from "next/navigation";
+import { useState } from "react";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { z } from "zod";
+import Link from "next/link";
 
 const passwordSchema = z
   .string()
   .min(8, "Password must be at least 8 characters long");
 
-export default function ChangePasswordPage() {
-  const { data: session } = useSession();
+export default function RefreshPasswordPage() {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const { toast } = useToast();
-
-  const [currentPassword, setCurrentPassword] = useState("");
+  const params = useSearchParams();
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const changePassword = async () => {
+  const refreshPassword = async () => {
     setIsLoading(true);
 
     try {
@@ -51,15 +56,13 @@ export default function ChangePasswordPage() {
       });
     }
 
-    const input: ChangePasswordInput = {
-      currentPassword,
-      newPassword,
+    const input: RefreshPasswordInput = {
+      id: params.get("id") as string,
+      password: newPassword,
+      token: params.get("token") as string,
     };
 
-    const { errors } = await ChangePasswordService(
-      session?.accessToken as string,
-      input
-    );
+    const { errors } = await RefreshPasswordService(input);
 
     if (errors) {
       setIsLoading(false);
@@ -81,23 +84,17 @@ export default function ChangePasswordPage() {
   };
 
   return (
-    <div>
-      <Card className="w-[400px] h-auto ml-10 pt-6 rounded-none">
-        <CardContent>
-          <Label htmlFor="currentPassword">Current Password</Label>
-          <Input
-            id="currentPassword"
-            type="password"
-            className="rounded-none h-12"
-            value={currentPassword}
-            onChange={(e) => setCurrentPassword(e.target.value)}
-          />
-
+    <Card className="w-[400px] h-auto ml-10 rounded-none">
+      <CardHeader className="text-center">
+        <CardTitle className="text-3xl">Reset Password</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div>
           <Label htmlFor="newPassword">New Password</Label>
           <Input
             id="newPassword"
-            className="rounded-none h-12"
             type="password"
+            className="rounded-none h-12"
             value={newPassword}
             onChange={(e) => setNewPassword(e.target.value)}
           />
@@ -105,25 +102,29 @@ export default function ChangePasswordPage() {
           <Label htmlFor="confirmPassword">Confirm Password</Label>
           <Input
             id="confirmPassword"
-            className="rounded-none h-12"
             type="password"
+            className="rounded-none h-12"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
           />
-        </CardContent>
-        <CardFooter>
-          {isLoading ? (
-            <Spinner size={20} />
-          ) : (
-            <Button
-              className="w-full mb-3 h-12 rounded-none"
-              onClick={changePassword}
-            >
-              Change password
-            </Button>
-          )}
-        </CardFooter>
-      </Card>
-    </div>
+        </div>
+      </CardContent>
+      <CardFooter className="flex  flex-col">
+        {isLoading ? (
+          <Spinner size={20} />
+        ) : (
+          <Button
+            className="w-full mb-3 h-12 rounded-none"
+            onClick={refreshPassword}
+          >
+            Refresh Password
+          </Button>
+        )}
+
+        <Link className="hover:text-blue-700" href="/login">
+          Back to Sign in?
+        </Link>
+      </CardFooter>
+    </Card>
   );
 }

@@ -9,3 +9,14 @@ export interface UpdateUserInput {
   birthDate?: string;
   avatar?: string;
 }
+
+export interface RefreshPasswordInput {
+  id: string;
+  token: string;
+  password: string;
+}
+
+export interface ChangePasswordInput {
+  currentPassword: string;
+  newPassword: string;
+}
