@@ -20,7 +20,9 @@ export default async function ProductResponse({
   return (
     <div className="w-3/4 p-5 flex flex-col items-center">
       <h1 className="text-center text-3xl mb-5 w-full">
-        {`Your search for "${searchParams.keyword}" revealed the following:`}
+        {`Your search for "${
+          searchParams.keyword ? searchParams.keyword : ""
+        }" revealed the following:`}
       </h1>
       <div className="mx-auto w-32 border-b border-gray-500 mb-5"></div>
 

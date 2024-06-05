@@ -29,3 +29,15 @@ export class About {
   @Field(() => GraphQLISODateTime)
   updatedAt: Date;
 }
+
+@ObjectType()
+export class RenderAbout {
+  @Field(() => [About], { defaultValue: [] })
+  main: About[];
+
+  @Field(() => [About], { defaultValue: [] })
+  child: About[];
+
+  @Field(() => [About], { defaultValue: [] })
+  qAndA: About[];
+}

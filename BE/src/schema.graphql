@@ -207,6 +207,12 @@ type About {
   updatedAt: DateTime!
 }
 
+type RenderAbout {
+  main: [About!]!
+  child: [About!]!
+  qAndA: [About!]!
+}
+
 type Query {
   products(searchConditionInput: SearchConditionInput!): PagingProduct!
   product(id: String!): Product!
@@ -231,6 +237,7 @@ type Query {
   reviewsByProduct(pagingReviewInput: PagingReviewInput!, productId: String!): PagingReviewResponse!
   review(findReviewInput: FindReviewInput!): Review!
   historiesReview(pagingReviewInput: PagingReviewInput!): PagingReviewResponse!
+  renderAbout: RenderAbout!
   abouts: [About!]!
   about(id: String!): About!
 }

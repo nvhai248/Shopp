@@ -9,3 +9,4 @@ export * from "./order";
 export * from "./review";
 export * from "./category";
 export * from "./publisher";
+export * from "./about";

@@ -16,6 +16,7 @@ import { PromotionType } from "@/+core/interfaces/promotion";
 import Spinner from "@/components/ui/spinner";
 import { Button } from "@/components/ui/button";
 import formatter from "@/lib/formatDate";
+import Link from "next/link";
 
 // Utility function to format Date objects
 
@@ -76,9 +77,11 @@ export default function LandingCarouse() {
                           ? formatter.format(new Date(promotion.endDate))
                           : "N/A"}
                       </h3>
-                      <Button className="rounded-none bg-gray-300 text-black hover:text-white transition duration-300 w-[10rem] h-[3srem]">
-                        Shop Now
-                      </Button>
+                      <Link href={"/search"}>
+                        <Button className="rounded-none bg-gray-300 text-black hover:text-white transition duration-300 w-[10rem] h-[3srem]">
+                          Shop Now
+                        </Button>
+                      </Link>
                     </div>
                   </CardContent>
                 </Card>
