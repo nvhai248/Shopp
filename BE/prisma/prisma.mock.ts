@@ -5,4 +5,11 @@ export const prismaMock = {
     create: jest.fn(),
     update: jest.fn(),
   },
+
+  order: {
+    findFirst: jest.fn(),
+    findMany: jest.fn(),
+    create: jest.fn(),
+    update: jest.fn(),
+  },
 };

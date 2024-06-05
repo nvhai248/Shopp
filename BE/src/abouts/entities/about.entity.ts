@@ -17,7 +17,7 @@ export class About {
   image: string;
 
   @Field()
-  status: string;
+  status: boolean;
 
   @Field()
   @IsEnum(ABOUT_TYPE)
