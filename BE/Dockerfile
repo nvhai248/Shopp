@@ -38,7 +38,9 @@ COPY --from=build /app/dist ./dist
 COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/package*.json ./
 COPY --from=build /app/prisma ./prisma
-COPY --from=build /app/tsconfig.json ./tsconfig.json  
+COPY --from=build /app/tsconfig.json ./tsconfig.json
+COPY --from=build /app/public ./public
+COPY --from=build /app/views ./views
 # Copy the prisma directory
 
 # Ensure bcrypt is correctly built for the container architecture

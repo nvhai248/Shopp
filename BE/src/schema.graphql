@@ -201,7 +201,7 @@ type About {
   title: String!
   description: String!
   image: String!
-  status: String!
+  status: Boolean!
   type: String!
   createdAt: DateTime!
   updatedAt: DateTime!

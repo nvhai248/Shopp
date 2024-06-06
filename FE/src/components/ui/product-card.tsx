@@ -144,7 +144,10 @@ export default function ProductCard({
         ) : (
           <>
             <img
-              src={avatar}
+              src={
+                avatar ||
+                "https://thebookwithnopictures.com/wp-content/uploads/2014/08/BookWithNoPictures_3D-300x423.png"
+              }
               alt={name}
               className="w-full h-[20rem] object-cover mt-2"
             />

@@ -2,7 +2,6 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AboutsResolver } from './abouts.resolver';
 import { AboutsService } from './abouts.service';
 import { mockAbout, mockAboutService } from './abouts.service.spec';
-import { ABOUT_TYPE } from 'src/utils/const';
 
 describe('AboutsResolver', () => {
   let resolver: AboutsResolver;
@@ -13,7 +12,7 @@ describe('AboutsResolver', () => {
         AboutsResolver,
         {
           provide: AboutsService,
-          useValue: { mockAboutService },
+          useValue: mockAboutService,
         },
       ],
     }).compile();
@@ -26,8 +25,38 @@ describe('AboutsResolver', () => {
   });
 
   describe('findAll', () => {
-    it('should returns an array of key value pair objects', async () => {
-      expect(await resolver.findByType()).toEqual(mockAbout);
+    it('should returns all about', async () => {
+      expect(await resolver.findAll()).toEqual({
+        main: undefined,
+        child: undefined,
+        qAndA: undefined,
+      });
+    });
+  });
+
+  describe('findByType', () => {
+    it('should returns all about', async () => {
+      expect(await resolver.findByType()).toEqual(undefined);
+    });
+  });
+
+  describe('findOne', () => {
+    it('should returns about with correct id', async () => {
+      expect(await resolver.findOne('1')).toEqual(undefined);
+    });
+  });
+
+  describe('update', () => {
+    it('should returns about information updated', async () => {
+      expect(
+        await resolver.updateAbout({
+          title: 'title',
+          description: 'description',
+          image: 'image',
+          status: true,
+          id: '1',
+        }),
+      ).toEqual(mockAbout[0]);
     });
   });
 });
