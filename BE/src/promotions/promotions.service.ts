@@ -89,7 +89,7 @@ export class PromotionsService {
             productQuantity.quantity,
           );
 
-        if (itemPromotion) {
+        if (itemPromotion && item.minValue <= recommendInput.totalValue) {
           result.push(item);
         }
       }

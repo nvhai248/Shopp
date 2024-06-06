@@ -40,6 +40,7 @@ export default function ShowVoucher({
         Authorization: `Bearer ${session?.accessToken}`,
       },
     },
+    fetchPolicy: "no-cache",
   });
 
   let vouchers: PromotionType[] = [];
