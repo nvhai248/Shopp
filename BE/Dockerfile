@@ -1,5 +1,5 @@
 # Use the official Node.js image as a base
-FROM node:latest AS build
+FROM node:18 AS build
 
 # Set the working directory
 WORKDIR /app
@@ -11,8 +11,9 @@ RUN wget -O /usr/local/bin/wait-for-it.sh https://raw.githubusercontent.com/vish
 # Copy package.json and package-lock.json
 COPY package*.json ./
 
-# Install dependencies
-RUN npm install
+# Clean the npm cache and install dependencies 
+RUN npm install --force
+
 
 # Copy the rest of the application code
 COPY . .
@@ -21,10 +22,13 @@ COPY . .
 RUN npm run build
 
 # Use a smaller Node.js runtime image for the final stage
-FROM node:alpine
+FROM node:18-alpine
 
 # Set the working directory
 WORKDIR /app
+
+# Install necessary build tools for bcrypt and other native modules
+RUN apk add --no-cache bash make gcc g++ python3
 
 # Copy the wait-for-it script from the build stage
 COPY --from=build /usr/local/bin/wait-for-it.sh /usr/local/bin/wait-for-it.sh
@@ -33,9 +37,15 @@ COPY --from=build /usr/local/bin/wait-for-it.sh /usr/local/bin/wait-for-it.sh
 COPY --from=build /app/dist ./dist
 COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/package*.json ./
+COPY --from=build /app/prisma ./prisma
+COPY --from=build /app/tsconfig.json ./tsconfig.json  
+# Copy the prisma directory
+
+# Ensure bcrypt is correctly built for the container architecture
+RUN npm rebuild bcrypt
 
 # Expose the port the app runs on
 EXPOSE 8080
 
 # Start the application
-CMD ["npm", "run", "start:prod"]
+CMD ["npm", "run", "start"]

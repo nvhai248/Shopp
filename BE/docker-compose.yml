@@ -56,7 +56,7 @@ services:
       /usr/local/bin/wait-for-it.sh
       postgres:5432
       --
-      sh -c "npx prisma db push && npx prisma generate && npm run start:prod"
+      sh -c "npx prisma db push --schema=./prisma/schema.prisma && npx prisma generate --schema=./prisma/schema.prisma && npm run start"
 
 networks:
   backend_hshopp:
