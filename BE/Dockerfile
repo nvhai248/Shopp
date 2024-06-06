@@ -1,4 +1,4 @@
-# Use the official Node.js image as a base
+# Dockerfile of ./BE
 FROM node:18 AS build
 
 # Set the working directory
@@ -50,4 +50,4 @@ RUN npm rebuild bcrypt
 EXPOSE 8080
 
 # Start the application
-CMD ["npm", "run", "start"]
+CMD ["npm", "run", "start:prod"]

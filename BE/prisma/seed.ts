@@ -2,10 +2,10 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 async function main() {
   await prisma.hShopAdmin.upsert({
-    where: { email: 'admin@hshopp.icom' },
+    where: { email: 'admin@hshopp.com' },
     update: {},
     create: {
-      email: 'admin@hshopp.icom',
+      email: 'admin@hshopp.com',
       firstName: 'Hai',
       lastName: 'Nguyen',
       gender: 'MALE',
