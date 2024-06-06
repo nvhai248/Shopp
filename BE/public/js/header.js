@@ -73,3 +73,19 @@ document.getElementById('logout').addEventListener('click', () => {
   localStorage.removeItem('expired_accessToken');
   window.location.href = '/';
 });
+
+document.addEventListener('DOMContentLoaded', function () {
+  const searchInput = document.querySelector('input[type="text"]');
+
+  searchInput.addEventListener('keydown', function (event) {
+    if (event.keyCode === 13) {
+      event.preventDefault();
+      const query = searchInput.value.trim();
+      if (query) {
+        const currentUrl = new URL(window.location.href);
+        currentUrl.searchParams.set('keyword', query);
+        window.location.href = currentUrl.toString();
+      }
+    }
+  });
+});

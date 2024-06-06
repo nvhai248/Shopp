@@ -149,7 +149,12 @@ export class UsersService {
 
     this.mailerService
       .sendMail(
-        NewRefreshPasswordEmailOption(user.email, user.name, user.id, token),
+        NewRefreshPasswordEmailOption(
+          user.email,
+          user.firstName,
+          user.id,
+          token,
+        ),
       )
       .catch((err) => console.log(err));
     return true;

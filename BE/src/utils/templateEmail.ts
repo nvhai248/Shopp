@@ -101,6 +101,7 @@ export function ThankYouForOrderMail(
           <p style="font-size: 16px; color: #333;">Your order (${orderId}) has been successfully placed.</p>
           <p style="font-size: 16px; color: #333;">We will process your order shortly.</p>
           <p style="font-size: 16px; color: #333;">If you have any questions or concerns, feel free to <a href="${CLIENT_SITE_DOMAIN}/contact">contact us</a>.</p>
+          <p style="font-size: 16px; color: #333;">To view order detail, Click <a href="${CLIENT_SITE_DOMAIN}/order/${orderId}">here</a>.</p>
           <p style="font-size: 16px; color: #333;">Thank you for choosing HShopp!</p>
         </div>
       </div>

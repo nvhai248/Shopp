@@ -67,7 +67,7 @@ const Checkout = () => {
   useEffect(() => {
     const temp: number =
       voucher?.type === PROMOTION_TYPE.PERCENT
-        ? ((voucher.discountPercentage as number) * totalPrice) / 100
+        ? ((voucher.discountPercentage as number) / 100) * totalPrice
         : voucher?.discountValue ?? 0;
 
     setDiscountTotal(temp);
@@ -200,8 +200,8 @@ const Checkout = () => {
             {voucher ? (
               <span className="ml-5">
                 {voucher.type === PROMOTION_TYPE.PERCENT
-                  ? voucher.discountValue + " $"
-                  : voucher.discountPercentage + "%"}{" "}
+                  ? voucher.discountPercentage + "%"
+                  : voucher.discountValue + " $"}{" "}
                 off
                 {", min spend: "} ${voucher.minValue}
                 {", expired: "}

@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 export const PromotionsQuery = gql`
-  query Promotions {
-    promotions {
+  query Promotions($isAvailablePromotions: Boolean!) {
+    promotions(isAvailablePromotions: $isAvailablePromotions) {
       id
       name
       description

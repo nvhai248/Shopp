@@ -81,17 +81,25 @@ export class PromotionsService {
     );
 
     for (let item of allPromotionLevelItem) {
-      for (let productQuantity of recommendInput.products) {
-        const itemPromotion =
-          await this.itemPromotionRepository.findOnePromotionItem(
-            item.id,
-            productQuantity.productId,
-            productQuantity.quantity,
-          );
+      let isOk = true;
 
-        if (itemPromotion && item.minValue <= recommendInput.totalValue) {
-          result.push(item);
+      const itemsPromotion =
+        await this.itemPromotionRepository.findAllByPromotionId(item.id);
+
+      for (let itemPromotion of itemsPromotion) {
+        const foundProduct = recommendInput.products.find(
+          (product) =>
+            product.productId === itemPromotion.productId &&
+            product.quantity >= itemPromotion.quantity,
+        );
+        if (!foundProduct) {
+          isOk = false;
+          break;
         }
+      }
+
+      if (isOk) {
+        result.push(item);
       }
     }
 

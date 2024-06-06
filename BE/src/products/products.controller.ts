@@ -24,6 +24,7 @@ export class ProductController {
   async categoryProduct(
     @Query('limit', new DefaultValuePipe(5), ParseIntPipe) limit: number,
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
+    @Query('keyword') keyword?: string,
   ) {
     const parents = await this.categoryService.findMany(
       CATEGORY_TYPE.PARENT,
@@ -45,7 +46,7 @@ export class ProductController {
     const products = await this.productService.returnSearchProduct({
       page: page,
       limit: limit,
-      keyword: null,
+      keyword: keyword,
       isOnSale: undefined,
     });
 

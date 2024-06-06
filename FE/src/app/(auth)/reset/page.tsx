@@ -33,7 +33,12 @@ export default function Reset() {
       });
     }
 
-    window.location.href = "/refresh-password";
+    return toast({
+      variant: "default",
+      title: "Success send email!",
+      description: "We are already send email, please check your email!",
+      action: <ToastAction altText="Close">Close</ToastAction>,
+    });
   };
 
   return (

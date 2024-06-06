@@ -69,8 +69,8 @@ export default function ShowVoucher({
                 <span className="font-bold">{voucher.name}</span>
                 <span className="ml-5">
                   {voucher.type === PROMOTION_TYPE.PERCENT
-                    ? voucher.discountValue + " $"
-                    : voucher.discountPercentage + "%"}{" "}
+                    ? voucher.discountPercentage + "%"
+                    : voucher.discountValue + " $"}{" "}
                   off
                   {", min spend: "} ${voucher.minValue}
                   {", expired: "}

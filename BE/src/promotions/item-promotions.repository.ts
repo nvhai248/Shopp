@@ -72,7 +72,7 @@ export class ItemPromotionRepository {
         where: {
           promotionId: promotionId,
           productId: productId,
-          quantity: quantity,
+          quantity: { lte: quantity },
         },
       });
     } catch (error) {
