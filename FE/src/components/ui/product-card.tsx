@@ -67,11 +67,11 @@ function ProductDetail({
         <div className="flex items-center gap-2">
           {isOnSale ? (
             <>
-              <p className="line-through text-gray-500">{priceSale}$</p>
-              <p className="text-black">{price}$</p>
+              <span className="line-through text-gray-500">{price}$</span>
+              <span className="text-black ml-3">{priceSale}$</span>
             </>
           ) : (
-            <p className="text-black">{price}$</p>
+            <span className="text-black ml-3">{price}$</span>
           )}
         </div>
       </div>
@@ -132,6 +132,7 @@ export default function ProductCard({
             name={name}
             rate={rate}
             price={price}
+            priceSale={priceSale}
             description={description}
             address={address}
             isOnSale={isOnSale}

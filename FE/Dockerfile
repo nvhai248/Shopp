@@ -1,4 +1,3 @@
-# Docker file of ./FE
 FROM node:18
 
 # Set the working directory
@@ -6,6 +5,7 @@ WORKDIR /app
 
 # Copy package.json and package-lock.json
 COPY package*.json ./
+RUN ls -al /app
 
 # Install dependencies
 RUN npm install
@@ -16,7 +16,8 @@ COPY . .
 # Set environment variable to disable linting during build
 ENV NEXT_DISABLE_ESLINT true
 
-# Build the Next.js application
+
+# Build the application
 RUN npm run build
 
 # Expose the port the app runs on

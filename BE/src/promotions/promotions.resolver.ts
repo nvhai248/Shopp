@@ -33,8 +33,6 @@ export class PromotionsResolver {
     @Args('isAvailablePromotions', { nullable: true })
     isAvailablePromotions: boolean,
   ) {
-    console.log(isAvailablePromotions);
-
     return this.promotionsService.findAll(isAvailablePromotions);
   }
 

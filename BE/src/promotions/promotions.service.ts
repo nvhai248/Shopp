@@ -98,7 +98,7 @@ export class PromotionsService {
         }
       }
 
-      if (isOk) {
+      if (isOk && recommendInput.totalValue >= item.minValue) {
         result.push(item);
       }
     }
