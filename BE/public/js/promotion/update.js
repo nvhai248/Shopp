@@ -38,10 +38,6 @@ async function submitUpdatePromotion() {
     errors.push('Min Value must be a positive number.');
   }
 
-  if (startDate <= now) {
-    errors.push('Start Date must be greater than the current date.');
-  }
-
   if (endDate <= startDate) {
     errors.push('End Date must be greater than Start Date.');
   }

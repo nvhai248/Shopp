@@ -71,7 +71,7 @@ const Checkout = () => {
         : voucher?.discountValue ?? 0;
 
     setDiscountTotal(temp);
-    setPaymentTotal(totalPrice - temp);
+    setPaymentTotal(totalPrice - temp >= 0 ? totalPrice - temp : 0);
   }, [voucher, totalPrice]);
 
   if (loading) {

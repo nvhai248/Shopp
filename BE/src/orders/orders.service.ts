@@ -46,7 +46,10 @@ export class OrdersService {
 
       if (promotionId && promotion) {
         if (promotion.type === PROMOTION_TYPE.VALUE)
-          reducePrice = promotion.discountValue;
+          reducePrice =
+            promotion.discountValue > totalPrice
+              ? promotion.discountValue
+              : totalPrice;
         else if (promotion.type === PROMOTION_TYPE.PERCENT) {
           reducePrice = totalPrice * (promotion.discountPercentage / 100);
         }

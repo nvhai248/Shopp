@@ -63,6 +63,7 @@ export class PromotionRepository {
       where = {
         ...where,
         endDate: { gt: new Date() },
+        startDate: { lt: new Date() },
       };
     }
 
@@ -79,6 +80,7 @@ export class PromotionRepository {
       where: {
         status: true,
         endDate: { gt: new Date() },
+        startDate: { lt: new Date() },
         minValue: { lte: totalValue },
         level: level,
       },
