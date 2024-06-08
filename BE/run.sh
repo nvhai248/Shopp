@@ -7,4 +7,4 @@ docker exec -it postgres /bin/bash
 psql -U postgres -l
 
 # show all table
-psql -U postgres -d hshopp -c "\dt"
+psql -U postgres -d shopp_nt -c "\dt"
