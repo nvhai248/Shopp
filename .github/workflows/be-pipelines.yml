@@ -18,7 +18,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 18.x"
+          node-version: "20.x"
 
       - name: Install dependencies
         run: |
@@ -43,17 +43,12 @@ jobs:
           cd BE
           npm run test:ci
 
-      - name: Publish test results to docs
+      - name: Publish test and code coverage results
         if: always()
-        run: |
-          mkdir -p docs/test-results
-          cp BE/**/test-report.xml docs/test-results/
-
-      - name: Publish code coverage results to docs
-        if: always()
-        run: |
-          mkdir -p docs/coverage
-          cp BE/coverage/cobertura-coverage.xml docs/coverage/
+        uses: actions/upload-artifact@v3
+        with:
+          name: code-coverage
+          path: BE/coverage/*
 
       - name: Run npm audit
         run: |
@@ -65,10 +60,3 @@ jobs:
         run: |
           cd BE
           npm run build
-
-      - name: Deploy to GitHub Pages
-        if: always()
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./docs
