@@ -23,14 +23,14 @@ export class OrdersController {
     @Query('limit', new DefaultValuePipe(5), ParseIntPipe) limit: number,
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
   ) {
-    let orders = [];
+    const orders = [];
 
     const temp = await this.ordersService.findMany({
       limit: limit,
       page: page,
     });
 
-    for (let item of temp.data) {
+    for (const item of temp.data) {
       const contact = await this.contactService.findOne(
         item.contactId,
         item.ownerId,

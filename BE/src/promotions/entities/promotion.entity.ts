@@ -1,10 +1,4 @@
-import {
-  ObjectType,
-  Field,
-  Int,
-  ID,
-  GraphQLISODateTime,
-} from '@nestjs/graphql';
+import { ObjectType, Field, ID, GraphQLISODateTime } from '@nestjs/graphql';
 import { IsEnum } from 'class-validator';
 import { PROMOTION_LEVEL, PROMOTION_TYPE } from 'src/utils/const';
 

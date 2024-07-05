@@ -3,7 +3,6 @@ import {
   Query,
   Mutation,
   Args,
-  Int,
   ResolveField,
   Parent,
 } from '@nestjs/graphql';
@@ -89,7 +88,7 @@ export class ReviewsResolver {
     );
   }
 
-  @ResolveField((returns) => User, { name: 'owner' })
+  @ResolveField(() => User, { name: 'owner' })
   getProduct(@Parent() review: Review) {
     return this.usersService.findOne(review.ownerId);
   }

@@ -4,7 +4,6 @@ import { MyDBException } from 'src/utils/error';
 import { CreateProductInput } from './dto/create-product.input';
 import { STATUS_PRODUCT } from 'src/utils/const';
 import { UpdateProductInput } from './dto/update-product.input';
-import { SearchConditionInput } from './dto/serch-condition.input';
 
 @Injectable()
 export class ProductRepository {

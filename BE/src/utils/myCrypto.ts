@@ -1,6 +1,5 @@
 import { HttpException, HttpStatus } from '@nestjs/common';
 
-const secretKey = process.env.CRYPTO_SECRET;
 // Function to encode JSON object to encrypted string
 export function EncodeToEncryptedString(data: object): string {
   try {

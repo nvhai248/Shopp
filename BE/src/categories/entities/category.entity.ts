@@ -54,7 +54,7 @@ export class Category {
   @Field()
   createdBy: string;
 
-  @Field((type) => [CategoryChild], { defaultValue: [] })
+  @Field(() => [CategoryChild], { defaultValue: [] })
   childs: CategoryChild[];
 
   @Field(() => GraphQLISODateTime)

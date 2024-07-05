@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { DatabaseService } from 'src/database/database.service';
 import { MyDBException } from 'src/utils/error';
 import { CreateContactInput } from './dto/create-contact.input';

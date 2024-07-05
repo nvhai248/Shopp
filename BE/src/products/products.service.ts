@@ -37,7 +37,6 @@ export class ProductsService {
           mode: 'insensitive',
         },
       };
-
     }
 
     if (conditions.categoryIds) {

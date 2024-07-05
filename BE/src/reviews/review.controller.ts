@@ -23,14 +23,14 @@ export class ReviewsController {
     @Query('limit', new DefaultValuePipe(5), ParseIntPipe) limit: number,
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
   ) {
-    let reviews = [];
+    const reviews = [];
 
     const temp = await this.reviewsService.findMany({
       limit: limit,
       page: page,
     });
 
-    for (let item of temp.data) {
+    for (const item of temp.data) {
       const product = await this.productsService.findOne(item.productId);
       reviews.push({
         ...item,

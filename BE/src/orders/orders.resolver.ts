@@ -3,7 +3,6 @@ import {
   Query,
   Mutation,
   Args,
-  Int,
   ResolveField,
   Parent,
 } from '@nestjs/graphql';
@@ -69,7 +68,7 @@ export class OrdersResolver {
     return this.ordersService.findMany(pagingOrderInput, user.id);
   }
 
-  @ResolveField((returns) => [OrderItem], { name: 'items' })
+  @ResolveField(() => [OrderItem], { name: 'items' })
   findItems(@Parent() parent: Order) {
     return this.ordersService.findItems(parent.id);
   }
@@ -79,7 +78,7 @@ export class OrdersResolver {
     return this.ordersService.update(updateInput.id, updateInput);
   }
 
-  @ResolveField((returns) => Contact, { name: 'contact' })
+  @ResolveField(() => Contact, { name: 'contact' })
   findContact(@Parent() parent: Order) {
     return this.contactsService.findOne(parent.contactId, parent.ownerId);
   }

@@ -1,6 +1,5 @@
 import { GraphQLError } from 'graphql';
 import { GRAPHQL_CODE_ERROR } from './const';
-import { HttpStatus } from '@nestjs/common';
 
 export class MyCustomException extends GraphQLError {
   constructor(

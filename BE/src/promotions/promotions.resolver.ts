@@ -1,4 +1,4 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { PromotionsService } from './promotions.service';
 import { Promotion } from './entities/promotion.entity';
 import { CreatePromotionInput } from './dto/create-promotion.input';

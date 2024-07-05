@@ -42,7 +42,7 @@ export class CartsResolver {
     return this.cartsService.getCart(user.id);
   }
 
-  @ResolveField((returns) => Product, { name: 'product' })
+  @ResolveField(() => Product, { name: 'product' })
   getProduct(@Parent() cartItem: CartItem) {
     return this.productService.findOne(cartItem.productId);
   }

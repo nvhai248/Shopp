@@ -1,4 +1,4 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { PublishersService } from './publishers.service';
 import { Publisher } from './entities/publisher.entity';
 import { CreatePublisherInput } from './dto/create-publisher.input';

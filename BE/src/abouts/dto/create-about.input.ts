@@ -1,4 +1,4 @@
-import { InputType, Int, Field } from '@nestjs/graphql';
+import { InputType, Field } from '@nestjs/graphql';
 import { IsEnum } from 'class-validator';
 import { ABOUT_TYPE } from 'src/utils/const';
 

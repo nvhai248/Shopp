@@ -33,7 +33,7 @@ export class CategoriesResolver {
     return this.categoriesService.findMany(CATEGORY_TYPE.PARENT, null);
   }
 
-  @ResolveField((returns) => [CategoryChild], { name: 'childs' })
+  @ResolveField(() => [CategoryChild], { name: 'childs' })
   findChilds(@Parent() parent: Category) {
     return this.categoriesService.findMany(CATEGORY_TYPE.CHILDREN, parent.id);
   }

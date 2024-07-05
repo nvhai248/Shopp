@@ -1,4 +1,4 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { ContactsService } from './contacts.service';
 import { Contact } from './entities/contact.entity';
 import { CreateContactInput } from './dto/create-contact.input';

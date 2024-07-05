@@ -31,8 +31,8 @@ export class ProductController {
       null,
     );
 
-    let result = [];
-    for (let category of parents) {
+    const result = [];
+    for (const category of parents) {
       const childs = await this.categoryService.findMany(
         CATEGORY_TYPE.CHILDREN,
         category.id,

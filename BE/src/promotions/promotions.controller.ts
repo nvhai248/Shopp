@@ -71,9 +71,9 @@ export class PromotionController {
   async itemPromotion(@Query('id') id: string) {
     const items = await this.promotionService.findAllItem(id);
 
-    let products = [];
+    const products = [];
 
-    for (let item of items) {
+    for (const item of items) {
       const product = await this.productService.findOne(item.productId);
       products.push({ ...product, quantity: item.quantity });
     }

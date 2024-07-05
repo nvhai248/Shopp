@@ -1,4 +1,4 @@
-import { InputType, Field, Float } from '@nestjs/graphql';
+import { InputType, Field } from '@nestjs/graphql';
 import { IsEnum } from 'class-validator';
 import { PAYMENT_METHOD } from 'src/utils/const';
 import { OrderItemInput } from './order-item.input';

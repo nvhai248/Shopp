@@ -23,8 +23,9 @@ jobs:
       - name: Install dependencies
         run: |
           cd BE
+          npm cache clean --force
           npm install -g @nestjs/cli
-          npm install
+          npm install --force
           npm run prisma:generate
 
       - name: Run lint

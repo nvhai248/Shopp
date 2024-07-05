@@ -15,13 +15,15 @@
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
-    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
+    "lint": "eslint \"{src,apps,libs}/**/*.ts\" --fix",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:ci": "jest --ci --coverage",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "prisma:generate": "npx prisma generate",
+    "gitleaks": "docker-compose run gitleaks"
   },
   "dependencies": {
     "@apollo/server": "^4.10.4",
@@ -32,7 +34,7 @@
     "@nestjs/common": "^10.3.9",
     "@nestjs/config": "^3.2.2",
     "@nestjs/core": "^10.3.9",
-    "@nestjs/graphql": "^12.1.1",
+    "@nestjs/graphql": "^12.2.0",
     "@nestjs/jwt": "^10.2.0",
     "@nestjs/mapped-types": "*",
     "@nestjs/passport": "^10.0.3",
@@ -41,16 +43,20 @@
     "@prisma/client": "^5.14.0",
     "aws-sdk": "^2.1624.0",
     "bcrypt": "^5.1.1",
+    "braces": "^3.0.3",
     "bs58": "^5.0.0",
     "cache-manager": "^5.5.2",
     "cache-manager-redis-store": "^2.0.0",
     "class-validator": "^0.14.1",
     "graphql": "^16.8.1",
     "hbs": "^4.2.0",
+    "jest-junit": "^16.0.0",
     "joi": "^17.13.0",
+    "lodash.pick": "^3.1.0",
     "multer": "^1.4.5-lts.1",
     "multer-s3": "^3.0.1",
     "nodemailer": "^6.9.13",
+    "nth-check": "^2.0.1",
     "passport": "^0.7.0",
     "passport-google-oauth20": "^2.0.0",
     "passport-jwt": "^4.0.1",
@@ -58,7 +64,8 @@
     "redis": "^3.1.2",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1",
-    "speakeasy": "^2.0.0"
+    "speakeasy": "^2.0.0",
+    "ws": "^8.17.0"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.0.0",
@@ -101,13 +108,38 @@
       "^.+\\.(t|j)s$": "ts-jest"
     },
     "collectCoverageFrom": [
-      "**/*.(t|j)s"
+      "src/**/*.resolver.{js,jsx,ts,tsx}",
+      "src/**/*.controller.{js,jsx,ts,tsx}",
+      "src/**/*.service.{js,jsx,ts,tsx}",
+      "!src/**/*.d.ts",
+      "!src/**/prisma.service.ts"
     ],
-    "coverageDirectory": "../coverage",
+    "coverageReporters": [
+      "text",
+      "lcov",
+      "cobertura",
+      "html"
+    ],
+    "coverageDirectory": "./coverage",
     "testEnvironment": "node",
     "moduleNameMapper": {
-      "^src/(.*)$": "<rootDir>/src/$1",
-      "^prisma/(.*)$": "<rootDir>/prisma/$1"
-    }
+      "^src/(.*)$": "<rootDir>/src/$1"
+    },
+    "coveragePathIgnorePatterns": [
+      "/node_modules/",
+      "/test-utils/",
+      "src/setupTests.js"
+    ],
+    "reporters": [
+      "default",
+      [
+        "jest-junit",
+        {
+          "outputDirectory": "./coverage/test-report",
+          "outputName": "test-report.xml"
+        }
+      ]
+    ],
+    "collectCoverage": true
   }
 }

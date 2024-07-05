@@ -16,7 +16,6 @@ import {
 } from 'src/utils/templateEmail';
 import { MyNotFoundException } from 'src/utils/error';
 import { CacheService } from 'src/database/cache.service';
-import { maskId } from 'src/utils/mask';
 import { HashPW, IsCorrectPW } from 'src/utils/hasher';
 
 @Injectable()
@@ -117,7 +116,7 @@ export class UsersService {
     userId: string,
     userSecretOtp: string,
     otp: string,
-  ): Promise<Boolean> {
+  ): Promise<boolean> {
     // Verify OTP entered by the user
     const otpIsValid = this.otpService.verifyOtp(userSecretOtp, otp);
 
@@ -214,14 +213,8 @@ export class UsersService {
           token,
         ),
       )
-      .catch((err) => {});
+      .catch(() => {});
 
     return true;
-  }
-
-  getUserCart(id: string) {
-    const products = [];
-
-    return products;
   }
 }

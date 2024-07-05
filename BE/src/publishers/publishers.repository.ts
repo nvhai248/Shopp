@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { DatabaseService } from 'src/database/database.service';
-import { CATEGORY_TYPE } from 'src/utils/const';
 import { CreatePublisherInput } from './dto/create-publisher.input';
 import { UpdatePublisherInput } from './dto/update-publisher.input';
 

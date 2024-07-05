@@ -1,4 +1,4 @@
-import { Controller, DefaultValuePipe, Get, ParseIntPipe, Query, Render } from '@nestjs/common';
+import { Controller, Get, Render } from '@nestjs/common';
 import { PublishersService } from './publishers.service';
 import { SITE_DOMAIN } from 'src/utils/const';
 
@@ -8,9 +8,7 @@ export class PublisherController {
 
   @Get('/')
   @Render('pages/publisher')
-  async publishers(
-    @Query('limit', new DefaultValuePipe(5), ParseIntPipe) limit: number,
-    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,) {
+  async publishers() {
     const publisher = await this.publisherService.findMany();
 
     return {

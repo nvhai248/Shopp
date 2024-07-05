@@ -1,4 +1,4 @@
-import { ObjectType, Field, ID, GraphQLISODateTime } from '@nestjs/graphql';
+import { ObjectType, Field, GraphQLISODateTime } from '@nestjs/graphql';
 import { Max, Min } from 'class-validator';
 import { User } from 'src/users/entities/user.entity';
 

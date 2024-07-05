@@ -1,12 +1,4 @@
-import {
-  Resolver,
-  Query,
-  Mutation,
-  Args,
-  ResolveField,
-  Parent,
-  ID,
-} from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args, ID } from '@nestjs/graphql';
 import { UsersService } from './users.service';
 import { User } from './entities/user.entity';
 import { UpdateUserInput } from './dto/updateUser.input';
@@ -43,7 +35,7 @@ export class UsersResolver {
   async verifyUser(
     @CurrentUser() user: CurrentUserInterface,
     @Args('otp') otp: string,
-  ): Promise<Boolean> {
+  ): Promise<boolean> {
     // Verify OTP entered by the user
     return this.usersService.verifyUser(user.id, user.secretOtp, otp);
   }

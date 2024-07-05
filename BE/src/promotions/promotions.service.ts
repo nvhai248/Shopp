@@ -80,13 +80,13 @@ export class PromotionsService {
       PROMOTION_LEVEL.ITEM,
     );
 
-    for (let item of allPromotionLevelItem) {
+    for (const item of allPromotionLevelItem) {
       let isOk = true;
 
       const itemsPromotion =
         await this.itemPromotionRepository.findAllByPromotionId(item.id);
 
-      for (let itemPromotion of itemsPromotion) {
+      for (const itemPromotion of itemsPromotion) {
         const foundProduct = recommendInput.products.find(
           (product) =>
             product.productId === itemPromotion.productId &&

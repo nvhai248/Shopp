@@ -33,7 +33,7 @@ export class OrdersService {
       let reducePrice = 0;
 
       // Validate each product in the items array
-      for (let item of items) {
+      for (const item of items) {
         const product = await this.productService.findOne(item.productId);
         if (!product) {
           throw new Error(`Product with ID ${item.productId} does not exist.`);
@@ -70,7 +70,7 @@ export class OrdersService {
         });
 
         // Create order items
-        for (let item of items) {
+        for (const item of items) {
           await transaction.productOrder.create({
             data: {
               orderId: order.id,

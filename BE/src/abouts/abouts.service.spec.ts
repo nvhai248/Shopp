@@ -1,7 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AboutsService } from './abouts.service';
 import { ABOUT_TYPE } from 'src/utils/const';
-import { prismaMock } from '../../prisma/prisma.mock';
 
 export const mockAbout = [
   {
@@ -35,13 +34,10 @@ export const mockAboutService = {
 
 describe('AboutsService', () => {
   let service: AboutsService;
-  let prisma = prismaMock;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        { provide: AboutsService, useValue: mockAboutService },
-      ],
+      providers: [{ provide: AboutsService, useValue: mockAboutService }],
     }).compile();
 
     service = module.get<AboutsService>(AboutsService);

@@ -6,7 +6,7 @@ import { ProductsService } from 'src/products/products.service';
 @Resolver(() => OrderItem)
 export class OrdersItemResolver {
   constructor(private readonly productsService: ProductsService) {}
-  @ResolveField((returns) => Product, { name: 'product' })
+  @ResolveField(() => Product, { name: 'product' })
   findProduct(@Parent() parent: OrderItem) {
     return this.productsService.findOne(parent.productId);
   }
