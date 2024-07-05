@@ -7,16 +7,17 @@ import { CacheService } from './cache.service';
 
 const redisHost = process.env.REDIS_HOST;
 const redisPort = process.env.REDIS_PORT;
+const redisPassword = process.env.REDIS_PASSWORD;
 
 @Global()
 @Module({
   imports: [
     CacheModule.register<RedisClientOptions>({
       store: redisStore,
-
       // Store-specific configuration:
       host: redisHost,
       port: redisPort,
+      password: redisPassword,
     }),
   ],
   providers: [DatabaseService, CacheService],
