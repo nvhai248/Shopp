@@ -1,0 +1,54 @@
+name: CI/CD Pipeline for Next.js
+
+on:
+  push:
+    branches:
+      - "*"
+      - "!main"
+
+jobs:
+  build:
+    name: Build and Test
+    runs-on: ubuntu-latest
+    if: github.ref != 'refs/heads/main'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "20.x"
+
+      - name: Install dependencies
+        run: |
+          cd FE
+          npm install next
+          npm install
+
+      - name: Run lint
+        run: |
+          cd FE
+          npm run lint
+
+      - name: Run GitLeaks
+        run: |
+          cd FE
+          npm run gitleaks
+
+      - name: Run tests
+        run: |
+          cd FE
+          npm run test
+
+      - name: Run npm audit
+        run: |
+          cd FE
+          npm audit --audit-level=high
+        continue-on-error: true
+
+      - name: Build project
+        run: |
+          cd FE
+          npm run build

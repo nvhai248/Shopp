@@ -75,6 +75,15 @@ services:
     networks:
       - hshopp
 
+  gitleaks:
+    container_name: asset_management_gitleaks
+    build:
+      context: ./gitleaks
+      dockerfile: Dockerfile
+    volumes:
+      - .:/app
+    entrypoint: ["gitleaks", "detect", "-c", "/app/gitleaks/.gitleaks.toml"]
+
 volumes:
   postgres-data:
   redis-data:

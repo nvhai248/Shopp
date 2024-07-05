@@ -1,5 +1,5 @@
 # Dockerfile of ./BE
-FROM node:18 AS build
+FROM node:18-alpine AS build
 
 # Set the working directory
 WORKDIR /app
