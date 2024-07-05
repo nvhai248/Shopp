@@ -43,12 +43,19 @@ jobs:
           cd BE
           npm run test:ci
 
-      - name: Publish test and code coverage results
+      - name: Publish test results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-results
+          path: "BE/**/test-report.xml"
+
+      - name: Publish code coverage results
         if: always()
         uses: actions/upload-artifact@v3
         with:
           name: code-coverage
-          path: BE/coverage/*
+          path: BE/coverage/cobertura-coverage.xml
 
       - name: Run npm audit
         run: |
